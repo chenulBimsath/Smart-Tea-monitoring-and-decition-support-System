@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Tea Monitoring & Decision Support System | SLSPC</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            overflow-x: hidden;
+            background: #ffffff;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+            z-index: 1000;
+            padding: 20px 0;
+        }
+
+        .navbar .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1a5490;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #2c3e50;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #1a5490;
+        }
+
+        .hero {
+            margin-top: 80px;
+            background: linear-gradient(165deg, #0a2342 0%, #1a5490 50%, #2d7e3f 100%);
+            color: white;
+            padding: 140px 20px 160px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 50%, rgba(255,255,255,0.05) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(255,255,255,0.05) 0%, transparent 50%);
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-label {
+            display: inline-block;
+            background: rgba(255,255,255,0.15);
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 30px;
+            font-weight: 700;
+            letter-spacing: -2px;
+            line-height: 1.1;
+            max-width: 900px;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 40px;
+            max-width: 700px;
+            opacity: 0.95;
+            line-height: 1.8;
+            font-weight: 300;
+        }
+
+        .cta-group {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 16px 40px;
+            background: #2d7e3f;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .cta-button:hover {
+            background: #25692f;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(45, 126, 63, 0.3);
+        }
+
+        .cta-button-secondary {
+            background: transparent;
+            border: 2px solid white;
+        }
+
+        .cta-button-secondary:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
+        .section {
+            padding: 120px 20px;
+        }
+
+        .section-header {
+            max-width: 700px;
+            margin: 0 auto 80px;
+            text-align: center;
+        }
+
+        .section-label {
+            color: #2d7e3f;
+            font-size: 0.9rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+        }
+
+        .section-title {
+            font-size: 3rem;
+            color: #0a2342;
+            margin-bottom: 25px;
+            font-weight: 700;
+            letter-spacing: -1px;
+        }
+
+        .section-description {
+            font-size: 1.2rem;
+            color: #64748b;
+            line-height: 1.8;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
+            margin-top: 80px;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 50px 45px;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+            border: 1px solid #e2e8f0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 0;
+            background: linear-gradient(180deg, #2d7e3f, #1a5490);
+            transition: height 0.4s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+            border-color: #2d7e3f;
+        }
+
+        .feature-card:hover::before {
+            height: 100%;
+        }
+
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #2d7e3f, #1a5490);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin-bottom: 30px;
+        }
+
+        .feature-card h3 {
+            color: #0a2342;
+            font-size: 1.6rem;
+            margin-bottom: 18px;
+            font-weight: 700;
+        }
+
+        .feature-card p {
+            color: #64748b;
+            line-height: 1.9;
+            font-size: 1.05rem;
+        }
+
+        .solution-section {
+            background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+        }
+
+        .solution-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+        }
+
+        .solution-text h3 {
+            font-size: 2.2rem;
+            color: #0a2342;
+            margin-bottom: 25px;
+            font-weight: 700;
+        }
+
+        .solution-text p {
+            color: #64748b;
+            line-height: 2;
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+        }
+
+        .solution-list {
+            list-style: none;
+            margin-top: 30px;
+        }
+
+        .solution-list li {
+            padding: 18px 0;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: start;
+            gap: 15px;
+            color: #2c3e50;
+            font-size: 1.05rem;
+        }
+
+        .solution-list li::before {
+            content: '✓';
+            color: #2d7e3f;
+            font-weight: 700;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .solution-visual {
+            background: linear-gradient(135deg, #1a5490, #2d7e3f);
+            border-radius: 20px;
+            padding: 60px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .solution-visual::before {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            top: -100px;
+            right: -100px;
+        }
+
+        .tech-stack {
+            background: #0a2342;
+            color: white;
+            padding: 100px 20px;
+        }
+
+        .tech-stack .section-label {
+            color: #2d7e3f;
+        }
+
+        .tech-stack .section-title {
+            color: white;
+        }
+
+        .tech-stack .section-description {
+            color: rgba(255,255,255,0.8);
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 30px;
+            margin-top: 60px;
+        }
+
+        .tech-item {
+            background: rgba(255,255,255,0.05);
+            padding: 40px 30px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .tech-item:hover {
+            background: rgba(255,255,255,0.08);
+            border-color: #2d7e3f;
+            transform: translateY(-5px);
+        }
+
+        .tech-item-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .tech-item strong {
+            display: block;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .tech-item span {
+            display: block;
+            color: rgba(255,255,255,0.6);
+            font-size: 0.85rem;
+            margin-top: 8px;
+        }
+
+        .stats {
+            background: linear-gradient(135deg, #1a5490 0%, #0a2342 100%);
+            color: white;
+            padding: 100px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stats::before {
+            content: '';
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(45,126,63,0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            top: -200px;
+            right: -200px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 60px;
+            max-width: 1100px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-item h3 {
+            font-size: 4rem;
+            color: #2d7e3f;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .stat-item p {
+            font-size: 1.2rem;
+            opacity: 0.95;
+            font-weight: 500;
+        }
+
+        .cta-section {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            padding: 120px 20px;
+            text-align: center;
+        }
+
+        .cta-content {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .cta-content h2 {
+            font-size: 3rem;
+            color: #0a2342;
+            margin-bottom: 25px;
+            font-weight: 700;
+        }
+
+        .cta-content p {
+            font-size: 1.2rem;
+            color: #64748b;
+            margin-bottom: 40px;
+        }
+
+        footer {
+            background: #0a1929;
+            color: white;
+            padding: 60px 20px 30px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 60px;
+            max-width: 1200px;
+            margin: 0 auto 50px;
+        }
+
+        .footer-brand h3 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #2d7e3f;
+        }
+
+        .footer-brand p {
+            color: rgba(255,255,255,0.7);
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .footer-links h4 {
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+
+        .footer-links ul {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links a {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #2d7e3f;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 30px;
+            text-align: center;
+            color: rgba(255,255,255,0.6);
+        }
+
+        @media (max-width: 968px) {
+            .hero h1 {
+                font-size: 2.8rem;
+            }
+
+            .section-title {
+                font-size: 2.2rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .solution-content {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                display: none;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .container {
+                padding: 0 20px;
+            }
+
+            .section {
+                padding: 80px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">SLSPC Tea Monitoring</div>
+            <ul class="nav-links">
+                <li><a href="#solution">Solution</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#technology">Technology</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-label">ENTERPRISE AGRICULTURAL INTELLIGENCE</div>
+            <h1>Smart Tea Monitoring & Decision Support System</h1>
+            <p>Transforming tea estate management through advanced AI-powered analytics, satellite technology, and predictive intelligence for SLSPC operations.</p>
+            <div class="cta-group">
+                <a href="#features" class="cta-button">Explore Platform</a>
+                <a href="#contact" class="cta-button cta-button-secondary">Request Demo</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="section solution-section" id="solution">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-label">Comprehensive Solution</div>
+                <h2 class="section-title">Integrated Intelligence for Tea Estate Management</h2>
+                <p class="section-description">A unified platform combining predictive analytics, real-time monitoring, and climate intelligence to optimize tea production and resource management across SLSPC estates.</p>
+            </div>
+            <div class="solution-content">
+                <div class="solution-text">
+                    <h3>Precision Agriculture at Scale</h3>
+                    <p>Our system integrates multiple analytical components to provide supervisors, administrators, and field workers with accurate, timely information about field conditions and performance metrics.</p>
+                    <ul class="solution-list">
+                        <li>Predictive yield modeling based on environmental and historical data</li>
+                        <li>Satellite-derived vegetation monitoring for field health assessment</li>
+                        <li>Climate vulnerability scoring for proactive risk management</li>
+                        <li>Data-driven fertilizer recommendations for optimal resource utilization</li>
+                        <li>Centralized decision support tools for strategic planning</li>
+                    </ul>
+                </div>
+                <div class="solution-visual">
+                    <h3 style="margin-bottom: 20px;">Unified Data Platform</h3>
+                    <p style="opacity: 0.9; line-height: 1.8;">Consolidate field data, satellite imagery, weather patterns, and historical records into a single, actionable intelligence platform designed specifically for tea estate operations.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="features">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-label">Core Capabilities</div>
+                <h2 class="section-title">Advanced Features for Modern Estate Management</h2>
+                <p class="section-description">Purpose-built tools that address the complex challenges of contemporary tea cultivation and production optimization.</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🤖</div>
+                    <h3>AI-Powered Yield Forecasting</h3>
+                    <p>Sophisticated predictive modeling leveraging machine learning algorithms to estimate future tea yield based on harvesting history, field characteristics, soil composition, precipitation patterns, and fertilizer application data. Enables strategic resource allocation and identifies underperforming areas with precision.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🛰️</div>
+                    <h3>Satellite Remote Sensing (NDVI)</h3>
+                    <p>Integration with satellite-derived vegetation indices to continuously monitor crop health and detect stress indicators. NDVI analysis provides comprehensive field assessments without physical inspection requirements, enabling rapid identification of areas requiring intervention.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🌱</div>
+                    <h3>Intelligent Fertilizer Management</h3>
+                    <p>Advanced recommendation engine that analyzes soil composition, plant maturity, vegetation health metrics, and projected yield to prescribe optimal fertilizer formulations and application rates. Reduces input costs, minimizes environmental impact, and maximizes nutrient efficiency.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">⚠️</div>
+                    <h3>Climate Risk Assessment</h3>
+                    <p>Comprehensive vulnerability scoring system that evaluates meteorological patterns, precipitation variability, temperature fluctuations, and vegetation dynamics to quantify field-level climate risks. Supports proactive planning for drought conditions, thermal stress, and adverse weather events.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="stats">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <h3>100%</h3>
+                    <p>Evidence-Based Decision Making</p>
+                </div>
+                <div class="stat-item">
+                    <h3>24/7</h3>
+                    <p>Continuous Field Monitoring</p>
+                </div>
+                <div class="stat-item">
+                    <h3>AI</h3>
+                    <p>Machine Learning Intelligence</p>
+                </div>
+                <div class="stat-item">
+                    <h3>Real-Time</h3>
+                    <p>Satellite Data Integration</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="tech-stack" id="technology">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-label">Technology Infrastructure</div>
+                <h2 class="section-title">Enterprise-Grade Architecture</h2>
+                <p class="section-description">Built on modern, scalable technologies that ensure reliability, performance, and security for mission-critical agricultural operations.</p>
+            </div>
+            <div class="tech-grid">
+                <div class="tech-item">
+                    <span class="tech-item-icon">⚛️</span>
+                    <strong>React.js</strong>
+                    <span>Frontend Framework</span>
+                </div>
+                <div class="tech-item">
+                    <span class="tech-item-icon">📘</span>
+                    <strong>TypeScript</strong>
+                    <span>Type-Safe Development</span>
+                </div>
+                <div class="tech-item">
+                    <span class="tech-item-icon">🟢</span>
+                    <strong>Node.js</strong>
+                    <span>Runtime Environment</span>
+                </div>
+                <div class="tech-item">
+                    <span class="tech-item-icon">🚂</span>
+                    <strong>Express.js</strong>
+                    <span>API Framework</span>
+                </div>
+                <div class="tech-item">
+                    <span class="tech-item-icon">🍃</span>
+                    <strong>MongoDB</strong>
+                    <span>Database System</span>
+                </div>
+                <div class="tech-item">
+                    <span class="tech-item-icon">🔗</span>
+                    <strong>Mongoose</strong>
+                    <span>ODM Layer</span>
+                </div>
+                <div class="tech-item">
+                    <span class="tech-item-icon">🔐</span>
+                    <strong>JWT</strong>
+                    <span>Authentication</span>
+                </div>
+                <div class="tech-item">
+                    <span class="tech-item-icon">📜</span>
+                    <strong>JavaScript</strong>
+                    <span>Core Language</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section" id="contact">
+        <div class="cta-content">
+            <h2>Ready to Transform Your Tea Estate Operations?</h2>
+            <p>Discover how our intelligent monitoring system can optimize your agricultural decisions and improve productivity across your estates.</p>
+            <a href="#" class="cta-button">Schedule Consultation</a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h3>SLSPC Tea Monitoring</h3>
+                    <p>Advanced decision support system designed specifically for Sri Lankan tea estate management, combining artificial intelligence, satellite technology, and climate science.</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Platform</h4>
+                    <ul>
+                        <li><a href="#">Features</a></li>
+                        <li><a href="#">Technology</a></li>
+                        <li><a href="#">Integration</a></li>
+                        <li><a href="#">Documentation</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="#">About SLSPC</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">Support</a></li>
+                        <li><a href="#">Careers</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="#">User Guide</a></li>
+                        <li><a href="#">API Documentation</a></li>
+                        <li><a href="#">Case Studies</a></li>
+                        <li><a href="#">Research</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Smart Tea Monitoring System | Sri Lanka State Plantations Corporation (SLSPC). All rights reserved.</p>
+                <p style="margin-top: 10px;">Advancing sustainable tea cultivation through agricultural intelligence</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
