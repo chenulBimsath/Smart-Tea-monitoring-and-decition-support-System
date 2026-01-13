@@ -17,7 +17,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background-image: url('BACKGROUND_IMAGE_PATH_HERE');
+            background-image: url('images/Tea Estate.jpeg');
             background-size: cover;
             background-position: center;
             position: relative;
@@ -205,31 +205,7 @@
             text-decoration: underline;
         }
 
-        .chat-button {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 60px;
-            height: 60px;
-            background: #1b5e3f;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-            transition: transform 0.2s;
-            z-index: 10;
-        }
 
-        .chat-button:hover {
-            transform: scale(1.1);
-        }
-
-        .chat-button::before {
-            content: '💬';
-            font-size: 28px;
-        }
 
         @media (max-width: 480px) {
             .signin-container {
@@ -246,7 +222,7 @@
 </head>
 <body>
     <div class="logo">
-        <img src="images/Tea Estate.jpeg" alt="Tea Estate ">
+        <img src="images/logo.png" alt="Tea Estate Logo">
     </div>
 
     <div class="signin-container">
@@ -288,8 +264,6 @@
         </div>
     </div>
 
-    <div class="chat-button" title="Chat Support"></div>
-
     <script>
         document.getElementById('signinForm').addEventListener('submit', function(e) {
             e.preventDefault();
@@ -299,10 +273,6 @@
             if (username && password) {
                 alert('Sign in functionality would be implemented here!');
             }
-        });
-
-        document.querySelector('.chat-button').addEventListener('click', function() {
-            alert('Chat support would open here!');
         });
     </script>
 </body>
