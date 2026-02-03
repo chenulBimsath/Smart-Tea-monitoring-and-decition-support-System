@@ -1,0 +1,52 @@
+.navbar {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 70px;
+
+  background-color: #1f6b4a;
+
+  display: flex;
+  align-items: center;    
+  justify-content: space-between;
+
+  padding: 0 60px;
+  box-sizing: border-box;
+
+  z-index: 99999;
+}
+
+
+.logo {
+  height: 55px;
+}
+
+.nav-links {
+  display: flex;
+  gap: 30px;
+}
+
+.nav-links a {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.nav-links a:hover {
+  opacity: 0.8;
+}
+
+.nav-btn {
+  background: white;
+  color: #1f6b4a;
+  padding: 10px 22px;
+  border-radius: 25px;
+  font-weight: bold;
+  text-decoration: none;
+}
+#signin:target ~ .navbar,
+#signin:target ~ header.navbar {
+  display: none;
+}
