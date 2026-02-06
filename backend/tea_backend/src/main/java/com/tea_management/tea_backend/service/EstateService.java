@@ -38,7 +38,17 @@ public class EstateService {
         return convertToDTO(estate);
     }
 
-  
+    // Update
+    public EstateDTO updateEstate(Integer id, EstateDTO estateDTO) {
+        Estate existingEstate = estateRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Estate not found with id: " + id));
+
+        existingEstate.setEstateName(estateDTO.getEstateName());
+
+        Estate updatedEstate = estateRepository.save(existingEstate);
+        return convertToDTO(updatedEstate);
+    }
+
 
     // Helper: Entity -> DTO
     private EstateDTO convertToDTO(Estate estate) {
