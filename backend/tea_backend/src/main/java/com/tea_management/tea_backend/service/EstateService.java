@@ -49,6 +49,13 @@ public class EstateService {
         return convertToDTO(updatedEstate);
     }
 
+    // Delete
+    public void deleteEstate(Integer id) {
+        if (!estateRepository.existsById(id)) {
+            throw new RuntimeException("Estate not found with id: " + id);
+        }
+        estateRepository.deleteById(id);
+    }
 
     // Helper: Entity -> DTO
     private EstateDTO convertToDTO(Estate estate) {
