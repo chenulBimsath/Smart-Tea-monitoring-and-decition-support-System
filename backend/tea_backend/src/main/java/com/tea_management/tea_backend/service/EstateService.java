@@ -31,6 +31,14 @@ public class EstateService {
                 .collect(Collectors.toList());
     }
 
+    // Read One
+    public EstateDTO getEstateById(Integer id) {
+        Estate estate = estateRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Estate not found with id: " + id));
+        return convertToDTO(estate);
+    }
+
+  
 
     // Helper: Entity -> DTO
     private EstateDTO convertToDTO(Estate estate) {
