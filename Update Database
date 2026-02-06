@@ -1,0 +1,30 @@
+Update Database
+CREATE TABLE Division (
+    division_id SERIAL PRIMARY KEY,
+    estate_id INT NOT NULL,
+    division_name VARCHAR(100) NOT NULL,
+
+    CONSTRAINT fk_division_estate
+        FOREIGN KEY (estate_id)
+        REFERENCES Estate(estate_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
+CREATE TABLE Division_Crop_Details (
+    crop_id SERIAL PRIMARY KEY,
+    division_id INT NOT NULL,
+    year INT NOT NULL,
+    month VARCHAR(20) NOT NULL,
+
+    green_leaf_kg NUMERIC(10,2) NOT NULL,
+    pluckers INT NOT NULL,
+    cash_kilo NUMERIC(10,2) NOT NULL,
+    without_cash_avg NUMERIC(5,2) NOT NULL,
+
+    CONSTRAINT fk_crop_division
+        FOREIGN KEY (division_id)
+        REFERENCES Division(division_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
