@@ -1,67 +1,64 @@
 package com.tea_management.tea_backend.service;
-
+import org.modelmapper.ModelMapper;
 import com.tea_management.tea_backend.dto.EstateDTO;
 import com.tea_management.tea_backend.model.Estate;
 import com.tea_management.tea_backend.repository.EstateRepository;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class EstateService {
 
     @Autowired
     private EstateRepository estateRepository;
 
-    // Create
-    public EstateDTO createEstate(EstateDTO estateDTO) {
-        Estate estate = new Estate();
-        estate.setEstateName(estateDTO.getEstateName());
+    @Autowired
+    private ModelMapper modelMapper;
 
-        Estate savedEstate = estateRepository.save(estate);
-        return convertToDTO(savedEstate);
-    }
-
-    // Read All
     public List<EstateDTO> getAllEstates() {
-        return estateRepository.findAll().stream()
-                .map(this::convertToDTO)
+        List<Estate> estates = estateRepository.findAll();
+        return estates.stream()
+                .map(estate -> modelMapper.map(estate, EstateDTO.class))
                 .collect(Collectors.toList());
     }
 
-    // Read One
+    public EstateDTO createEstate(EstateDTO estateDTO) {
+        // 1. Map DTO to Entity
+        Estate estate = modelMapper.map(estateDTO, Estate.class);
+        // 2. Save
+        Estate savedEstate = estateRepository.save(estate);
+        // 3. Map back to DTO
+        return modelMapper.map(savedEstate, EstateDTO.class);
+    }
+
+    public EstateDTO updateEstate(EstateDTO estateDTO) {
+        Estate estate = modelMapper.map(estateDTO, Estate.class);
+        Estate savedEstate = estateRepository.save(estate);
+        return modelMapper.map(savedEstate, EstateDTO.class);
+    }
+
+    // Kept this because your Controller needs it for GET /api/estates/{id}
     public EstateDTO getEstateById(Integer id) {
         Estate estate = estateRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Estate not found with id: " + id));
-        return convertToDTO(estate);
+                .orElseThrow(() -> new RuntimeException("Estate not found"));
+        return modelMapper.map(estate, EstateDTO.class);
     }
 
-    // Update
-    public EstateDTO updateEstate(Integer id, EstateDTO estateDTO) {
-        Estate existingEstate = estateRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Estate not found with id: " + id));
-
-        existingEstate.setEstateName(estateDTO.getEstateName());
-
-        Estate updatedEstate = estateRepository.save(existingEstate);
-        return convertToDTO(updatedEstate);
+    public String deleteEstate(EstateDTO estateDTO) {
+        estateRepository.delete(modelMapper.map(estateDTO, Estate.class));
+        return "Estate deleted";
     }
 
-    // Delete
-    public void deleteEstate(Integer id) {
-        if (!estateRepository.existsById(id)) {
-            throw new RuntimeException("Estate not found with id: " + id);
-        }
+    // Optional: Overload to keep your Controller working if it passes ID
+    public String deleteEstate(Integer id) {
         estateRepository.deleteById(id);
-    }
-
-    // Helper: Entity -> DTO
-    private EstateDTO convertToDTO(Estate estate) {
-        EstateDTO dto = new EstateDTO();
-        dto.setEstateId(estate.getEstateId());
-        dto.setEstateName(estate.getEstateName());
-        return dto;
+        return "Estate deleted";
     }
 }
