@@ -24,6 +24,14 @@ public class EstateService {
         return convertToDTO(savedEstate);
     }
 
+    // Read All
+    public List<EstateDTO> getAllEstates() {
+        return estateRepository.findAll().stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+
     // Helper: Entity -> DTO
     private EstateDTO convertToDTO(Estate estate) {
         EstateDTO dto = new EstateDTO();
