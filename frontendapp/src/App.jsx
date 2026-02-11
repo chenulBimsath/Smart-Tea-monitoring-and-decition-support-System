@@ -1,11 +1,11 @@
 import { useState } from "react";
 
-import Navbar from "./components/navbar";
-import Splash from "./components/splash";
-import Features from "./components/features";
-import HowItWorks from "./components/howItWorks";
-import Contact from "./components/contact";
-import SignInPopup from "./components/signinPopup";
+import Navbar from "./components/landing_page/navbar";
+import Splash from "./components/landing_page/splash";
+import Features from "./components/landing_page/features";
+import HowItWorks from "./components/landing_page/howItWorks";
+import Contact from "./components/landing_page/contact";
+import SignInPopup from "./components/landing_page/signinPopup";
 
 
 export default function App() {
