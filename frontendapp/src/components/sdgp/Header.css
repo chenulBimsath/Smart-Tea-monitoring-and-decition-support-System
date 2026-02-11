@@ -1,0 +1,40 @@
+.app-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 70px;
+
+  background-color: #2f7d5b;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 24px;
+
+  /* subtle curve like your image */
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+
+  z-index: 1000;
+}
+
+/* LEFT (LOGO) */
+.header-left {
+  display: flex;
+  align-items: center;
+}
+
+.header-logo {
+  height: 40px;
+}
+
+/* RIGHT (PROFILE ICON) */
+.header-right {
+  color: #ffffff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
