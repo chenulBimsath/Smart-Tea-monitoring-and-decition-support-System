@@ -1,0 +1,44 @@
+Create tables in db
+
+CREATE TABLE Estate (
+    estate_id SERIAL PRIMARY KEY,
+    estate_name VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE Fertilizer_Application (
+    application_id SERIAL PRIMARY KEY,
+    estate_id INT NOT NULL,
+    year INT NOT NULL,
+    fertilizer_type VARCHAR(50) NOT NULL,
+    quantity_kg NUMERIC(10,2) NOT NULL,
+    division VARCHAR(50),
+    CONSTRAINT fk_fertilizer_estate
+        FOREIGN KEY (estate_id)
+        REFERENCES Estate(estate_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
+CREATE TABLE Financial_Performance (
+    finance_id SERIAL PRIMARY KEY,
+    estate_id INT NOT NULL,
+    year INT NOT NULL,
+    total_income NUMERIC(12,2) NOT NULL,
+    total_cost NUMERIC(12,2) NOT NULL,
+    profit_loss NUMERIC(12,2) NOT NULL,
+    CONSTRAINT fk_finance_estate
+        FOREIGN KEY (estate_id)
+        REFERENCES Estate(estate_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
+CREATE TABLE "User" (
+    user_id SERIAL PRIMARY KEY,
+    full_name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    password_hash VARCHAR(255) NOT NULL,
+    role VARCHAR(50) NOT NULL,
+    phone VARCHAR(20),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
