@@ -5,7 +5,7 @@ import Splash from "./components/pages/Splash";
 import Features from "./components/pages/Features";
 import HowItWorks from "./components/pages/HowItWorks";
 import Contact from "./components/pages/Contact";
-import SignInPopup from "./components/pages/SignInPopup";
+import SignInPopup from "./components/pages/SigninPopup";
 
 export default function LandingPage() {
   const [showSignIn, setShowSignIn] = useState(false);
