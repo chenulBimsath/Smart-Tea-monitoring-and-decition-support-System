@@ -14,7 +14,6 @@ import AddFieldData from "./components/sdgp/AddFieldData";
 
 export default function SDGPApp() {
 
-
   const [page, setPage] = useState("fieldmap");
 
   return (
@@ -27,23 +26,27 @@ export default function SDGPApp() {
 
         <main className="app-main">
 
-
-
           {page === "fieldmap" && <FieldMap />}
-          {page === "fielddata" && <FieldData />}
-          {page === "climaterisk" && <ClimateRisk />}
+
           {page === "fielddata" && <FieldData setPage={setPage} />}
-          {page === "climate" && <ClimateRisk />}
-          {page === "rangala" && <RangalaData setPage={setPage} />}
-          {page === "rangaladivisions" && <RangalaDivisions setPage={setPage} />}
-          {page === "rangaladata" && <RangalaData setPage={setPage} />}
-          {page === "newdivisiondata" && <NewDivisionData setPage={setPage} />}
-          {page === "addfield" && <AddFieldData setPage={setPage} />}
+
           {page === "climaterisk" && <ClimateRisk />}
-          {page === "rangaladivisions" && (<RangalaDivisions setPage={setPage} />)}
-          {page === "rangaladata" && (<RangalaData setPage={setPage} />)}
-          {page === "newdivisiondata" && (<NewDivisionData setPage={setPage} />)}
-          {page === "addfield" && (<AddFieldData setPage={setPage} />)}
+
+          {page === "rangaladivisions" && (
+            <RangalaDivisions setPage={setPage} />
+          )}
+
+          {page === "rangaladata" && (
+            <RangalaData setPage={setPage} />
+          )}
+
+          {page === "newdivisiondata" && (
+            <NewDivisionData setPage={setPage} />
+          )}
+
+          {page === "addfield" && (
+            <AddFieldData setPage={setPage} />
+          )}
 
         </main>
 
