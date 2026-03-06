@@ -8,6 +8,10 @@ import DashboardCards from "./components/sdgp/DashboardCards";
 import FieldMap from "./components/sdgp/FieldMap";
 import FieldData from "./components/sdgp/FieldData";
 import ClimateRisk from "./components/sdgp/ClimateRisk";
+import RangalaData from "./components/sdgp/RangalaData";
+import RangalaDivisions from "./components/sdgp/RangalaDivisions";
+import NewDivisionData from "./components/sdgp/NewDivisionData";
+import AddFieldData from "./components/sdgp/AddFieldData";
 
 export default function SDGPApp() {
   const [page, setPage] = useState("dashboard");
@@ -22,8 +26,13 @@ export default function SDGPApp() {
         <main className="app-main">
           {page === "dashboard" && <DashboardCards />}
           {page === "fieldmap" && <FieldMap />}
-          {page === "fielddata" && <FieldData />}
+          {page === "fielddata" && <FieldData setPage={setPage} />}
           {page === "climate" && <ClimateRisk />}
+          {page === "rangala" && <RangalaData setPage={setPage} />}
+          {page === "rangaladivisions" && <RangalaDivisions setPage={setPage} />}
+          {page === "rangaladata" && <RangalaData setPage={setPage} />}
+          {page === "newdivisiondata" && <NewDivisionData setPage={setPage} />}
+          {page === "addfield" && <AddFieldData setPage={setPage} />}
         </main>
       </div>
     </>
