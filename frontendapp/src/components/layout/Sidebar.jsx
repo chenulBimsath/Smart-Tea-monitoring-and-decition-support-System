@@ -38,8 +38,8 @@ export default function Sidebar({ page, setPage }) {
         <SidebarItem
           icon={<Cloud size={18} />}
           label="Climate Risk"
-          active={page === "climate"}
-          onClick={() => setPage("climate")}
+          active={page === "climaterisk"}
+          onClick={() => setPage("climaterisk")}
         />
 
         <SidebarItem

@@ -12,44 +12,60 @@ export default function ClimateRisk() {
   const [district, setDistrict] = useState("Talawakelle");
   const [weather, setWeather] = useState(null);
   const [forecast, setForecast] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const API_KEY = import.meta.env.VITE_WEATHER_API_KEY;
   const { lat, lon } = DISTRICTS[district];
 
   useEffect(() => {
-    if (!API_KEY) return;
+    if (!API_KEY) {
+      console.error("Weather API key missing");
+      return;
+    }
 
-    setWeather(null);
+    setLoading(true);
 
-    // Current
+    // Current Weather
     fetch(
       `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${API_KEY}`
     )
       .then((res) => res.json())
-      .then(setWeather);
+      .then((data) => {
+        setWeather(data);
+      })
+      .catch((err) => console.error(err));
 
     // Forecast
     fetch(
       `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=metric&appid=${API_KEY}`
     )
       .then((res) => res.json())
-      .then((data) =>
-        setForecast(data.list.filter((_, i) => i % 8 === 0).slice(0, 7))
-      );
-  }, [district, API_KEY, lat, lon]);
+      .then((data) => {
+        const daily =
+          data.list?.filter((_, i) => i % 8 === 0).slice(0, 7) || [];
+        setForecast(daily);
+        setLoading(false);
+      })
+      .catch((err) => console.error(err));
+  }, [district, lat, lon, API_KEY]);
 
-  if (!weather) return <div className="loading">Loading climate data…</div>;
+  if (loading) {
+    return <div className="loading">Loading climate data...</div>;
+  }
+
+  if (!weather || !weather.main) {
+    return <div className="loading">Weather data unavailable</div>;
+  }
 
   return (
     <div className="climate-container colorful">
       {/* HEADER */}
       <div className="climate-header">
         <div>
-          <h2> {district} Tea Plantation</h2>
+          <h2>{district} Tea Plantation</h2>
           <span>Live Climate Conditions</span>
         </div>
 
-        {/* District Selector */}
         <select
           className="district-select"
           value={district}
@@ -63,7 +79,7 @@ export default function ClimateRisk() {
         </select>
       </div>
 
-      {/* CARDS */}
+      {/* METRIC CARDS */}
       <div className="metric-grid">
         <div className="metric-card temp">
           <h1>{Math.round(weather.main.temp)}°C</h1>
@@ -79,10 +95,10 @@ export default function ClimateRisk() {
         </div>
 
         <div className="metric-card wind">
-          <h1>{weather.wind.speed} km/h</h1>
+          <h1>{weather.wind?.speed ?? 0} km/h</h1>
           <p>Wind Speed</p>
           <span className="badge">
-            {weather.wind.speed > 10 ? "High Risk" : "Normal"}
+            {weather.wind?.speed > 10 ? "High Risk" : "Normal"}
           </span>
         </div>
 
@@ -94,6 +110,7 @@ export default function ClimateRisk() {
 
       {/* FORECAST */}
       <h3 className="section-title">7-Day Forecast</h3>
+
       <div className="forecast-row">
         {forecast.map((day, i) => (
           <div className="forecast-card" key={i}>
@@ -102,12 +119,14 @@ export default function ClimateRisk() {
                 weekday: "short",
               })}
             </span>
+
             <img
-              src={`https://openweathermap.org/img/wn/${day.weather[0].icon}.png`}
-              alt=""
+              src={`https://openweathermap.org/img/wn/${day.weather?.[0]?.icon}.png`}
+              alt="weather icon"
             />
+
             <span className="temp">
-              {Math.round(day.main.temp)}°C
+              {Math.round(day.main?.temp ?? 0)}°C
             </span>
           </div>
         ))}
