@@ -1,6 +1,6 @@
 import "./FieldData.css";
 
-export default function FieldData() {
+export default function FieldData({ setPage }) {
   const stats = [
     { title: "Total States", value: 4 },
     { title: "Total Fields", value: 24 },
@@ -20,7 +20,7 @@ export default function FieldData() {
       {/* HEADER */}
       <div className="fielddata-header">
         <h2>Field Data</h2>
-        <button className="add-field-btn">+ Add New Field Data</button>
+        <button className="add-field-btn" onClick={() => setPage("addfield")}>+ Add New Field Data</button>
       </div>
 
       {/* TOP STATS */}
@@ -33,11 +33,9 @@ export default function FieldData() {
         ))}
       </div>
 
-      {/* REGIONS */}
-
       <div className="region-grid">
         {regions.map((region, index) => (
-          <div key={index} className="region-box">
+          <div key={index} className="region-box" onClick={() => { if (region.name === "Rangala") setPage("rangaladivisions"); }}>
             <span>{region.name}</span>
             <span className="arrow">→</span>
           </div>

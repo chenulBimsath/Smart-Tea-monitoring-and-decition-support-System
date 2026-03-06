@@ -1,0 +1,72 @@
+.rangala-page{
+  padding:30px;
+  background:#f5f7f6;
+}
+
+.rangala-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:25px;
+}
+
+.header-buttons{
+  display:flex;
+  gap:10px;
+}
+
+.back-btn{
+  background:#2f7d5b;
+  color:white;
+  border:none;
+  padding:10px 20px;
+  border-radius:10px;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.back-btn:hover{
+  background:#25684a;
+}
+
+.table-container{
+  background:white;
+  padding:20px;
+  border-radius:10px;
+}
+
+.data-table{
+  width:100%;
+  border-collapse:collapse;
+}
+
+.data-table th{
+  background:#2f7d5b;
+  color:white;
+  padding:12px;
+}
+
+.data-table td{
+  padding:12px;
+  border-bottom:1px solid #eee;
+}
+
+.pagination{
+  margin-top:25px;
+  display:flex;
+  justify-content:center;
+  gap:20px;
+}
+
+.pagination button{
+  padding:10px 20px;
+  background:#2f7d5b;
+  color:white;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+.pagination button:disabled{
+  background:#ccc;
+}

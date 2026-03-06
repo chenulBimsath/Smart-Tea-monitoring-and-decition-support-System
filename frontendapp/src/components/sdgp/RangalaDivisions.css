@@ -1,0 +1,62 @@
+.division-page {
+  padding: 30px;
+  background: #f5f7f6;
+}
+
+.division-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.division-header h2 {
+  margin: 0;
+}
+
+.back-btn {
+  background: #4CAF50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.back-btn:hover {
+  background: #45a049;
+}
+
+.division-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 30px;
+}
+
+.division-card {
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: 0.3s;
+  min-height: 100px;
+}
+
+.division-card:hover {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.division-card h3 {
+  margin: 0;
+  color: #2f7d5b;
+}
+
+.arrow {
+  font-size: 20px;
+  color: #2f7d5b;
+}
