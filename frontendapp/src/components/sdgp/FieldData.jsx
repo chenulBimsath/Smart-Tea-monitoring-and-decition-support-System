@@ -8,11 +8,25 @@ export default function FieldData({ setPage }) {
     { title: "Stressed Fields", value: 4 },
   ];
 
-  const regions = [
-    { name: "Rangala" },
-    { name: "Galle" },
-    { name: "Badulla" },
-    { name: "Nuwaraeliya" },
+  // Cleaned up the image paths. 
+  // (Assuming these images are directly inside your 'public' folder)
+ const regions = [
+    { 
+      name: "Rangala", 
+      image: "/1.png"  // Notice it's just /1.png now
+    },
+    { 
+      name: "Hatton", 
+      image: "/2.png" 
+    },
+    { 
+      name: "Badulla", 
+      image: "/3.png" 
+    },
+    { 
+      name: "Nuwara Eliya", 
+      image: "/4.png" 
+    },
   ];
 
   return (
@@ -20,7 +34,9 @@ export default function FieldData({ setPage }) {
       {/* HEADER */}
       <div className="fielddata-header">
         <h2>Field Data</h2>
-        <button className="add-field-btn" onClick={() => setPage("addfield")}>+ Add New Field Data</button>
+        <button className="add-field-btn" onClick={() => setPage("addfield")}>
+          + Add New Field Data
+        </button>
       </div>
 
       {/* TOP STATS */}
@@ -33,11 +49,21 @@ export default function FieldData({ setPage }) {
         ))}
       </div>
 
+      {/* REGION SQUARES */}
       <div className="region-grid">
         {regions.map((region, index) => (
-          <div key={index} className="region-box" onClick={() => { if (region.name === "Rangala") setPage("rangaladivisions"); }}>
-            <span>{region.name}</span>
-            <span className="arrow">→</span>
+          <div 
+            key={index} 
+            className="region-box" 
+            onClick={() => { if (region.name === "Rangala") setPage("rangaladivisions"); }}
+          >
+            <div className="region-image-wrapper">
+              <img src={region.image} alt={region.name} className="region-image" />
+            </div>
+            <div className="region-info">
+              <span>{region.name}</span>
+              <span className="arrow">→</span>
+            </div>
           </div>
         ))}
       </div>
