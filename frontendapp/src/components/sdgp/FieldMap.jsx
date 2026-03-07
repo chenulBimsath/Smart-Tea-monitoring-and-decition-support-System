@@ -1,109 +1,180 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   MapContainer,
   TileLayer,
-  Circle,
   ZoomControl,
-  Marker,
+  GeoJSON,
   useMap
 } from "react-leaflet";
+import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "./FieldMap.css";
 
-
-const DISTRICTS = {
-  talawakelle: { center: [6.94, 80.79], zoom: 12 },
-  kothmale: { center: [7.05, 80.64], zoom: 12 },
-  hatton: { center: [6.90, 80.60], zoom: 12 },
-  nuwaraeliya: { center: [6.9697, 80.7891], zoom: 13 }
-};
-
-
-function FlyToLocation({ target }) {
+/* ================= AUTO ZOOM ================= */
+function ZoomToLayer({ data }) {
   const map = useMap();
 
-  if (target) {
-    map.flyTo(target.center, target.zoom);
-  }
+  useEffect(() => {
+    if (!data?.features?.length) return;
+
+    const layer = L.geoJSON(data);
+    map.fitBounds(layer.getBounds());
+  }, [data, map]);
 
   return null;
 }
 
+/* ================= FILTERED LAYER ================= */
+function FilteredLayer({ geoData, selectedDivision, showNDVI }) {
+  if (!geoData || !selectedDivision) return null;
+
+  const target = selectedDivision.toLowerCase().trim();
+
+  const filteredFeatures = geoData.features.filter((feature) => {
+    const name = feature.properties?.name?.toLowerCase().trim() || "";
+    return name.includes(target);
+  });
+
+  if (!filteredFeatures.length) return null;
+
+  const filteredData = {
+    type: "FeatureCollection",
+    features: filteredFeatures
+  };
+
+  return (
+    <>
+      <ZoomToLayer data={filteredData} />
+
+      <GeoJSON
+        key={selectedDivision + showNDVI}  // ⭐ force reset layer
+        data={filteredData}
+        style={{
+          color: "#2e7d32",
+          weight: 2,
+          fillColor: "#4caf50",
+          fillOpacity: showNDVI ? 0.5 : 0
+        }}
+        onEachFeature={(feature, layer) => {
+          layer.bindPopup(`<strong>${feature.properties?.name}</strong>`);
+        }}
+      />
+    </>
+  );
+}
+
+/* ================= MAIN COMPONENT ================= */
 export default function FieldMap() {
-  const [selectedDistrict, setSelectedDistrict] = useState("talawakelle");
+  const [geoData, setGeoData] = useState(null);
+  const [selectedDistrict, setSelectedDistrict] = useState("rangala");
+  const [selectedDivision, setSelectedDivision] = useState("");
+  const [viewMode, setViewMode] = useState("boundary");
+
+  /* ================= LOAD GEOJSON ================= */
+  useEffect(() => {
+    fetch("/data/tea-fields.json")
+      .then((res) => res.json())
+      .then((data) => {
+        const cleanData = {
+          ...data,
+          features: data.features.filter(
+            (f) => f.properties?.["@geometry-type"] !== "groundoverlay"
+          )
+        };
+        setGeoData(cleanData);
+      })
+      .catch((err) => console.error("GeoJSON load error:", err));
+  }, []);
+
+  /* District → division mapping */
+  const districtDivisions = {
+    rangala: ["NEW DIVIDON", "RANGALA 1", "RANGALA 2", "RANGALA 3"],
+    galle: ["NEW DIVIDON"],
+    nuwaraeliya: ["NEW DIVIDON"]
+  };
+
+  const divisions = districtDivisions[selectedDistrict] || [];
 
   return (
     <div className="fieldmap-layout">
-      {/* MAP */}
+      {/* ================= MAP ================= */}
       <div className="fieldmap-map">
         <MapContainer
-          center={[6.95, 80.78]}
-          zoom={11}
+          center={[7.34, 80.80]}
+          zoom={13}
           zoomControl={false}
           className="leaflet-map"
         >
           <ZoomControl position="topleft" />
 
-          <TileLayer
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+
+          <FilteredLayer
+            geoData={geoData}
+            selectedDivision={selectedDivision}
+            showNDVI={viewMode === "ndvi"}
           />
-
-        
-          <FlyToLocation target={DISTRICTS[selectedDistrict]} />
-
-          {/* Marker */}
-          <Marker position={DISTRICTS[selectedDistrict].center} />
         </MapContainer>
       </div>
 
-      
+      {/* ================= FILTER PANEL ================= */}
       <div className="filter-card">
-        <div className="filter-card-header">
-          <h3>Districts</h3>
-          <span className="filter-menu">☰</span>
-        </div>
+        <h3>Districts</h3>
 
-        <div className="filter-group">
-          <label>
+        {["rangala", "galle", "nuwaraeliya"].map((district) => (
+          <label key={district}>
             <input
               type="radio"
               name="district"
-              checked={selectedDistrict === "talawakelle"}
-              onChange={() => setSelectedDistrict("talawakelle")}
+              checked={selectedDistrict === district}
+              onChange={() => {
+                setSelectedDistrict(district);
+                setSelectedDivision("");
+              }}
             />
-            Talawakelle
+            {district}
           </label>
+        ))}
 
-          <label>
+        <div className="divider" />
+
+        <h3>Division</h3>
+
+        {divisions.map((division) => (
+          <label key={division}>
             <input
               type="radio"
-              name="district"
-              checked={selectedDistrict === "kothmale"}
-              onChange={() => setSelectedDistrict("kothmale")}
+              name="division"
+              checked={selectedDivision === division}
+              onChange={() => setSelectedDivision(division)}
             />
-            Kothmale
+            {division}
           </label>
+        ))}
 
-          <label>
-            <input
-              type="radio"
-              name="district"
-              checked={selectedDistrict === "hatton"}
-              onChange={() => setSelectedDistrict("hatton")}
-            />
-            Hatton
-          </label>
+        <div className="divider" />
 
-          <label>
-            <input
-              type="radio"
-              name="district"
-              checked={selectedDistrict === "nuwaraeliya"}
-              onChange={() => setSelectedDistrict("nuwaraeliya")}
-            />
-            Nuwara Eliya
-          </label>
-        </div>
+        <h3>View Mode</h3>
+
+        <label>
+          <input
+            type="radio"
+            name="view"
+            checked={viewMode === "boundary"}
+            onChange={() => setViewMode("boundary")}
+          />
+          Show Division (Boundary Only)
+        </label>
+
+        <label>
+          <input
+            type="radio"
+            name="view"
+            checked={viewMode === "ndvi"}
+            onChange={() => setViewMode("ndvi")}
+          />
+          Show NDVI (Green Area)
+        </label>
       </div>
     </div>
   );
