@@ -58,12 +58,12 @@ export default function Sidebar({ page, setPage }) {
       </div>
 
       <div className="sidebar-bottom">
-        <SidebarItem
+ <SidebarItem
   icon={<User size={18} />}
   label="My Profile"
   active={page === "profile"}
   onClick={() => setPage("profile")}
- />
+/>
 
 
         <SidebarItem icon={<LogOut size={18} />} label="Logout" />

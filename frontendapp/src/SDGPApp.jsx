@@ -7,6 +7,7 @@ import Sidebar from "./components/layout/Sidebar";
 import FieldMap from "./components/sdgp/FieldMap";
 import FieldData from "./components/sdgp/FieldData";
 import ClimateRisk from "./components/sdgp/ClimateRisk";
+import MyProfile from "./components/sdgp/MyProfile";
 import RangalaData from "./components/sdgp/RangalaData";
 import RangalaDivisions from "./components/sdgp/RangalaDivisions";
 import NewDivisionData from "./components/sdgp/NewDivisionData";
@@ -31,6 +32,8 @@ export default function SDGPApp() {
           {page === "fielddata" && <FieldData setPage={setPage} />}
 
           {page === "climaterisk" && <ClimateRisk />}
+
+          {page === "profile" && <MyProfile />}
 
           {page === "rangaladivisions" && (
             <RangalaDivisions setPage={setPage} />
