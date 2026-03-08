@@ -1,47 +1,55 @@
 import React, { useState, useEffect } from "react";
 import "./CropYields.css"; 
 
-// Helper function to generate dummy data
-const generateMockData = (year, count) => {
-  const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-  const divisions = ["DIV-01", "DIV-02", "DIV-03", "DIV-04"]; // Added division list
-  
-  return Array.from({ length: count }, (_, i) => ({
-    crop_id: `RY-${year.toString().slice(-2)}${(i + 1).toString().padStart(3, '0')}`,
-    division_id: divisions[Math.floor(Math.random() * divisions.length)], // Randomly assign a division
-    month: months[i % 12],
-    green_leaf: Math.floor(Math.random() * 150) + 200, 
-    pluckers: Math.floor(Math.random() * 10) + 8,      
-    cash_kilo: Math.floor(Math.random() * 30) + 100,   
-    without_cash_avg: Math.floor(Math.random() * 20) + 80 
-  }));
-};
-
-const initialData = {
-  2021: generateMockData(2021, 65),
-  2022: generateMockData(2022, 58),
-  2023: generateMockData(2023, 72),
-  2024: generateMockData(2024, 60),
-  2025: generateMockData(2025, 85)
-};
-
 export default function CropYields({ setPage }) {
-  const [data, setData] = useState(initialData);
+  // 1. State for real backend data
+  const [allData, setAllData] = useState([]);
+  const [availableYears, setAvailableYears] = useState([]);
+  const [selectedYear, setSelectedYear] = useState("");
   
-  const years = Object.keys(data).sort((a, b) => b - a);
-  const [selectedYear, setSelectedYear] = useState(years[0]);
-  
+  // Pagination & UI State
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 25;
-
   const [openMenuId, setOpenMenuId] = useState(null);
 
+  // 2. Fetch Data from Spring Boot on component mount
+  useEffect(() => {
+    fetchCropData();
+  }, []);
+
+  const fetchCropData = async () => {
+    try {
+      // Assuming your Spring Boot backend is running on port 8080
+      const response = await fetch("http://localhost:8080/api/crop-details");
+      if (!response.ok) throw new Error("Network response was not ok");
+      
+      const data = await response.json();
+      setAllData(data);
+
+      // 3. Extract unique years from the real data and sort newest to oldest
+      const years = [...new Set(data.map(item => item.year))].sort((a, b) => b - a);
+      setAvailableYears(years);
+      
+      // Set the default dropdown value to the most recent year
+      if (years.length > 0) {
+        setSelectedYear(years[0].toString());
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      alert("Failed to load data from backend.");
+    }
+  };
+
+  // Reset pagination when year changes
   useEffect(() => {
     setCurrentPage(1);
     setOpenMenuId(null); 
   }, [selectedYear]);
 
-  const yearData = data[selectedYear] || [];
+  // 4. Filter data dynamically based on the selected year dropdown
+  const yearData = allData.filter(item => item.year.toString() === selectedYear.toString());
+  
+  // Pagination Logic
   const totalPages = Math.ceil(yearData.length / rowsPerPage);
   const startIndex = (currentPage - 1) * rowsPerPage;
   const currentRows = yearData.slice(startIndex, startIndex + rowsPerPage);
@@ -50,19 +58,29 @@ export default function CropYields({ setPage }) {
     setOpenMenuId(openMenuId === id ? null : id);
   };
 
-  const handleDelete = (crop_id) => {
-    if (window.confirm(`Are you sure you want to delete record ${crop_id}?`)) {
-      const updatedYearData = yearData.filter(item => item.crop_id !== crop_id);
-      setData({
-        ...data,
-        [selectedYear]: updatedYearData
-      });
-      setOpenMenuId(null); 
+  // 5. Connect Delete button to the Backend API
+  const handleDelete = async (cropId) => {
+    if (window.confirm(`Are you sure you want to delete record ${cropId}?`)) {
+      try {
+        const response = await fetch(`http://localhost:8080/api/crop-details/${cropId}`, {
+          method: "DELETE"
+        });
+
+        if (response.ok) {
+          // Remove it from the local React state immediately so the UI updates
+          setAllData(prevData => prevData.filter(item => item.cropId !== cropId));
+          setOpenMenuId(null); 
+        } else {
+          alert("Failed to delete record.");
+        }
+      } catch (error) {
+        console.error("Error deleting data:", error);
+      }
     }
   };
 
   const handleUpdate = (item) => {
-    alert(`Opening update form for ${item.crop_id}...`);
+    alert(`Update functionality for Crop ID ${item.cropId} will go here!`);
     setOpenMenuId(null);
   };
 
@@ -83,7 +101,7 @@ export default function CropYields({ setPage }) {
               value={selectedYear}
               onChange={(e) => setSelectedYear(e.target.value)}
             >
-              {years.map((year) => (
+              {availableYears.map((year) => (
                 <option key={year} value={year}>
                   {year}
                 </option>
@@ -102,51 +120,55 @@ export default function CropYields({ setPage }) {
           <thead>
             <tr>
               <th>Batch ID</th>
-              <th>Division ID</th> {/* Added Division Header */}
+              <th>Division ID</th>
               <th>Harvest Month</th>
               <th>Green Leaf Yield</th>
               <th>Plucker Count</th>
               <th>Rate (LKR/kg)</th>
-              <th>Average Margin</th>
               <th className="action-header">Actions</th>
             </tr>
           </thead>
           <tbody>
-            {currentRows.map((item, index) => (
-              <tr key={index}>
-                <td className="id-cell">{item.crop_id}</td>
-                <td style={{fontWeight: '600', color: '#555'}}>{item.division_id}</td> {/* Added Division Data */}
-                <td className="month-cell">{item.month}</td>
-                <td><span className="yield-badge">{item.green_leaf} kg</span></td>
-                <td>{item.pluckers} Workers</td>
-                <td className="currency-cell">රු. {item.cash_kilo}.00</td>
-                <td>{item.without_cash_avg}%</td>
-                
-                <td 
-                  className="action-cell" 
-                  onMouseLeave={() => setOpenMenuId(null)}
-                >
-                  <button 
-                    className="action-dots-btn" 
-                    onClick={() => toggleMenu(item.crop_id)}
-                  >
-                    ⋮
-                  </button>
-
-                  {openMenuId === item.crop_id && (
-                    <div className="action-dropdown">
-                      <button onClick={() => handleUpdate(item)}>
-                        ✎ Update
-                      </button>
-                      <button className="delete-btn" onClick={() => handleDelete(item.crop_id)}>
-                        🗑 Delete
-                      </button>
-                    </div>
-                  )}
-                </td>
-
+            {currentRows.length === 0 ? (
+              <tr>
+                <td colSpan="7" style={{textAlign: "center", padding: "30px"}}>No data available for {selectedYear}</td>
               </tr>
-            ))}
+            ) : (
+              currentRows.map((item, index) => (
+                <tr key={index}>
+                  {/* Notice how item.crop_id is now item.cropId to match your Java DTO */}
+                  <td className="id-cell">{item.cropId}</td>
+                  <td style={{fontWeight: '600', color: '#555'}}>{item.divisionId}</td>
+                  <td className="month-cell">{item.month}</td>
+                  <td><span className="yield-badge">{item.greenLeafKg} kg</span></td>
+                  <td>{item.pluckers} Workers</td>
+                  <td className="currency-cell">රු. {item.cashKilo}</td>
+                  
+                  <td 
+                    className="action-cell" 
+                    onMouseLeave={() => setOpenMenuId(null)}
+                  >
+                    <button 
+                      className="action-dots-btn" 
+                      onClick={() => toggleMenu(item.cropId)}
+                    >
+                      ⋮
+                    </button>
+
+                    {openMenuId === item.cropId && (
+                      <div className="action-dropdown">
+                        <button onClick={() => handleUpdate(item)}>
+                          ✎ Update
+                        </button>
+                        <button className="delete-btn" onClick={() => handleDelete(item.cropId)}>
+                          🗑 Delete
+                        </button>
+                      </div>
+                    )}
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
 
