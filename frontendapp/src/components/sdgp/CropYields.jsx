@@ -2,76 +2,74 @@ import React, { useState, useEffect } from "react";
 import "./CropYields.css"; 
 
 export default function CropYields({ setPage }) {
-  // 1. State for real backend data
+  // --- STATE ---
   const [allData, setAllData] = useState([]);
   const [availableYears, setAvailableYears] = useState([]);
   const [selectedYear, setSelectedYear] = useState("");
   
-  // Pagination & UI State
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 25;
   const [openMenuId, setOpenMenuId] = useState(null);
 
-  // 2. Fetch Data from Spring Boot on component mount
+  // --- FETCH DATA FROM SPRING BOOT ---
   useEffect(() => {
     fetchCropData();
   }, []);
 
   const fetchCropData = async () => {
     try {
-      // Assuming your Spring Boot backend is running on port 8080
+      // Make sure this URL matches your backend port (usually 8080)
       const response = await fetch("http://localhost:8080/api/crop-details");
       if (!response.ok) throw new Error("Network response was not ok");
       
       const data = await response.json();
       setAllData(data);
 
-      // 3. Extract unique years from the real data and sort newest to oldest
+      // Extract unique years from the real data, sort descending (newest first)
       const years = [...new Set(data.map(item => item.year))].sort((a, b) => b - a);
       setAvailableYears(years);
       
-      // Set the default dropdown value to the most recent year
+      // Set the default dropdown value
       if (years.length > 0) {
         setSelectedYear(years[0].toString());
       }
     } catch (error) {
       console.error("Error fetching data:", error);
-      alert("Failed to load data from backend.");
     }
   };
 
-  // Reset pagination when year changes
+  // Reset pagination when year dropdown changes
   useEffect(() => {
     setCurrentPage(1);
     setOpenMenuId(null); 
   }, [selectedYear]);
 
-  // 4. Filter data dynamically based on the selected year dropdown
-  const yearData = allData.filter(item => item.year.toString() === selectedYear.toString());
+  // --- FILTER & PAGINATE ---
+  // Filter data for the selected year
+  const yearData = allData.filter(item => item.year && item.year.toString() === selectedYear.toString());
   
-  // Pagination Logic
   const totalPages = Math.ceil(yearData.length / rowsPerPage);
   const startIndex = (currentPage - 1) * rowsPerPage;
   const currentRows = yearData.slice(startIndex, startIndex + rowsPerPage);
 
+  // --- ACTIONS ---
   const toggleMenu = (id) => {
     setOpenMenuId(openMenuId === id ? null : id);
   };
 
-  // 5. Connect Delete button to the Backend API
   const handleDelete = async (cropId) => {
-    if (window.confirm(`Are you sure you want to delete record ${cropId}?`)) {
+    if (window.confirm(`Are you sure you want to delete Crop ID ${cropId}?`)) {
       try {
         const response = await fetch(`http://localhost:8080/api/crop-details/${cropId}`, {
           method: "DELETE"
         });
 
         if (response.ok) {
-          // Remove it from the local React state immediately so the UI updates
+          // Remove deleted item from the React UI immediately
           setAllData(prevData => prevData.filter(item => item.cropId !== cropId));
           setOpenMenuId(null); 
         } else {
-          alert("Failed to delete record.");
+          alert("Failed to delete record from backend.");
         }
       } catch (error) {
         console.error("Error deleting data:", error);
@@ -101,6 +99,7 @@ export default function CropYields({ setPage }) {
               value={selectedYear}
               onChange={(e) => setSelectedYear(e.target.value)}
             >
+              {availableYears.length === 0 && <option>No data</option>}
               {availableYears.map((year) => (
                 <option key={year} value={year}>
                   {year}
@@ -131,12 +130,15 @@ export default function CropYields({ setPage }) {
           <tbody>
             {currentRows.length === 0 ? (
               <tr>
-                <td colSpan="7" style={{textAlign: "center", padding: "30px"}}>No data available for {selectedYear}</td>
+                <td colSpan="7" style={{textAlign: "center", padding: "30px", color: "#666"}}>
+                  No records found for {selectedYear}. Please add data to your database.
+                </td>
               </tr>
             ) : (
               currentRows.map((item, index) => (
-                <tr key={index}>
-                  {/* Notice how item.crop_id is now item.cropId to match your Java DTO */}
+                <tr key={item.cropId || index}>
+                  
+                  {/* EXACT MAPPINGS TO JAVA DTO */}
                   <td className="id-cell">{item.cropId}</td>
                   <td style={{fontWeight: '600', color: '#555'}}>{item.divisionId}</td>
                   <td className="month-cell">{item.month}</td>
@@ -144,6 +146,7 @@ export default function CropYields({ setPage }) {
                   <td>{item.pluckers} Workers</td>
                   <td className="currency-cell">රු. {item.cashKilo}</td>
                   
+                  {/* Action Menu */}
                   <td 
                     className="action-cell" 
                     onMouseLeave={() => setOpenMenuId(null)}
@@ -172,6 +175,7 @@ export default function CropYields({ setPage }) {
           </tbody>
         </table>
 
+        {/* Pagination Footer */}
         {totalPages > 0 && (
           <div className="table-footer">
             <button 

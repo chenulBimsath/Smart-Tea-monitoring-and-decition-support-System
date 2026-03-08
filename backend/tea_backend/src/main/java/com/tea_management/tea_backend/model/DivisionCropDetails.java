@@ -29,7 +29,8 @@ public class DivisionCropDetails {
     @Column(name = "month", nullable = false, length = 20)
     private String month;
 
-    @Column(name = "green_leaf_kg", nullable = false, precision = 10, scale = 2)
+    // Corrected to match the database column "green_leaf"
+    @Column(name = "green_leaf", nullable = false, precision = 10, scale = 2)
     private BigDecimal greenLeafKg;
 
     @Column(name = "pluckers", nullable = false)
