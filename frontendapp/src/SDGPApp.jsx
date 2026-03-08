@@ -13,6 +13,9 @@ import RangalaDivisions from "./components/sdgp/RangalaDivisions";
 import NewDivisionData from "./components/sdgp/NewDivisionData";
 import AddFieldData from "./components/sdgp/AddFieldData";
 
+// 1. ADD THIS IMPORT (Make sure the path matches where you saved CropYields.jsx)
+import CropYields from "./components/sdgp/CropYields"; 
+
 export default function SDGPApp() {
 
   const [page, setPage] = useState("fieldmap");
@@ -49,6 +52,11 @@ export default function SDGPApp() {
 
           {page === "addfield" && (
             <AddFieldData setPage={setPage} />
+          )}
+
+          {/* 2. ADD THIS LINE SO THE DASHBOARD KNOWS TO SHOW THE TABLE */}
+          {page === "crop_yields" && (
+            <CropYields setPage={setPage} />
           )}
 
         </main>

@@ -1,0 +1,138 @@
+.yield-page {
+  padding: 40px;
+  background-color: #f4f7f6;
+  min-height: 100vh;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Header Section */
+.yield-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 30px;
+}
+
+.yield-header h1 {
+  color: #1a4331;
+  margin: 0;
+  font-size: 2rem;
+}
+
+.yield-header p {
+  color: #666;
+  margin: 5px 0 0 0;
+}
+
+.back-to-grid-btn {
+  background: #2f7d5b;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.back-to-grid-btn:hover {
+  background: #246347;
+  transform: translateX(-5px);
+}
+
+/* Table Design */
+.table-card {
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  border: 1px solid #e0e0e0;
+}
+
+.yield-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+}
+
+.yield-table th {
+  background-color: #2f7d5b;
+  color: #ffffff;
+  text-align: left;
+  padding: 20px 25px;
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.yield-table td {
+  padding: 20px 25px;
+  border-bottom: 1px solid #f0f0f0;
+  color: #333;
+  font-size: 1rem;
+}
+
+/* Zebra Stripes */
+.yield-table tbody tr:nth-child(even) {
+  background-color: #fafdfb;
+}
+
+.yield-table tbody tr:hover {
+  background-color: #f0f7f3;
+}
+
+/* Specific Cell Styling */
+.id-cell {
+  font-weight: 700;
+  color: #2f7d5b;
+}
+
+.yield-badge {
+  background: #e8f5e9;
+  color: #2e7d32;
+  padding: 6px 14px;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.currency-cell {
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: bold;
+}
+
+/* Footer & Pagination */
+.table-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 25px;
+  background: #fdfdfd;
+}
+
+.nav-btn {
+  background: #ffffff;
+  color: #2f7d5b;
+  border: 2px solid #2f7d5b;
+  padding: 8px 18px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 700;
+  transition: 0.3s;
+}
+
+.nav-btn:hover:not(:disabled) {
+  background: #2f7d5b;
+  color: white;
+}
+
+.nav-btn:disabled {
+  border-color: #ccc;
+  color: #ccc;
+  cursor: not-allowed;
+}
+
+.year-label {
+  color: #555;
+  font-size: 1rem;
+}
