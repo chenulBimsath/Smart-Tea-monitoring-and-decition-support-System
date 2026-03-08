@@ -11,11 +11,13 @@ export default function CropYields({ setPage }) {
   const rowsPerPage = 25;
   const [openMenuId, setOpenMenuId] = useState(null);
 
-  // --- POPUP STATE ---
-  const [isAddPopupOpen, setIsAddPopupOpen] = useState(false);
+  // --- POPUP & EDIT STATE ---
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [editingItemId, setEditingItemId] = useState(null); // Tracks if we are editing (holds ID) or adding (null)
+  
   const [formData, setFormData] = useState({
     division_number: "",
-    year: "2026", // Default to 2026
+    year: "2026", 
     month: "", 
     green_leaf: "",
     pluckers: "",
@@ -75,6 +77,7 @@ export default function CropYields({ setPage }) {
         });
 
         if (response.ok) {
+          // Remove from UI immediately
           setAllData(prevData => prevData.filter(item => item.cropId !== cropId));
           setOpenMenuId(null); 
         } else {
@@ -86,12 +89,35 @@ export default function CropYields({ setPage }) {
     }
   };
 
+  // --- POPUP OPENERS ---
+  const openAddPopup = () => {
+    setEditingItemId(null); // Null means Add Mode
+    setFormData({
+      division_number: "",
+      year: "2026", 
+      month: "",
+      green_leaf: "",
+      pluckers: "",
+      rate: "" 
+    });
+    setIsPopupOpen(true);
+  };
+
   const handleUpdate = (item) => {
-    alert(`Update functionality for Crop ID ${item.cropId} will go here!`);
+    setEditingItemId(item.cropId); // Set ID for Edit Mode
+    setFormData({
+      division_number: item.divisionId, // Pre-fill with existing data
+      year: item.year || "2026",
+      month: item.month,
+      green_leaf: item.greenLeafKg,
+      pluckers: item.pluckers,
+      rate: item.cashKilo
+    });
+    setIsPopupOpen(true);
     setOpenMenuId(null);
   };
 
-  // --- POPUP FORM HANDLERS ---
+  // --- FORM HANDLERS ---
   const handleFormChange = (e) => {
     setFormData({
       ...formData,
@@ -99,14 +125,12 @@ export default function CropYields({ setPage }) {
     });
   };
 
-  // NEW POST REQUEST LOGIC ADDED HERE
-  const handleAddSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // 1. Clean the division ID (extract numbers from strings like "DIV-01")
-    const numericDivisionId = parseInt(formData.division_number.replace(/\D/g, ''), 10);
+    // Clean division ID to ensure it's just numbers
+    const numericDivisionId = parseInt(formData.division_number.toString().replace(/\D/g, ''), 10);
 
-    // 2. Map frontend form state to match Spring Boot DTO exactly
     const payload = {
       divisionId: numericDivisionId,
       year: parseInt(formData.year, 10),
@@ -114,13 +138,19 @@ export default function CropYields({ setPage }) {
       greenLeafKg: parseFloat(formData.green_leaf),
       pluckers: parseInt(formData.pluckers, 10),
       cashKilo: parseFloat(formData.rate),
-      withoutCashAvg: 0 // Defaulting to 0 since it's required in the backend but not in the form
+      withoutCashAvg: 0 
     };
 
     try {
-      // 3. Send POST request to Spring Boot
-      const response = await fetch("http://localhost:8080/api/crop-details", {
-        method: "POST",
+      // Determine if we are Adding (POST) or Editing (PUT)
+      const url = editingItemId 
+        ? `http://localhost:8080/api/crop-details/${editingItemId}`
+        : "http://localhost:8080/api/crop-details";
+        
+      const method = editingItemId ? "PUT" : "POST";
+
+      const response = await fetch(url, {
+        method: method,
         headers: {
           "Content-Type": "application/json",
         },
@@ -131,18 +161,11 @@ export default function CropYields({ setPage }) {
         throw new Error("Failed to save data. Please check if the Division ID exists.");
       }
 
-      alert("Field Data Added Successfully!");
+      alert(editingItemId ? "Data Updated Successfully!" : "Field Data Added Successfully!");
       
-      // 4. Close popup, reset form, and instantly refresh the table data
-      setIsAddPopupOpen(false);
-      setFormData({
-        division_number: "",
-        year: "2026", 
-        month: "",
-        green_leaf: "",
-        pluckers: "",
-        rate: "" 
-      });
+      // Close popup, clear state, and refresh table
+      setIsPopupOpen(false);
+      setEditingItemId(null);
       fetchCropData(); 
 
     } catch (error) {
@@ -164,7 +187,7 @@ export default function CropYields({ setPage }) {
         {/* CENTER: Add Button */}
         <button 
           className="add-record-btn" 
-          onClick={() => setIsAddPopupOpen(true)}
+          onClick={openAddPopup}
         >
           + Add New Data Record
         </button>
@@ -260,18 +283,18 @@ export default function CropYields({ setPage }) {
         )}
       </div>
 
-      {/* --- POPUP MODAL --- */}
-      {isAddPopupOpen && (
+      {/* --- POPUP MODAL (Handles Both Add and Edit) --- */}
+      {isPopupOpen && (
         <div className="modal-overlay">
           <div className="modal-content">
             <div className="modal-header">
-              <h2>Add Field Data</h2>
-              <button className="close-btn" onClick={() => setIsAddPopupOpen(false)}>
+              <h2>{editingItemId ? "Edit Field Data" : "Add Field Data"}</h2>
+              <button className="close-btn" onClick={() => setIsPopupOpen(false)}>
                 ✕
               </button>
             </div>
 
-            <form className="add-form" onSubmit={handleAddSubmit}>
+            <form className="add-form" onSubmit={handleSubmit}>
               <div className="form-group">
                 <label>Division Number</label>
                 <input 
@@ -353,7 +376,7 @@ export default function CropYields({ setPage }) {
               </div>
 
               <button type="submit" className="submit-btn">
-                Save Field Data
+                {editingItemId ? "Save Changes" : "Save Field Data"}
               </button>
             </form>
           </div>
