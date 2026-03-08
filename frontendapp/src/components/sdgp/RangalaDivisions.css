@@ -1,17 +1,21 @@
 .division-page {
-  padding: 30px;
+  /* Increased top padding to push everything lower, and side padding to spread it out */
+  padding: 50px; 
   background: #f5f7f6;
+  min-height: 100vh; /* Ensures the background covers the whole screen */
 }
 
 .division-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 25px;
+  /* Increased margin-bottom to spread the header further from the cards */
+  margin-bottom: 45px; 
 }
 
 .division-header h2 {
   margin: 0;
+  font-size: 28px; /* Optional: Slightly larger text for the header */
 }
 
 .back-btn {
@@ -22,6 +26,7 @@
   border-radius: 10px;
   cursor: pointer;
   transition: 0.3s;
+  font-weight: 500;
 }
 
 .back-btn:hover {
@@ -31,32 +36,36 @@
 .division-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 30px;
+  /* Increased gap to spread the cards further apart */
+  gap: 40px; 
 }
 
 .division-card {
   background: white;
-  padding: 30px;
+  padding: 30px 40px; /* Increased side padding inside the cards */
   border-radius: 10px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* Softened the shadow a bit */
   display: flex;
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
   transition: 0.3s;
-  min-height: 100px;
+  /* Increased min-height to make the cards a bit taller */
+  min-height: 110px; 
 }
 
 .division-card:hover {
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px); /* Adds a slight lift effect on hover */
 }
 
 .division-card h3 {
   margin: 0;
   color: #2f7d5b;
+  font-size: 18px;
 }
 
 .arrow {
-  font-size: 20px;
+  font-size: 24px;
   color: #2f7d5b;
 }
