@@ -8,12 +8,10 @@ export default function FieldData({ setPage }) {
     { title: "Stressed Fields", value: 4 },
   ];
 
-  // Cleaned up the image paths. 
-  // (Assuming these images are directly inside your 'public' folder)
- const regions = [
+  const regions = [
     { 
       name: "Rangala", 
-      image: "/1.png"  // Notice it's just /1.png now
+      image: "/1.png"  
     },
     { 
       name: "Hatton", 
@@ -34,9 +32,6 @@ export default function FieldData({ setPage }) {
       {/* HEADER */}
       <div className="fielddata-header">
         <h2>Field Data</h2>
-        <button className="add-field-btn" onClick={() => setPage("addfield")}>
-          + Add New Field Data
-        </button>
       </div>
 
       {/* TOP STATS */}
