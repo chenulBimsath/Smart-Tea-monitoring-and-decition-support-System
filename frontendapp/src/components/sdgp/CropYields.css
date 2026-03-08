@@ -348,18 +348,35 @@
   font-size: 0.9rem;
 }
 
-.form-group input {
+.form-group input,
+.form-group select {
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 8px;
   font-size: 14px;
   transition: 0.2s;
+  background-color: white;
+  font-family: inherit;
 }
 
-.form-group input:focus {
+.form-group input:focus,
+.form-group select:focus {
   outline: none;
   border-color: #2f7d5b;
   box-shadow: 0 0 0 2px rgba(47, 125, 91, 0.2);
+}
+
+/* Specific style for the read-only year input */
+.form-group input.readonly-input {
+  background-color: #e9ecef;
+  color: #6c757d;
+  cursor: not-allowed;
+  font-weight: bold;
+}
+
+/* Specific style to make sure the select dropdown looks like inputs */
+.form-group select.month-select {
+  cursor: pointer;
 }
 
 .submit-btn {

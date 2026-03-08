@@ -14,13 +14,18 @@ export default function CropYields({ setPage }) {
   // --- POPUP STATE ---
   const [isAddPopupOpen, setIsAddPopupOpen] = useState(false);
   const [formData, setFormData] = useState({
-    plantation_name: "",
-    division_name: "",
-    year: "",
-    month: "",
+    division_number: "",
+    year: "2026", // Default to 2026
+    month: "", 
     green_leaf: "",
-    pluckers: ""
+    pluckers: "",
+    rate: "" 
   });
+
+  const months = [
+    "January", "February", "March", "April", "May", "June", 
+    "July", "August", "September", "October", "November", "December"
+  ];
 
   // --- FETCH DATA FROM SPRING BOOT ---
   useEffect(() => {
@@ -94,24 +99,56 @@ export default function CropYields({ setPage }) {
     });
   };
 
-  const handleAddSubmit = (e) => {
+  // NEW POST REQUEST LOGIC ADDED HERE
+  const handleAddSubmit = async (e) => {
     e.preventDefault();
-    console.log("New Field Data:", formData);
     
-    // TODO: Add your fetch POST request here to save to Spring Boot backend
-    
-    alert("Field Data Added Successfully!");
-    
-    // Reset form and close popup
-    setFormData({
-      plantation_name: "",
-      division_name: "",
-      year: "",
-      month: "",
-      green_leaf: "",
-      pluckers: ""
-    });
-    setIsAddPopupOpen(false);
+    // 1. Clean the division ID (extract numbers from strings like "DIV-01")
+    const numericDivisionId = parseInt(formData.division_number.replace(/\D/g, ''), 10);
+
+    // 2. Map frontend form state to match Spring Boot DTO exactly
+    const payload = {
+      divisionId: numericDivisionId,
+      year: parseInt(formData.year, 10),
+      month: formData.month,
+      greenLeafKg: parseFloat(formData.green_leaf),
+      pluckers: parseInt(formData.pluckers, 10),
+      cashKilo: parseFloat(formData.rate),
+      withoutCashAvg: 0 // Defaulting to 0 since it's required in the backend but not in the form
+    };
+
+    try {
+      // 3. Send POST request to Spring Boot
+      const response = await fetch("http://localhost:8080/api/crop-details", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to save data. Please check if the Division ID exists.");
+      }
+
+      alert("Field Data Added Successfully!");
+      
+      // 4. Close popup, reset form, and instantly refresh the table data
+      setIsAddPopupOpen(false);
+      setFormData({
+        division_number: "",
+        year: "2026", 
+        month: "",
+        green_leaf: "",
+        pluckers: "",
+        rate: "" 
+      });
+      fetchCropData(); 
+
+    } catch (error) {
+      console.error("Error saving data:", error);
+      alert(error.message);
+    }
   };
 
   return (
@@ -236,33 +273,83 @@ export default function CropYields({ setPage }) {
 
             <form className="add-form" onSubmit={handleAddSubmit}>
               <div className="form-group">
-                <label>Plantation Name</label>
-                <input type="text" name="plantation_name" value={formData.plantation_name} onChange={handleFormChange} placeholder="Enter Plantation Name" required />
-              </div>
-
-              <div className="form-group">
-                <label>Division Name</label>
-                <input type="text" name="division_name" value={formData.division_name} onChange={handleFormChange} placeholder="Enter Division Name" required />
+                <label>Division Number</label>
+                <input 
+                  type="text" 
+                  name="division_number" 
+                  value={formData.division_number} 
+                  onChange={handleFormChange} 
+                  placeholder="Enter Division Number (e.g., DIV-01)" 
+                  required 
+                />
               </div>
 
               <div className="form-group">
                 <label>Year</label>
-                <input type="number" name="year" value={formData.year} onChange={handleFormChange} placeholder="Enter Year" required />
+                <input 
+                  type="number" 
+                  name="year" 
+                  value={formData.year} 
+                  readOnly 
+                  className="readonly-input"
+                />
               </div>
 
               <div className="form-group">
                 <label>Month</label>
-                <input type="text" name="month" value={formData.month} onChange={handleFormChange} placeholder="Enter Month" required />
+                <select 
+                  name="month" 
+                  value={formData.month} 
+                  onChange={handleFormChange} 
+                  required
+                  className="month-select"
+                >
+                  <option value="" disabled>Select a Month</option>
+                  {months.map((m, index) => (
+                    <option key={index} value={m}>{m}</option>
+                  ))}
+                </select>
               </div>
 
               <div className="form-group">
                 <label>Green Leaf (kg)</label>
-                <input type="number" name="green_leaf" value={formData.green_leaf} onChange={handleFormChange} placeholder="Enter Green Leaf Amount" required />
+                <input 
+                  type="number" 
+                  name="green_leaf" 
+                  value={formData.green_leaf} 
+                  onChange={handleFormChange} 
+                  placeholder="Enter Green Leaf Amount" 
+                  required 
+                  min="0"
+                  step="0.01"
+                />
               </div>
 
               <div className="form-group">
                 <label>Number of Pluckers</label>
-                <input type="number" name="pluckers" value={formData.pluckers} onChange={handleFormChange} placeholder="Enter Pluckers Count" required />
+                <input 
+                  type="number" 
+                  name="pluckers" 
+                  value={formData.pluckers} 
+                  onChange={handleFormChange} 
+                  placeholder="Enter Pluckers Count" 
+                  required 
+                  min="0"
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Rate (LKR/kg)</label>
+                <input 
+                  type="number" 
+                  name="rate" 
+                  value={formData.rate} 
+                  onChange={handleFormChange} 
+                  placeholder="Enter Rate per kg" 
+                  required 
+                  min="0"
+                  step="0.01"
+                />
               </div>
 
               <button type="submit" className="submit-btn">
