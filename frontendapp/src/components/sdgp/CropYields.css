@@ -40,12 +40,52 @@
   transform: translateX(-5px);
 }
 
+/* Header Controls & Dropdown */
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.dropdown-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dropdown-container label {
+  font-weight: 600;
+  color: #1a4331;
+  font-size: 0.9rem;
+}
+
+.year-dropdown {
+  padding: 10px 15px;
+  border-radius: 8px;
+  border: 2px solid #2f7d5b;
+  background-color: white;
+  color: #1a4331;
+  font-weight: 700;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.year-dropdown:hover {
+  border-color: #246347;
+  background-color: #f0f7f3;
+}
+
+.year-dropdown:focus {
+  box-shadow: 0 0 0 3px rgba(47, 125, 91, 0.2);
+}
+
 /* Table Design */
 .table-card {
   background: white;
   border-radius: 15px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  overflow: hidden;
+  overflow: visible; /* Changed from hidden so the action dropdown doesn't get cut off at the bottom */
   border: 1px solid #e0e0e0;
 }
 
@@ -53,6 +93,8 @@
   width: 100%;
   border-collapse: collapse;
   background: white;
+  border-radius: 15px 15px 0 0;
+  overflow: hidden;
 }
 
 .yield-table th {
@@ -108,6 +150,7 @@
   align-items: center;
   padding: 20px 25px;
   background: #fdfdfd;
+  border-radius: 0 0 15px 15px;
 }
 
 .nav-btn {
@@ -135,4 +178,82 @@
 .year-label {
   color: #555;
   font-size: 1rem;
+}
+
+/* --- Action Menu Styles (New Additions) --- */
+.action-header {
+  text-align: center !important;
+  width: 80px;
+}
+
+.action-cell {
+  text-align: center;
+  position: relative; /* Crucial for positioning the dropdown relative to the cell */
+}
+
+.action-dots-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #888;
+  cursor: pointer;
+  padding: 0 10px;
+  border-radius: 50%;
+  transition: background-color 0.2s, color 0.2s;
+  line-height: 1;
+  height: 35px;
+  width: 35px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.action-dots-btn:hover {
+  background-color: #e8eee9;
+  color: #2f7d5b;
+}
+
+/* The Popup Menu */
+.action-dropdown {
+  position: absolute;
+  right: 50px; /* Pushes it to the left of the 3 dots */
+  top: 15px;
+  background: white;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  border-radius: 8px;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  width: 140px;
+  overflow: hidden;
+}
+
+.action-dropdown button {
+  padding: 12px 16px;
+  border: none;
+  background: white;
+  text-align: left;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-family: inherit;
+  font-weight: 600;
+  color: #444;
+  transition: background 0.2s;
+}
+
+.action-dropdown button:hover {
+  background-color: #f4f7f6;
+  color: #2f7d5b;
+}
+
+.action-dropdown button.delete-btn {
+  color: #d32f2f;
+  border-top: 1px solid #f0f0f0;
+}
+
+.action-dropdown button.delete-btn:hover {
+  background-color: #ffebee;
+  color: #b71c1c;
 }
