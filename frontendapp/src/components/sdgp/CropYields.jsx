@@ -11,6 +11,24 @@ export default function CropYields({ setPage }) {
   const rowsPerPage = 25;
   const [openMenuId, setOpenMenuId] = useState(null);
 
+  // --- POPUP & EDIT STATE ---
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [editingItemId, setEditingItemId] = useState(null); // Tracks if we are editing (holds ID) or adding (null)
+  
+  const [formData, setFormData] = useState({
+    division_number: "",
+    year: "2026", 
+    month: "", 
+    green_leaf: "",
+    pluckers: "",
+    rate: "" 
+  });
+
+  const months = [
+    "January", "February", "March", "April", "May", "June", 
+    "July", "August", "September", "October", "November", "December"
+  ];
+
   // --- FETCH DATA FROM SPRING BOOT ---
   useEffect(() => {
     fetchCropData();
@@ -18,18 +36,15 @@ export default function CropYields({ setPage }) {
 
   const fetchCropData = async () => {
     try {
-      // Make sure this URL matches your backend port (usually 8080)
       const response = await fetch("http://localhost:8080/api/crop-details");
       if (!response.ok) throw new Error("Network response was not ok");
       
       const data = await response.json();
       setAllData(data);
 
-      // Extract unique years from the real data, sort descending (newest first)
       const years = [...new Set(data.map(item => item.year))].sort((a, b) => b - a);
       setAvailableYears(years);
       
-      // Set the default dropdown value
       if (years.length > 0) {
         setSelectedYear(years[0].toString());
       }
@@ -38,16 +53,13 @@ export default function CropYields({ setPage }) {
     }
   };
 
-  // Reset pagination when year dropdown changes
   useEffect(() => {
     setCurrentPage(1);
     setOpenMenuId(null); 
   }, [selectedYear]);
 
   // --- FILTER & PAGINATE ---
-  // Filter data for the selected year
   const yearData = allData.filter(item => item.year && item.year.toString() === selectedYear.toString());
-  
   const totalPages = Math.ceil(yearData.length / rowsPerPage);
   const startIndex = (currentPage - 1) * rowsPerPage;
   const currentRows = yearData.slice(startIndex, startIndex + rowsPerPage);
@@ -65,7 +77,7 @@ export default function CropYields({ setPage }) {
         });
 
         if (response.ok) {
-          // Remove deleted item from the React UI immediately
+          // Remove from UI immediately
           setAllData(prevData => prevData.filter(item => item.cropId !== cropId));
           setOpenMenuId(null); 
         } else {
@@ -77,19 +89,110 @@ export default function CropYields({ setPage }) {
     }
   };
 
+  // --- POPUP OPENERS ---
+  const openAddPopup = () => {
+    setEditingItemId(null); // Null means Add Mode
+    setFormData({
+      division_number: "",
+      year: "2026", 
+      month: "",
+      green_leaf: "",
+      pluckers: "",
+      rate: "" 
+    });
+    setIsPopupOpen(true);
+  };
+
   const handleUpdate = (item) => {
-    alert(`Update functionality for Crop ID ${item.cropId} will go here!`);
+    setEditingItemId(item.cropId); // Set ID for Edit Mode
+    setFormData({
+      division_number: item.divisionId, // Pre-fill with existing data
+      year: item.year || "2026",
+      month: item.month,
+      green_leaf: item.greenLeafKg,
+      pluckers: item.pluckers,
+      rate: item.cashKilo
+    });
+    setIsPopupOpen(true);
     setOpenMenuId(null);
+  };
+
+  // --- FORM HANDLERS ---
+  const handleFormChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    // Clean division ID to ensure it's just numbers
+    const numericDivisionId = parseInt(formData.division_number.toString().replace(/\D/g, ''), 10);
+
+    const payload = {
+      divisionId: numericDivisionId,
+      year: parseInt(formData.year, 10),
+      month: formData.month,
+      greenLeafKg: parseFloat(formData.green_leaf),
+      pluckers: parseInt(formData.pluckers, 10),
+      cashKilo: parseFloat(formData.rate),
+      withoutCashAvg: 0 
+    };
+
+    try {
+      // Determine if we are Adding (POST) or Editing (PUT)
+      const url = editingItemId 
+        ? `http://localhost:8080/api/crop-details/${editingItemId}`
+        : "http://localhost:8080/api/crop-details";
+        
+      const method = editingItemId ? "PUT" : "POST";
+
+      const response = await fetch(url, {
+        method: method,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to save data. Please check if the Division ID exists.");
+      }
+
+      alert(editingItemId ? "Data Updated Successfully!" : "Field Data Added Successfully!");
+      
+      // Close popup, clear state, and refresh table
+      setIsPopupOpen(false);
+      setEditingItemId(null);
+      fetchCropData(); 
+
+    } catch (error) {
+      console.error("Error saving data:", error);
+      alert(error.message);
+    }
   };
 
   return (
     <div className="yield-page">
       <div className="yield-header">
+        
+        {/* LEFT: Title */}
         <div className="title-section">
           <h1>Rangala Yield Analytics</h1>
           <p>Analyzing harvest performance for the year {selectedYear}</p>
         </div>
 
+        {/* CENTER: Add Button */}
+        <button 
+          className="add-record-btn" 
+          onClick={openAddPopup}
+        >
+          + Add New Data Record
+        </button>
+
+        {/* RIGHT: Controls */}
         <div className="header-controls">
           <div className="dropdown-container">
             <label htmlFor="year-select">Select Harvest Year: </label>
@@ -137,8 +240,6 @@ export default function CropYields({ setPage }) {
             ) : (
               currentRows.map((item, index) => (
                 <tr key={item.cropId || index}>
-                  
-                  {/* EXACT MAPPINGS TO JAVA DTO */}
                   <td className="id-cell">{item.cropId}</td>
                   <td style={{fontWeight: '600', color: '#555'}}>{item.divisionId}</td>
                   <td className="month-cell">{item.month}</td>
@@ -146,26 +247,15 @@ export default function CropYields({ setPage }) {
                   <td>{item.pluckers} Workers</td>
                   <td className="currency-cell">රු. {item.cashKilo}</td>
                   
-                  {/* Action Menu */}
-                  <td 
-                    className="action-cell" 
-                    onMouseLeave={() => setOpenMenuId(null)}
-                  >
-                    <button 
-                      className="action-dots-btn" 
-                      onClick={() => toggleMenu(item.cropId)}
-                    >
+                  <td className="action-cell" onMouseLeave={() => setOpenMenuId(null)}>
+                    <button className="action-dots-btn" onClick={() => toggleMenu(item.cropId)}>
                       ⋮
                     </button>
 
                     {openMenuId === item.cropId && (
                       <div className="action-dropdown">
-                        <button onClick={() => handleUpdate(item)}>
-                          ✎ Update
-                        </button>
-                        <button className="delete-btn" onClick={() => handleDelete(item.cropId)}>
-                          🗑 Delete
-                        </button>
+                        <button onClick={() => handleUpdate(item)}>✎ Update</button>
+                        <button className="delete-btn" onClick={() => handleDelete(item.cropId)}>🗑 Delete</button>
                       </div>
                     )}
                   </td>
@@ -175,14 +265,9 @@ export default function CropYields({ setPage }) {
           </tbody>
         </table>
 
-        {/* Pagination Footer */}
         {totalPages > 0 && (
           <div className="table-footer">
-            <button 
-              className="nav-btn" 
-              onClick={() => { setCurrentPage(p => p - 1); setOpenMenuId(null); }} 
-              disabled={currentPage === 1}
-            >
+            <button className="nav-btn" onClick={() => { setCurrentPage(p => p - 1); setOpenMenuId(null); }} disabled={currentPage === 1}>
               ← Previous 25
             </button>
             <div className="year-label">
@@ -191,16 +276,112 @@ export default function CropYields({ setPage }) {
                 (Total records: {yearData.length})
               </span>
             </div>
-            <button 
-              className="nav-btn" 
-              onClick={() => { setCurrentPage(p => p + 1); setOpenMenuId(null); }} 
-              disabled={currentPage === totalPages}
-            >
+            <button className="nav-btn" onClick={() => { setCurrentPage(p => p + 1); setOpenMenuId(null); }} disabled={currentPage === totalPages}>
               Next 25 →
             </button>
           </div>
         )}
       </div>
+
+      {/* --- POPUP MODAL (Handles Both Add and Edit) --- */}
+      {isPopupOpen && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h2>{editingItemId ? "Edit Field Data" : "Add Field Data"}</h2>
+              <button className="close-btn" onClick={() => setIsPopupOpen(false)}>
+                ✕
+              </button>
+            </div>
+
+            <form className="add-form" onSubmit={handleSubmit}>
+              <div className="form-group">
+                <label>Division Number</label>
+                <input 
+                  type="text" 
+                  name="division_number" 
+                  value={formData.division_number} 
+                  onChange={handleFormChange} 
+                  placeholder="Enter Division Number (e.g., DIV-01)" 
+                  required 
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Year</label>
+                <input 
+                  type="number" 
+                  name="year" 
+                  value={formData.year} 
+                  readOnly 
+                  className="readonly-input"
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Month</label>
+                <select 
+                  name="month" 
+                  value={formData.month} 
+                  onChange={handleFormChange} 
+                  required
+                  className="month-select"
+                >
+                  <option value="" disabled>Select a Month</option>
+                  {months.map((m, index) => (
+                    <option key={index} value={m}>{m}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="form-group">
+                <label>Green Leaf (kg)</label>
+                <input 
+                  type="number" 
+                  name="green_leaf" 
+                  value={formData.green_leaf} 
+                  onChange={handleFormChange} 
+                  placeholder="Enter Green Leaf Amount" 
+                  required 
+                  min="0"
+                  step="0.01"
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Number of Pluckers</label>
+                <input 
+                  type="number" 
+                  name="pluckers" 
+                  value={formData.pluckers} 
+                  onChange={handleFormChange} 
+                  placeholder="Enter Pluckers Count" 
+                  required 
+                  min="0"
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Rate (LKR/kg)</label>
+                <input 
+                  type="number" 
+                  name="rate" 
+                  value={formData.rate} 
+                  onChange={handleFormChange} 
+                  placeholder="Enter Rate per kg" 
+                  required 
+                  min="0"
+                  step="0.01"
+                />
+              </div>
+
+              <button type="submit" className="submit-btn">
+                {editingItemId ? "Save Changes" : "Save Field Data"}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
