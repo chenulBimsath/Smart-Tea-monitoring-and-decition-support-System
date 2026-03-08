@@ -4,8 +4,11 @@ import "./CropYields.css";
 // Helper function to generate dummy data
 const generateMockData = (year, count) => {
   const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  const divisions = ["DIV-01", "DIV-02", "DIV-03", "DIV-04"]; // Added division list
+  
   return Array.from({ length: count }, (_, i) => ({
     crop_id: `RY-${year.toString().slice(-2)}${(i + 1).toString().padStart(3, '0')}`,
+    division_id: divisions[Math.floor(Math.random() * divisions.length)], // Randomly assign a division
     month: months[i % 12],
     green_leaf: Math.floor(Math.random() * 150) + 200, 
     pluckers: Math.floor(Math.random() * 10) + 8,      
@@ -99,6 +102,7 @@ export default function CropYields({ setPage }) {
           <thead>
             <tr>
               <th>Batch ID</th>
+              <th>Division ID</th> {/* Added Division Header */}
               <th>Harvest Month</th>
               <th>Green Leaf Yield</th>
               <th>Plucker Count</th>
@@ -111,13 +115,13 @@ export default function CropYields({ setPage }) {
             {currentRows.map((item, index) => (
               <tr key={index}>
                 <td className="id-cell">{item.crop_id}</td>
+                <td style={{fontWeight: '600', color: '#555'}}>{item.division_id}</td> {/* Added Division Data */}
                 <td className="month-cell">{item.month}</td>
                 <td><span className="yield-badge">{item.green_leaf} kg</span></td>
                 <td>{item.pluckers} Workers</td>
                 <td className="currency-cell">රු. {item.cash_kilo}.00</td>
                 <td>{item.without_cash_avg}%</td>
                 
-                {/* --- Added onMouseLeave here to auto-hide the menu --- */}
                 <td 
                   className="action-cell" 
                   onMouseLeave={() => setOpenMenuId(null)}
