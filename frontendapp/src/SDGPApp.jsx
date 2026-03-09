@@ -12,6 +12,11 @@ import RangalaData from "./components/sdgp/RangalaData";
 import RangalaDivisions from "./components/sdgp/RangalaDivisions";
 import NewDivisionData from "./components/sdgp/NewDivisionData";
 import AddFieldData from "./components/sdgp/AddFieldData";
+import FertilizerData from "./components/sdgp/FertilizerData";
+import FertilizerRangalaDivisions from "./components/sdgp/FertilizerRangalaDivisions";
+
+
+import CropYields from "./components/sdgp/CropYields"; 
 
 // 1. ADD THIS IMPORT (Make sure the path matches where you saved CropYields.jsx)
 import CropYields from "./components/sdgp/CropYields"; 
@@ -31,34 +36,22 @@ export default function SDGPApp() {
         <main className="app-main">
 
           {page === "fieldmap" && <FieldMap />}
-
           {page === "fielddata" && <FieldData setPage={setPage} />}
-
           {page === "climaterisk" && <ClimateRisk />}
-
           {page === "profile" && <MyProfile />}
-
-          {page === "rangaladivisions" && (
-            <RangalaDivisions setPage={setPage} />
-          )}
-
-          {page === "rangaladata" && (
-            <RangalaData setPage={setPage} />
-          )}
-
-          {page === "newdivisiondata" && (
-            <NewDivisionData setPage={setPage} />
-          )}
-
-          {page === "addfield" && (
-            <AddFieldData setPage={setPage} />
-          )}
-
-          {/* 2. ADD THIS LINE SO THE DASHBOARD KNOWS TO SHOW THE TABLE */}
-          {page === "crop_yields" && (
-            <CropYields setPage={setPage} />
-          )}
-
+          {page === "rangaladivisions" && ( <RangalaDivisions setPage={setPage} /> )}
+          {page === "rangaladata" && ( <RangalaData setPage={setPage} />)}
+          {page === "newdivisiondata" && (<NewDivisionData setPage={setPage} />         )}
+          {page === "addfield" && (<AddFieldData setPage={setPage} /> )}
+          {page === "crop_yields" && (<CropYields setPage={setPage} />)}
+          {page === "profile" && <MyProfile />}
+          {page === "rangaladivisions" && (<RangalaDivisions setPage={setPage} />)}
+          {page === "rangaladata" && (<RangalaData setPage={setPage} />)}
+          {page === "newdivisiondata" && (<NewDivisionData setPage={setPage} />)}
+          {page === "addfield" && (<AddFieldData setPage={setPage} />)}
+          {page === "crop_yields" && (<CropYields setPage={setPage} />)}
+          {page === "fertilizerdata" && (<FertilizerData setPage={setPage} />)}
+          {page === "fertilizerrangaladivisions" && <FertilizerRangalaDivisions setPage={setPage} />}
         </main>
 
       </div>
