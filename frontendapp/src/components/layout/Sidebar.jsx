@@ -8,12 +8,15 @@ import {
   FileText,
   User,
   LogOut,
+  Leaf
 } from "lucide-react";
 
 export default function Sidebar({ page, setPage }) {
   return (
     <aside className="sidebar">
+
       <div className="sidebar-menu">
+
         <SidebarItem
           icon={<LayoutGrid size={18} />}
           label="Dashboard"
@@ -35,11 +38,19 @@ export default function Sidebar({ page, setPage }) {
           onClick={() => setPage("fielddata")}
         />
 
+        {/* NEW MENU */}
+        <SidebarItem
+          icon={<Leaf size={18} />}
+          label="Fertilizer Data"
+          active={page === "fertilizerdata"}
+          onClick={() => setPage("fertilizerdata")}
+        />
+
         <SidebarItem
           icon={<Cloud size={18} />}
           label="Climate Risk"
-          active={page === "climate"}
-          onClick={() => setPage("climate")}
+          active={page === "climaterisk"}
+          onClick={() => setPage("climaterisk")}
         />
 
         <SidebarItem
@@ -55,19 +66,25 @@ export default function Sidebar({ page, setPage }) {
           active={page === "reports"}
           onClick={() => setPage("reports")}
         />
+
       </div>
 
       <div className="sidebar-bottom">
+
         <SidebarItem
-  icon={<User size={18} />}
-  label="My Profile"
-  active={page === "profile"}
-  onClick={() => setPage("profile")}
- />
+          icon={<User size={18} />}
+          label="My Profile"
+          active={page === "profile"}
+          onClick={() => setPage("profile")}
+        />
 
+        <SidebarItem
+          icon={<LogOut size={18} />}
+          label="Logout"
+        />
 
-        <SidebarItem icon={<LogOut size={18} />} label="Logout" />
       </div>
+
     </aside>
   );
 }
