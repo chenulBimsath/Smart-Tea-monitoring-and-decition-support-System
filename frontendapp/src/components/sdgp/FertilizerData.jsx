@@ -34,6 +34,12 @@ export default function FertilizerData({ setPage }) {
 
       <div className="fielddata-header">
         <h2>Fertilizer Data</h2>
+        <button
+          className="add-btn"
+          onClick={() => setPage("addfertilizer")}
+        >
+          + Add Fertilizer Data
+        </button>
       </div>
 
 
