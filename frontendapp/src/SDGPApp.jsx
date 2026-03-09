@@ -18,8 +18,7 @@ import FertilizerRangalaDivisions from "./components/sdgp/FertilizerRangalaDivis
 
 import CropYields from "./components/sdgp/CropYields"; 
 
-// 1. ADD THIS IMPORT (Make sure the path matches where you saved CropYields.jsx)
-import CropYields from "./components/sdgp/CropYields"; 
+
 
 export default function SDGPApp() {
 
