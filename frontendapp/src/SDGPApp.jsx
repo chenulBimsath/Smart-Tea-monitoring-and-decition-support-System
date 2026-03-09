@@ -11,13 +11,19 @@ import RangalaDivisions from "./components/sdgp/RangalaDivisions";
 import NewDivisionData from "./components/sdgp/NewDivisionData";
 import AddFieldData from "./components/sdgp/AddFieldData";
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 import FertilizerData from "./components/sdgp/FertilizerData";
 import FertilizerRangalaDivisions from "./components/sdgp/FertilizerRangalaDivisions";
 import RangalaFertilizerData from "./components/sdgp/RangalaFertilizerData";
 import NewDivisionFertilizerData from "./components/sdgp/NewDivisionFertilizerData";
 import CropYields from "./components/sdgp/CropYields";
 import AddFertilizerData from "./components/sdgp/AddFertilizerData";
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
 export default function SDGPApp() {
@@ -34,15 +40,20 @@ export default function SDGPApp() {
 
           {page === "fieldmap" && <FieldMap />}
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
           {page === "fielddata" && <FieldData setPage={setPage} />}
 
 =======
           {page === "fielddata" && (<FieldData setPage={setPage} />)}
 >>>>>>> Stashed changes
+=======
+          {page === "fielddata" && (<FieldData setPage={setPage} />)}
+>>>>>>> Stashed changes
           {page === "climaterisk" && <ClimateRisk />}
 
           {page === "profile" && <MyProfile />}
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 
           {page === "rangaladivisions" && (
@@ -61,6 +72,8 @@ export default function SDGPApp() {
             <AddFieldData setPage={setPage} />
           )}
 =======
+=======
+>>>>>>> Stashed changes
           {page === "rangaladivisions" && ( <RangalaDivisions setPage={setPage} /> )}
           {page === "rangaladata" && ( <RangalaData setPage={setPage} />  )}
           {page === "newdivisiondata" && (  <NewDivisionData setPage={setPage} /> )}
@@ -74,6 +87,9 @@ export default function SDGPApp() {
           {page === "rangalafertilizer" && (<RangalaFertilizerData setPage={setPage} />)}
           {page === "newdivisionfertilizer" && (<NewDivisionFertilizerData setPage={setPage} />)}
           {page === "addfertilizer" && (<AddFertilizerData setPage={setPage} />)}
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
         </main>
