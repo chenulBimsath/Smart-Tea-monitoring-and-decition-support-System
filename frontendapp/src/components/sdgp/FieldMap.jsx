@@ -329,8 +329,7 @@ export default function FieldMap() {
           </>
         )}
 
-      </div>
-
+      </div>  
     </div>
   );
 }
