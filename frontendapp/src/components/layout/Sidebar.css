@@ -54,3 +54,6 @@
   flex-direction: column;
   gap: 6px;
 }
+.sidebar{
+  margin-top:70px;
+}
