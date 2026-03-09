@@ -34,7 +34,7 @@ rangala_plantation_polygon = [
 (7.34761257990041,80.80231557365266)
 ]
 
-# Earth Engine needs (lon, lat)
+
 polygon_coords = [[lon, lat] for lat, lon in rangala_plantation_polygon]
 
 polygon = ee.Geometry.Polygon([polygon_coords])
@@ -85,14 +85,14 @@ for i in range(count):
         print(f"{date}: NDVI = {ndvi:.4f}")
 
 
-# Convert to DataFrame
+
 df = pd.DataFrame(results)
 
-# Monthly Average
+
 monthly = df.groupby(['year','month'])['ndvi'].mean().reset_index()
 monthly['ndvi'] = monthly['ndvi'].round(4)
 
-# Save File
+
 monthly.to_csv('rangala_plantation_monthly_NDVI.csv', index=False)
 
 print(f"\nSUCCESS! Saved {len(monthly)} months of NDVI data!")
