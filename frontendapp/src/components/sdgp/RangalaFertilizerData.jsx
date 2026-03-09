@@ -7,9 +7,34 @@ export default function RangalaFertilizerData({ setPage }) {
   const [showForm, setShowForm] = useState(false);
 
   const data = [
-    { field_no: "F1", year: 2024, month: "January", fertilizer_type: "Urea", quantity: 120, cost: 24000, supplier: "Agro Lanka" },
-    { field_no: "F2", year: 2024, month: "February", fertilizer_type: "NPK", quantity: 150, cost: 30000, supplier: "Green Agro" },
-    { field_no: "F3", year: 2024, month: "March", fertilizer_type: "Organic", quantity: 90, cost: 18000, supplier: "Eco Fert" }
+    {
+      field_no: "F1",
+      date: "2024-01-10",
+      fertilizer_name: "Urea",
+      quantity: 120,
+      cost: 24000,
+      supplier: "Agro Lanka",
+      type_of_tea: "VP",
+      nutrient_ratio: "46:0:0",
+      total_quantity: 120,
+      application_method: "Manual Spread",
+      soil_condition: "Moist",
+      supervisor: "Mr. Silva"
+    },
+    {
+      field_no: "F2",
+      date: "2024-02-12",
+      fertilizer_name: "NPK",
+      quantity: 150,
+      cost: 30000,
+      supplier: "Green Agro",
+      type_of_tea: "Seedling",
+      nutrient_ratio: "10:26:26",
+      total_quantity: 150,
+      application_method: "Machine Spread",
+      soil_condition: "Wet Soil",
+      supervisor: "Mr. Perera"
+    }
   ];
 
   return (
@@ -28,6 +53,12 @@ export default function RangalaFertilizerData({ setPage }) {
             ← Back
           </button>
 
+          <button
+            className="add-btn"
+            onClick={() => setShowForm(true)}
+          >
+            + Add Fertilizer Data
+          </button>
 
         </div>
 
@@ -41,35 +72,46 @@ export default function RangalaFertilizerData({ setPage }) {
             <tr>
               <th>#</th>
               <th>Field No</th>
-              <th>Year</th>
-              <th>Month</th>
-              <th>Fertilizer Type</th>
+              <th>Date</th>
+              <th>Fertilizer Name</th>
               <th>Quantity (kg)</th>
               <th>Cost (LKR)</th>
               <th>Supplier</th>
+              <th>Type of Tea</th>
+              <th>Nutrient Ratio (N:P:K)</th>
+              <th>Total Quantity Used</th>
+              <th>Application Method</th>
+              <th>Weather / Soil Condition</th>
+              <th>Supervisor Name</th>
             </tr>
           </thead>
 
           <tbody>
+
             {data.map((item, index) => (
               <tr key={index}>
                 <td>{index + 1}</td>
                 <td>{item.field_no}</td>
-                <td>{item.year}</td>
-                <td>{item.month}</td>
-                <td>{item.fertilizer_type}</td>
+                <td>{item.date}</td>
+                <td>{item.fertilizer_name}</td>
                 <td>{item.quantity}</td>
                 <td>{item.cost}</td>
                 <td>{item.supplier}</td>
+                <td>{item.type_of_tea}</td>
+                <td>{item.nutrient_ratio}</td>
+                <td>{item.total_quantity}</td>
+                <td>{item.application_method}</td>
+                <td>{item.soil_condition}</td>
+                <td>{item.supervisor}</td>
               </tr>
             ))}
+
           </tbody>
 
         </table>
 
       </div>
 
-      {/* MODAL */}
       {showForm && (
         <AddFertilizerData closeModal={() => setShowForm(false)} />
       )}
