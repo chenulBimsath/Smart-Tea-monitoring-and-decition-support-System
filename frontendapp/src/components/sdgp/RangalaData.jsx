@@ -14,7 +14,6 @@ export default function RangalaData({ setPage }) {
     { 
       id: 2, 
       title: "Fertilizer Data", 
-      // Changed from "plucker_stats" to "fertilizer_analytics"
       target: "fertilizer_analytics", 
       imageSrc: "https://www.tmkhb.com/wp-content/uploads/2024/05/TMK-Composter.jpg" 
     },
@@ -27,7 +26,7 @@ export default function RangalaData({ setPage }) {
     { 
       id: 4, 
       title: "Agronomic Data", 
-      target: "monthly_reports", 
+      target: "agronomic_data", // <-- CHANGED THIS from "monthly_reports"
       imageSrc: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=600&q=80" 
     }
   ];
