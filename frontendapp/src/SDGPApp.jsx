@@ -20,6 +20,10 @@ import NewDivisionFertilizerData from "./components/sdgp/NewDivisionFertilizerDa
 import AddFertilizerData from "./components/sdgp/AddFertilizerData";
 
 import CropYields from "./components/sdgp/CropYields";
+import FertilizerAnalytics from "./components/sdgp/FertilizerAnalytics";
+
+// 1. IMPORT YOUR NEW FINANCE COMPONENT HERE
+import FinanceAnalytics from "./components/sdgp/FinanceAnalytics";
 
 export default function SDGPApp() {
   const [page, setPage] = useState("fieldmap");
@@ -61,6 +65,15 @@ export default function SDGPApp() {
 
           {page === "crop_yields" && (
             <CropYields setPage={setPage} />
+          )}
+
+          {page === "fertilizer_analytics" && (
+            <FertilizerAnalytics setPage={setPage} />
+          )}
+
+          {/* 2. ADD YOUR NEW FINANCE PAGE CONDITION HERE */}
+          {page === "financials" && (
+            <FinanceAnalytics setPage={setPage} />
           )}
 
           {page === "fertilizerdata" && (
