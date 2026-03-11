@@ -4,6 +4,9 @@ import "./FertilizerAnalytics.css";
 export default function FertilizerAnalytics({ setPage }) {
   // --- STATE ---
   const [allData, setAllData] = useState([]);
+  const [availableYears, setAvailableYears] = useState([]);
+  const [selectedYear, setSelectedYear] = useState("");
+
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 25;
   const [openMenuId, setOpenMenuId] = useState(null);
@@ -13,6 +16,7 @@ export default function FertilizerAnalytics({ setPage }) {
   const [editingItemId, setEditingItemId] = useState(null); 
   
   const [formData, setFormData] = useState({
+    year: "2026", // Added year field
     fieldNo: "",
     typeOfTea: "Clonal",
     cropStatus: "Mature",
@@ -25,14 +29,12 @@ export default function FertilizerAnalytics({ setPage }) {
     supervisor: ""
   });
 
-  // Dropdown options based on your sample data
   const teaTypes = ["Clonal", "Seedling"];
   const cropStatuses = ["Mature", "Immature", "Pruned"];
   const applicationMethods = ["Broadcasting", "Ring Placement", "Foliar Spray"];
   const weatherConditions = ["Moist", "Sunny", "Rain", "Dry"];
 
   // --- FETCH DATA FROM SPRING BOOT ---
-  // Note: Update the URL to match your backend endpoint for fertilizer
   useEffect(() => {
     fetchFertilizerData();
   }, []);
@@ -44,22 +46,42 @@ export default function FertilizerAnalytics({ setPage }) {
       
       const data = await response.json();
       setAllData(data);
+
+      // Extract unique years for the dropdown
+      const years = [...new Set(data.map(item => item.year))].filter(Boolean).sort((a, b) => b - a);
+      setAvailableYears(years);
+      
+      if (years.length > 0) {
+        setSelectedYear(years[0].toString());
+      } else {
+        setAvailableYears(["2026"]);
+        setSelectedYear("2026");
+      }
     } catch (error) {
       console.error("Error fetching data:", error);
-      // Fallback sample data for testing purposes if backend is down
-      
-      setAllData([
-        { id: 1, fieldNo: "1", typeOfTea: "Clonal", cropStatus: "Mature", fertilizerName: "T-65", nutrientRatio: "25:5:15", quantityPerHa: 150, totalQuantity: 450, applicationMethod: "Broadcasting", condition: "Moist", supervisor: "Kumara Mallwathantri" },
-        { id: 2, fieldNo: "2", typeOfTea: "Seedling", cropStatus: "Immature", fertilizerName: "T-200", nutrientRatio: "15:15:15", quantityPerHa: 100, totalQuantity: 200, applicationMethod: "Ring Placement", condition: "Sunny", supervisor: "Kumara Mallwathantri" }
-      ]);
-      
+      // Fallback sample data with years
+      const sampleData = [
+        { id: 1, year: 2026, fieldNo: "1", typeOfTea: "Clonal", cropStatus: "Mature", fertilizerName: "T-65", nutrientRatio: "25:5:15", quantityPerHa: 150, totalQuantity: 450, applicationMethod: "Broadcasting", condition: "Moist", supervisor: "Kumara Mallwathantri" },
+        { id: 2, year: 2026, fieldNo: "2", typeOfTea: "Seedling", cropStatus: "Immature", fertilizerName: "T-200", nutrientRatio: "15:15:15", quantityPerHa: 100, totalQuantity: 200, applicationMethod: "Ring Placement", condition: "Sunny", supervisor: "Kumara Mallwathantri" },
+        { id: 3, year: 2025, fieldNo: "1", typeOfTea: "Clonal", cropStatus: "Mature", fertilizerName: "T-65", nutrientRatio: "25:5:15", quantityPerHa: 140, totalQuantity: 420, applicationMethod: "Broadcasting", condition: "Rain", supervisor: "Kumara Mallwathantri" }
+      ];
+      setAllData(sampleData);
+      setAvailableYears(["2026", "2025"]);
+      setSelectedYear("2026");
     }
   };
 
-  // --- PAGINATE ---
-  const totalPages = Math.ceil(allData.length / rowsPerPage);
+  // Reset page when year changes
+  useEffect(() => {
+    setCurrentPage(1);
+    setOpenMenuId(null); 
+  }, [selectedYear]);
+
+  // --- FILTER BY YEAR & PAGINATE ---
+  const yearData = allData.filter(item => item.year && item.year.toString() === selectedYear.toString());
+  const totalPages = Math.ceil(yearData.length / rowsPerPage);
   const startIndex = (currentPage - 1) * rowsPerPage;
-  const currentRows = allData.slice(startIndex, startIndex + rowsPerPage);
+  const currentRows = yearData.slice(startIndex, startIndex + rowsPerPage);
 
   // --- ACTIONS ---
   const toggleMenu = (id) => {
@@ -89,6 +111,7 @@ export default function FertilizerAnalytics({ setPage }) {
   const openAddPopup = () => {
     setEditingItemId(null); 
     setFormData({
+      year: selectedYear || "2026", // Default to currently viewed year
       fieldNo: "",
       typeOfTea: "Clonal",
       cropStatus: "Mature",
@@ -106,6 +129,7 @@ export default function FertilizerAnalytics({ setPage }) {
   const handleUpdate = (item) => {
     setEditingItemId(item.id); 
     setFormData({
+      year: item.year || "2026",
       fieldNo: item.fieldNo,
       typeOfTea: item.typeOfTea,
       cropStatus: item.cropStatus,
@@ -124,19 +148,14 @@ export default function FertilizerAnalytics({ setPage }) {
   // --- FORM HANDLERS ---
   const handleFormChange = (e) => {
     const { name, value } = e.target;
-    let newFormData = { ...formData, [name]: value };
-
-    // Auto-calculate Total Quantity if Quantity Per Ha changes (Optional logic, adjust if you have a Ha field)
-    // If you want to automatically calculate this, you'd need the field size in Hectares. 
-    // For now, it just updates normally.
-    
-    setFormData(newFormData);
+    setFormData({ ...formData, [name]: value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const payload = {
+      year: parseInt(formData.year, 10), // Include year in payload
       fieldNo: formData.fieldNo,
       typeOfTea: formData.typeOfTea,
       cropStatus: formData.cropStatus,
@@ -158,9 +177,7 @@ export default function FertilizerAnalytics({ setPage }) {
 
       const response = await fetch(url, {
         method: method,
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
 
@@ -187,7 +204,7 @@ export default function FertilizerAnalytics({ setPage }) {
         {/* LEFT: Title */}
         <div className="title-section">
           <h1>Rangala Fertilizer Analytics</h1>
-          <p>Tracking nutrient applications and soil conditions</p>
+          <p>Tracking nutrient applications for the year {selectedYear}</p>
         </div>
 
         {/* CENTER: Add Button */}
@@ -198,8 +215,25 @@ export default function FertilizerAnalytics({ setPage }) {
           + Add Fertilizer Record
         </button>
 
-        {/* RIGHT: Controls */}
+        {/* RIGHT: Controls (Added Year Dropdown) */}
         <div className="header-controls">
+          <div className="dropdown-container">
+            <label htmlFor="year-select">Select Year: </label>
+            <select 
+              id="year-select" 
+              className="year-dropdown"
+              value={selectedYear}
+              onChange={(e) => setSelectedYear(e.target.value)}
+            >
+              {availableYears.length === 0 && <option>No data</option>}
+              {availableYears.map((year) => (
+                <option key={year} value={year}>
+                  {year}
+                </option>
+              ))}
+            </select>
+          </div>
+
           <button className="back-to-grid-btn" onClick={() => setPage("rangaladata")}>
             ← Back to Overview
           </button>
@@ -228,7 +262,7 @@ export default function FertilizerAnalytics({ setPage }) {
               {currentRows.length === 0 ? (
                 <tr>
                   <td colSpan="11" style={{textAlign: "center", padding: "30px", color: "#666"}}>
-                    No records found. Please add data to your database.
+                    No records found for {selectedYear}. Please add data to your database.
                   </td>
                 </tr>
               ) : (
@@ -272,7 +306,7 @@ export default function FertilizerAnalytics({ setPage }) {
             <div className="page-label">
               Page <strong>{currentPage}</strong> of <strong>{totalPages}</strong>
               <span style={{marginLeft: "10px", fontSize: "0.85rem", color: "#888"}}>
-                (Total records: {allData.length})
+                (Total records: {yearData.length})
               </span>
             </div>
             <button className="nav-btn" onClick={() => { setCurrentPage(p => p + 1); setOpenMenuId(null); }} disabled={currentPage === totalPages}>
@@ -292,6 +326,19 @@ export default function FertilizerAnalytics({ setPage }) {
             </div>
 
             <form className="add-form grid-form" onSubmit={handleSubmit}>
+              
+              {/* Added Year Field to the form */}
+              <div className="form-group">
+                <label>Year</label>
+                <input 
+                  type="number" 
+                  name="year" 
+                  value={formData.year} 
+                  onChange={handleFormChange} 
+                  required 
+                />
+              </div>
+
               <div className="form-group">
                 <label>Field No</label>
                 <input type="text" name="fieldNo" value={formData.fieldNo} onChange={handleFormChange} placeholder="e.g., 1" required />
