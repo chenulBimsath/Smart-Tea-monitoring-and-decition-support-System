@@ -20,6 +20,8 @@ import NewDivisionFertilizerData from "./components/sdgp/NewDivisionFertilizerDa
 import AddFertilizerData from "./components/sdgp/AddFertilizerData";
 
 import CropYields from "./components/sdgp/CropYields";
+// 1. IMPORT YOUR NEW COMPONENT HERE (make sure the path is correct based on where you saved it)
+import FertilizerAnalytics from "./components/sdgp/FertilizerAnalytics";
 
 export default function SDGPApp() {
   const [page, setPage] = useState("fieldmap");
@@ -61,6 +63,11 @@ export default function SDGPApp() {
 
           {page === "crop_yields" && (
             <CropYields setPage={setPage} />
+          )}
+
+          {/* 2. ADD YOUR NEW PAGE CONDITION HERE */}
+          {page === "fertilizer_analytics" && (
+            <FertilizerAnalytics setPage={setPage} />
           )}
 
           {page === "fertilizerdata" && (
