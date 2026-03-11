@@ -31,7 +31,6 @@ export default function FinanceAnalytics({ setPage }) {
 
   const fetchFinanceData = async () => {
     try {
-      // Update this URL to match your Spring Boot controller for finance data
       const response = await fetch("http://localhost:8080/api/finance-details");
       if (!response.ok) throw new Error("Network response was not ok");
       
@@ -39,7 +38,6 @@ export default function FinanceAnalytics({ setPage }) {
       setAllData(data);
     } catch (error) {
       console.error("Error fetching data:", error);
-      // Fallback sample data for testing purposes
       setAllData([
         { id: 1, transactionType: "Expense", category: "Labor - Plucking", description: "Plucking wages Field 1", quantity: 350, unitPrice: 40, totalAmount: 14000, paymentMethod: "Cash", voucherRef: "V-101", authorizedBy: "Kumara Mallwathantri" },
         { id: 2, transactionType: "Expense", category: "Labor - Plucking", description: "Plucking wages Field 2", quantity: 300, unitPrice: 40, totalAmount: 12000, paymentMethod: "Cash", voucherRef: "V-102", authorizedBy: "Kumara Mallwathantri" },
@@ -121,7 +119,10 @@ export default function FinanceAnalytics({ setPage }) {
     if (name === "quantity" || name === "unitPrice") {
       const qty = parseFloat(newFormData.quantity) || 0;
       const price = parseFloat(newFormData.unitPrice) || 0;
-      newFormData.totalAmount = (qty * price).toFixed(2);
+      // Only auto-calculate if both have a value greater than 0
+      if (qty > 0 || price > 0) {
+        newFormData.totalAmount = (qty * price).toFixed(2);
+      }
     }
 
     setFormData(newFormData);
@@ -130,12 +131,13 @@ export default function FinanceAnalytics({ setPage }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
+    // Allow quantity and unitPrice to be 0 or null if the user is just entering a flat Total Amount
     const payload = {
       transactionType: formData.transactionType,
       category: formData.category,
       description: formData.description,
-      quantity: parseFloat(formData.quantity),
-      unitPrice: parseFloat(formData.unitPrice),
+      quantity: parseFloat(formData.quantity) || 0,
+      unitPrice: parseFloat(formData.unitPrice) || 0,
       totalAmount: parseFloat(formData.totalAmount),
       paymentMethod: formData.paymentMethod,
       voucherRef: formData.voucherRef,
@@ -220,8 +222,8 @@ export default function FinanceAnalytics({ setPage }) {
                     <div style={{fontSize: '0.85rem', color: '#666'}}>{item.category}</div>
                   </td>
                   <td>{item.description}</td>
-                  <td>{item.quantity}</td>
-                  <td>රු. {item.unitPrice}</td>
+                  <td>{item.quantity === 0 ? '-' : item.quantity}</td>
+                  <td>{item.unitPrice === 0 ? '-' : `රු. ${item.unitPrice}`}</td>
                   <td className="currency-cell">රු. {item.totalAmount}</td>
                   <td>
                     <div>{item.paymentMethod}</div>
@@ -291,17 +293,26 @@ export default function FinanceAnalytics({ setPage }) {
               <div className="form-row">
                 <div className="form-group">
                   <label>Quantity</label>
-                  <input type="number" name="quantity" value={formData.quantity} onChange={handleFormChange} required min="0" step="0.01" />
+                  <input type="number" name="quantity" value={formData.quantity} onChange={handleFormChange} placeholder="Optional" min="0" step="0.01" />
                 </div>
                 <div className="form-group">
                   <label>Unit Price / Rate</label>
-                  <input type="number" name="unitPrice" value={formData.unitPrice} onChange={handleFormChange} required min="0" step="0.01" />
+                  <input type="number" name="unitPrice" value={formData.unitPrice} onChange={handleFormChange} placeholder="Optional" min="0" step="0.01" />
                 </div>
               </div>
 
               <div className="form-group">
                 <label>Total Amount (LKR)</label>
-                <input type="number" name="totalAmount" value={formData.totalAmount} readOnly className="readonly-input" />
+                <input 
+                  type="number" 
+                  name="totalAmount" 
+                  value={formData.totalAmount} 
+                  onChange={handleFormChange} 
+                  required 
+                  min="0" 
+                  step="0.01" 
+                  placeholder="Enter total amount"
+                />
               </div>
 
               <div className="form-row">
