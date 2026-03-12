@@ -71,12 +71,6 @@ export default function Sidebar({ page, setPage }) {
 
       <div className="sidebar-bottom">
 
- <SidebarItem
-  icon={<User size={18} />}
-  label="My Profile"
-  active={page === "profile"}
-  onClick={() => setPage("profile")}
-/>
 
         <SidebarItem
           icon={<User size={18} />}
