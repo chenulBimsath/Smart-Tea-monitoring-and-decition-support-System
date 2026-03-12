@@ -1,15 +1,37 @@
 import { useEffect, useState } from "react";
 import "./ClimateRisk.css";
 
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Tooltip,
+  Legend
+} from "chart.js";
+
+import { Line } from "react-chartjs-2";
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Tooltip,
+  Legend
+);
+
 const DISTRICTS = {
-  Talawakelle: { lat: 6.94, lon: 80.79 },
-  Hatton: { lat: 6.9, lon: 80.6 },
-  "Nuwara Eliya": { lat: 6.97, lon: 80.77 },
-  Kothmale: { lat: 7.02, lon: 80.65 },
+  Rangala: { lat: 7.327, lon: 80.820 },
+  Galle: { lat: 6.0535, lon: 80.221 },
+  "Nuwara Eliya": { lat: 6.9497, lon: 80.7891 },
+  Badulla: { lat: 6.9934, lon: 81.0550 }
 };
 
 export default function ClimateRisk() {
-  const [district, setDistrict] = useState("Talawakelle");
+
+  const [district, setDistrict] = useState("Rangala");
   const [weather, setWeather] = useState(null);
   const [forecast, setForecast] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -18,35 +40,29 @@ export default function ClimateRisk() {
   const { lat, lon } = DISTRICTS[district];
 
   useEffect(() => {
-    if (!API_KEY) {
-      console.error("Weather API key missing");
-      return;
-    }
 
     setLoading(true);
 
-    // Current Weather
     fetch(
       `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${API_KEY}`
     )
       .then((res) => res.json())
-      .then((data) => {
-        setWeather(data);
-      })
-      .catch((err) => console.error(err));
+      .then((data) => setWeather(data));
 
-    // Forecast
     fetch(
       `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=metric&appid=${API_KEY}`
     )
       .then((res) => res.json())
       .then((data) => {
+
         const daily =
           data.list?.filter((_, i) => i % 8 === 0).slice(0, 7) || [];
+
         setForecast(daily);
         setLoading(false);
-      })
-      .catch((err) => console.error(err));
+
+      });
+
   }, [district, lat, lon, API_KEY]);
 
   if (loading) {
@@ -57,10 +73,48 @@ export default function ClimateRisk() {
     return <div className="loading">Weather data unavailable</div>;
   }
 
+  /* Chart Data */
+
+  const chartData = {
+    labels: forecast.map((day) =>
+      new Date(day.dt * 1000).toLocaleDateString("en-US", {
+        weekday: "short",
+      })
+    ),
+
+    datasets: [
+      {
+        label: "Temperature °C",
+        data: forecast.map((day) => day.main.temp),
+        borderColor: "#ff7a18",
+        backgroundColor: "rgba(255,122,24,0.2)",
+        tension: 0.4,
+        fill: true,
+      },
+    ],
+  };
+
+  const chartOptions = {
+    responsive: true,
+    plugins: {
+      legend: { display: false },
+    },
+    scales: {
+      y: {
+        ticks: {
+          callback: (value) => value + "°C",
+        },
+      },
+    },
+  };
+
   return (
     <div className="climate-container colorful">
+
       {/* HEADER */}
+
       <div className="climate-header">
+
         <div>
           <h2>{district} Tea Plantation</h2>
           <span>Live Climate Conditions</span>
@@ -72,15 +126,17 @@ export default function ClimateRisk() {
           onChange={(e) => setDistrict(e.target.value)}
         >
           {Object.keys(DISTRICTS).map((d) => (
-            <option key={d} value={d}>
-              {d}
-            </option>
+            <option key={d}>{d}</option>
           ))}
         </select>
+
       </div>
 
+
       {/* METRIC CARDS */}
+
       <div className="metric-grid">
+
         <div className="metric-card temp">
           <h1>{Math.round(weather.main.temp)}°C</h1>
           <p>Temperature</p>
@@ -106,31 +162,44 @@ export default function ClimateRisk() {
           <h1>{weather.rain?.["1h"] ?? 0} mm</h1>
           <p>Rainfall (1h)</p>
         </div>
+
       </div>
 
-      {/* FORECAST */}
-      <h3 className="section-title">7-Day Forecast</h3>
 
-      <div className="forecast-row">
-        {forecast.map((day, i) => (
-          <div className="forecast-card" key={i}>
-            <span className="day">
-              {new Date(day.dt * 1000).toLocaleDateString("en-US", {
-                weekday: "short",
-              })}
-            </span>
+<div className="climate-bottom">
 
-            <img
-              src={`https://openweathermap.org/img/wn/${day.weather?.[0]?.icon}.png`}
-              alt="weather icon"
-            />
+  <div className="chart-card">
+    <h3>Temperature Trend</h3>
+    <Line data={chartData} options={chartOptions} />
+  </div>
 
-            <span className="temp">
-              {Math.round(day.main?.temp ?? 0)}°C
-            </span>
-          </div>
-        ))}
-      </div>
+  <div className="forecast-container">
+    <h3>7-Day Forecast</h3>
+
+    <div className="forecast-row">
+      {forecast.map((day, i) => (
+        <div className="forecast-card" key={i}>
+          <span className="day">
+            {new Date(day.dt * 1000).toLocaleDateString("en-US", {
+              weekday: "short",
+            })}
+          </span>
+
+          <img
+            src={`https://openweathermap.org/img/wn/${day.weather?.[0]?.icon}.png`}
+          />
+
+          <span className="temp">
+            {Math.round(day.main?.temp ?? 0)}°C
+          </span>
+        </div>
+      ))}
+    </div>
+
+  </div>
+
+</div>
+
     </div>
   );
 }
