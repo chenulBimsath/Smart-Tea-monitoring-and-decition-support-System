@@ -19,6 +19,8 @@ import RangalaFertilizerData from "./components/sdgp/RangalaFertilizerData";
 import NewDivisionFertilizerData from "./components/sdgp/NewDivisionFertilizerData";
 import AddFertilizerData from "./components/sdgp/AddFertilizerData";
 
+import YieldPrediction from "./components/sdgp/YieldPrediction";
+
 import CropYields from "./components/sdgp/CropYields";
 import FertilizerAnalytics from "./components/sdgp/FertilizerAnalytics";
 
@@ -68,6 +70,10 @@ export default function SDGPApp() {
 
           {page === "crop_yields" && (
             <CropYields setPage={setPage} />
+          )}
+
+          {page === "yield_prediction" && (
+            <YieldPrediction setPage={setPage} />
           )}
 
           {page === "fertilizer_analytics" && (

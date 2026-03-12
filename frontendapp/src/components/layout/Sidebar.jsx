@@ -56,8 +56,8 @@ export default function Sidebar({ page, setPage }) {
         <SidebarItem
           icon={<TrendingUp size={18} />}
           label="Yield Prediction"
-          active={page === "yield"}
-          onClick={() => setPage("yield")}
+          active={page === "yield_prediction"}
+          onClick={() => setPage("yield_prediction")}
         />
 
         <SidebarItem
