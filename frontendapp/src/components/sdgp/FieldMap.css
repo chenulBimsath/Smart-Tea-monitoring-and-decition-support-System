@@ -118,3 +118,62 @@
   background: #eee;
   margin: 10px 0;
 }
+.ndvi-dashboard{
+  background:#fff;
+  border-radius:10px;
+  padding:14px;
+  margin-top:12px;
+  box-shadow:0 2px 6px rgba(0,0,0,0.15);
+}
+
+.ndvi-score{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-top:8px;
+}
+
+.ndvi-number{
+  font-size:26px;
+  font-weight:bold;
+  color:#2e7d32;
+}
+
+.ndvi-label{
+  font-size:14px;
+  color:#555;
+}
+
+.ndvi-bar{
+  height:10px;
+  background:#eee;
+  border-radius:6px;
+  margin-top:10px;
+  overflow:hidden;
+}
+
+.ndvi-progress{
+  height:100%;
+  border-radius:6px;
+}
+
+.ndvi-stats{
+  display:flex;
+  justify-content:space-between;
+  margin-top:12px;
+}
+
+.stat{
+  text-align:center;
+}
+
+.label{
+  font-size:12px;
+  color:#777;
+}
+
+.value{
+  display:block;
+  font-weight:bold;
+  margin-top:2px;
+}
