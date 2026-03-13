@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import "./AgronomicData.css"; 
 
 export default function AgronomicData({ setPage }) {
-  // --- SET YOUR BACKEND URL HERE ---
   const API_BASE_URL = "http://localhost:8080/api/agronomic-data";
 
   // --- STATE ---
@@ -41,28 +40,55 @@ export default function AgronomicData({ setPage }) {
       if (!response.ok) throw new Error("Failed to fetch data");
       const data = await response.json();
       
-      // Map backend 'inspectionDate' to frontend 'date'
       const mappedData = data.map(item => ({
         ...item,
         date: item.inspectionDate 
       }));
+      
       setAllData(mappedData);
+
+      // --- NEW: EXTRACT UNIQUE YEARS FROM DATES ---
+      const years = [...new Set(mappedData.map(item => {
+        if (!item.date) return null;
+        return item.date.substring(0, 4); // Extract YYYY from YYYY-MM-DD
+      }))].filter(Boolean).sort((a, b) => b - a);
+
+      setAvailableYears(years);
+      
+      if (years.length > 0) {
+        setSelectedYear(years[0]);
+      } else {
+        const currentYear = new Date().getFullYear().toString();
+        setAvailableYears([currentYear]);
+        setSelectedYear(currentYear);
+      }
+
     } catch (error) {
       console.error("Error fetching agronomic data:", error);
     }
   };
 
-  // --- PAGINATION ---
-  const totalPages = Math.ceil(allData.length / rowsPerPage);
+  // --- NEW: RESET PAGE WHEN YEAR CHANGES ---
+  useEffect(() => {
+    setCurrentPage(1);
+    setOpenMenuId(null); 
+  }, [selectedYear]);
+
+  // --- FILTER BY YEAR & PAGINATE ---
+  const yearData = allData.filter(item => {
+    if (!item.date) return false;
+    return item.date.substring(0, 4) === selectedYear;
+  });
+
+  const totalPages = Math.ceil(yearData.length / rowsPerPage);
   const startIndex = (currentPage - 1) * rowsPerPage;
-  const currentRows = allData.slice(startIndex, startIndex + rowsPerPage);
+  const currentRows = yearData.slice(startIndex, startIndex + rowsPerPage);
 
   // --- ACTIONS ---
   const toggleMenu = (id) => {
     setOpenMenuId(openMenuId === id ? null : id);
   };
 
-  // DELETE REQUEST
   const handleDelete = async (id) => {
     if (window.confirm(`Are you sure you want to delete Record ID ${id}?`)) {
       try {
@@ -73,6 +99,9 @@ export default function AgronomicData({ setPage }) {
         if (response.ok) {
           setAllData(prevData => prevData.filter(item => item.id !== id));
           setOpenMenuId(null); 
+          
+          // Re-calculate years just in case we deleted the last record of a year
+          fetchAgronomicData(); 
         } else {
           alert("Failed to delete record.");
         }
@@ -82,7 +111,6 @@ export default function AgronomicData({ setPage }) {
     }
   };
 
-  // --- POPUP OPENERS ---
   const openAddPopup = () => {
     setEditingItemId(null); 
     setFormData({
@@ -107,7 +135,6 @@ export default function AgronomicData({ setPage }) {
     setOpenMenuId(null);
   };
 
-  // --- FORM HANDLERS ---
   const handleFormChange = (e) => {
     setFormData({
       ...formData,
@@ -115,11 +142,9 @@ export default function AgronomicData({ setPage }) {
     });
   };
 
-  // POST & PUT REQUESTS
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Prepare payload, mapping frontend 'date' to backend 'inspectionDate'
     const payload = {
       ...formData,
       inspectionDate: formData.date 
@@ -127,7 +152,6 @@ export default function AgronomicData({ setPage }) {
     
     try {
       if (editingItemId) {
-        // --- UPDATE (PUT) ---
         const response = await fetch(`${API_BASE_URL}/${editingItemId}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -135,17 +159,11 @@ export default function AgronomicData({ setPage }) {
         });
 
         if (response.ok) {
-          const updatedItem = await response.json();
-          // Map backend date back to frontend format
-          updatedItem.date = updatedItem.inspectionDate; 
-          
-          setAllData(prev => prev.map(item => item.id === editingItemId ? updatedItem : item));
           alert("Data Updated Successfully!");
         } else {
           alert("Failed to update data.");
         }
       } else {
-        // --- CREATE (POST) ---
         const response = await fetch(API_BASE_URL, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -153,11 +171,6 @@ export default function AgronomicData({ setPage }) {
         });
 
         if (response.ok) {
-          const newItem = await response.json();
-          // Map backend date back to frontend format
-          newItem.date = newItem.inspectionDate;
-          
-          setAllData(prev => [...prev, newItem]);
           alert("Agronomic Data Added Successfully!");
         } else {
           alert("Failed to add data.");
@@ -166,6 +179,10 @@ export default function AgronomicData({ setPage }) {
       
       setIsPopupOpen(false);
       setEditingItemId(null);
+      
+      // Re-fetch data to automatically update the table and year dropdown logic
+      fetchAgronomicData();
+      
     } catch (error) {
       console.error("Error saving data:", error);
       alert("Network error. Could not save data.");
@@ -178,7 +195,7 @@ export default function AgronomicData({ setPage }) {
         
         <div className="title-section">
           <h1>Rangala Agronomic Data</h1>
-          <p>Tracking field conditions and crop health metrics</p>
+          <p>Tracking field conditions and crop health metrics for {selectedYear}</p>
         </div>
 
         <button className="add-record-btn" onClick={openAddPopup}>
@@ -186,6 +203,26 @@ export default function AgronomicData({ setPage }) {
         </button>
 
         <div className="header-controls">
+          
+          {/* --- NEW: YEAR DROPDOWN UI --- */}
+          <div className="dropdown-container">
+            <label htmlFor="year-select" style={{ marginRight: '10px', fontWeight: 'bold' }}>Select Year: </label>
+            <select 
+              id="year-select" 
+              className="year-dropdown"
+              value={selectedYear}
+              onChange={(e) => setSelectedYear(e.target.value)}
+              style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
+            >
+              {availableYears.length === 0 && <option>No data</option>}
+              {availableYears.map((year) => (
+                <option key={year} value={year}>
+                  {year}
+                </option>
+              ))}
+            </select>
+          </div>
+
           <button className="back-to-grid-btn" onClick={() => setPage("rangaladata")}>
             ← Back to Overview
           </button>
@@ -217,7 +254,7 @@ export default function AgronomicData({ setPage }) {
               {currentRows.length === 0 ? (
                 <tr>
                   <td colSpan="14" style={{textAlign: "center", padding: "30px", color: "#666"}}>
-                    No agronomic records found. Please add data.
+                    No agronomic records found for {selectedYear}. Please add data.
                   </td>
                 </tr>
               ) : (
@@ -261,7 +298,8 @@ export default function AgronomicData({ setPage }) {
             <div className="year-label">
               Page <strong>{currentPage}</strong> of <strong>{totalPages}</strong>
               <span style={{marginLeft: "10px", fontSize: "0.85rem", color: "#888"}}>
-                (Total records: {allData.length})
+                {/* --- NEW: SHOW FILTERED LENGTH --- */}
+                (Total records for {selectedYear}: {yearData.length})
               </span>
             </div>
             <button className="nav-btn" onClick={() => { setCurrentPage(p => p + 1); setOpenMenuId(null); }} disabled={currentPage === totalPages}>
