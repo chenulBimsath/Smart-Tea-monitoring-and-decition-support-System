@@ -5,7 +5,12 @@ export default function AgronomicData({ setPage }) {
   const API_BASE_URL = "http://localhost:8080/api/agronomic-data";
 
   // --- STATE ---
-  const [allData, setAllData] = useState([]); // Start empty, fetch from backend
+  const [allData, setAllData] = useState([]); 
+  
+  // --- NEW: YEAR FILTERING STATE ---
+  const [availableYears, setAvailableYears] = useState([]);
+  const [selectedYear, setSelectedYear] = useState("");
+
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 25;
   const [openMenuId, setOpenMenuId] = useState(null);
