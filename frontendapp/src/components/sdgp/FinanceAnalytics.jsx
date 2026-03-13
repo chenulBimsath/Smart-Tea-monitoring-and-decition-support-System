@@ -4,6 +4,9 @@ import "./FinanceAnalytics.css";
 export default function FinanceAnalytics({ setPage }) {
   // --- STATE ---
   const [allData, setAllData] = useState([]);
+  const [availableYears, setAvailableYears] = useState([]);
+  const [selectedYear, setSelectedYear] = useState("");
+
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 25;
   const [openMenuId, setOpenMenuId] = useState(null);
@@ -13,6 +16,7 @@ export default function FinanceAnalytics({ setPage }) {
   const [editingItemId, setEditingItemId] = useState(null);
   
   const [formData, setFormData] = useState({
+    date: "", 
     transactionType: "Expense",
     category: "",
     description: "",
@@ -23,6 +27,12 @@ export default function FinanceAnalytics({ setPage }) {
     voucherRef: "",
     authorizedBy: ""
   });
+
+  // --- HELPER FUNCTION: Get Today's Date ---
+  const getTodayDate = () => {
+    const today = new Date();
+    return today.toISOString().split('T')[0]; // Returns YYYY-MM-DD
+  };
 
   // --- FETCH DATA FROM SPRING BOOT ---
   useEffect(() => {
@@ -36,21 +46,51 @@ export default function FinanceAnalytics({ setPage }) {
       
       const data = await response.json();
       setAllData(data);
+
+      // Extract unique years from the 'date' field (e.g., '2024' from '2024-03-01')
+      const years = [...new Set(data.map(item => item.date ? item.date.substring(0, 4) : null))]
+        .filter(Boolean)
+        .sort((a, b) => b - a);
+        
+      setAvailableYears(years);
+      
+      if (years.length > 0) {
+        setSelectedYear(years[0].toString());
+      } else {
+        const currentYear = new Date().getFullYear().toString();
+        setAvailableYears([currentYear]);
+        setSelectedYear(currentYear);
+      }
     } catch (error) {
       console.error("Error fetching data:", error);
-      setAllData([
-        { id: 1, transactionType: "Expense", category: "Labor - Plucking", description: "Plucking wages Field 1", quantity: 350, unitPrice: 40, totalAmount: 14000, paymentMethod: "Cash", voucherRef: "V-101", authorizedBy: "Kumara Mallwathantri" },
-        { id: 2, transactionType: "Expense", category: "Labor - Plucking", description: "Plucking wages Field 2", quantity: 300, unitPrice: 40, totalAmount: 12000, paymentMethod: "Cash", voucherRef: "V-102", authorizedBy: "Kumara Mallwathantri" },
-        { id: 3, transactionType: "Expense", category: "Labor - Sundry", description: "Weeding Field 3", quantity: 5, unitPrice: 1000, totalAmount: 5000, paymentMethod: "Cash", voucherRef: "V-103", authorizedBy: "Kumara Mallwathantri" },
-        { id: 4, transactionType: "Expense", category: "Fertilizer", description: "T-65 Purchase", quantity: 150, unitPrice: 80, totalAmount: 12000, paymentMethod: "Bank Transfer", voucherRef: "V-104", authorizedBy: "Sadun Wijesighe" }
-      ]);
+      
+      // Fallback data with various years for testing the filter
+      const sampleData = [
+        { id: 1, date: "2024-03-01", transactionType: "Expense", category: "Labor - Plucking", description: "Plucking wages Field 1", quantity: 350, unitPrice: 40, totalAmount: 14000, paymentMethod: "Cash", voucherRef: "V-101", authorizedBy: "Kumara Mallwathantri" },
+        { id: 2, date: "2024-03-02", transactionType: "Expense", category: "Labor - Plucking", description: "Plucking wages Field 2", quantity: 300, unitPrice: 40, totalAmount: 12000, paymentMethod: "Cash", voucherRef: "V-102", authorizedBy: "Kumara Mallwathantri" },
+        { id: 3, date: "2023-11-15", transactionType: "Expense", category: "Labor - Sundry", description: "Weeding Field 3", quantity: 5, unitPrice: 1000, totalAmount: 5000, paymentMethod: "Cash", voucherRef: "V-103", authorizedBy: "Kumara Mallwathantri" },
+        { id: 4, date: "2023-12-05", transactionType: "Expense", category: "Fertilizer", description: "T-65 Purchase", quantity: 150, unitPrice: 80, totalAmount: 12000, paymentMethod: "Bank Transfer", voucherRef: "V-104", authorizedBy: "Sadun Wijesighe" }
+      ];
+      setAllData(sampleData);
+      
+      const sampleYears = ["2024", "2023"];
+      setAvailableYears(sampleYears);
+      setSelectedYear("2024");
     }
   };
 
-  // --- FILTER & PAGINATE ---
-  const totalPages = Math.ceil(allData.length / rowsPerPage);
+  // Reset page when year changes
+  useEffect(() => {
+    setCurrentPage(1);
+    setOpenMenuId(null); 
+  }, [selectedYear]);
+
+  // --- FILTER BY YEAR & PAGINATE ---
+  // Filter where the date string starts with the selected year
+  const yearData = allData.filter(item => item.date && item.date.startsWith(selectedYear));
+  const totalPages = Math.ceil(yearData.length / rowsPerPage);
   const startIndex = (currentPage - 1) * rowsPerPage;
-  const currentRows = allData.slice(startIndex, startIndex + rowsPerPage);
+  const currentRows = yearData.slice(startIndex, startIndex + rowsPerPage);
 
   // --- ACTIONS ---
   const toggleMenu = (id) => {
@@ -80,6 +120,7 @@ export default function FinanceAnalytics({ setPage }) {
   const openAddPopup = () => {
     setEditingItemId(null);
     setFormData({
+      date: getTodayDate(),
       transactionType: "Expense",
       category: "",
       description: "",
@@ -96,6 +137,7 @@ export default function FinanceAnalytics({ setPage }) {
   const handleUpdate = (item) => {
     setEditingItemId(item.id);
     setFormData({
+      date: item.date || getTodayDate(),
       transactionType: item.transactionType,
       category: item.category,
       description: item.description,
@@ -115,11 +157,9 @@ export default function FinanceAnalytics({ setPage }) {
     const { name, value } = e.target;
     let newFormData = { ...formData, [name]: value };
 
-    // Auto-calculate Total Amount when Quantity or Unit Price changes
     if (name === "quantity" || name === "unitPrice") {
       const qty = parseFloat(newFormData.quantity) || 0;
       const price = parseFloat(newFormData.unitPrice) || 0;
-      // Only auto-calculate if both have a value greater than 0
       if (qty > 0 || price > 0) {
         newFormData.totalAmount = (qty * price).toFixed(2);
       }
@@ -131,8 +171,8 @@ export default function FinanceAnalytics({ setPage }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Allow quantity and unitPrice to be 0 or null if the user is just entering a flat Total Amount
     const payload = {
+      date: formData.date,
       transactionType: formData.transactionType,
       category: formData.category,
       description: formData.description,
@@ -173,16 +213,37 @@ export default function FinanceAnalytics({ setPage }) {
   return (
     <div className="finance-page">
       <div className="finance-header">
+        
+        {/* LEFT: Title */}
         <div className="title-section">
           <h1>Rangala Financial Analytics</h1>
-          <p>Managing estate expenses and transactions</p>
+          <p>Managing estate expenses and transactions for {selectedYear}</p>
         </div>
 
+        {/* CENTER: Add Button */}
         <button className="add-record-btn" onClick={openAddPopup}>
           + Add New Transaction
         </button>
 
+        {/* RIGHT: Controls & Dropdown */}
         <div className="header-controls">
+          <div className="dropdown-container">
+            <label htmlFor="year-select">Select Year: </label>
+            <select 
+              id="year-select" 
+              className="year-dropdown"
+              value={selectedYear}
+              onChange={(e) => setSelectedYear(e.target.value)}
+            >
+              {availableYears.length === 0 && <option>No data</option>}
+              {availableYears.map((year) => (
+                <option key={year} value={year}>
+                  {year}
+                </option>
+              ))}
+            </select>
+          </div>
+
           <button className="back-to-grid-btn" onClick={() => setPage("rangaladata")}>
             ← Back to Overview
           </button>
@@ -194,6 +255,7 @@ export default function FinanceAnalytics({ setPage }) {
           <thead>
             <tr>
               <th>ID</th>
+              <th>Date</th>
               <th>Type & Category</th>
               <th>Description</th>
               <th>Qty</th>
@@ -207,14 +269,15 @@ export default function FinanceAnalytics({ setPage }) {
           <tbody>
             {currentRows.length === 0 ? (
               <tr>
-                <td colSpan="9" style={{textAlign: "center", padding: "30px", color: "#666"}}>
-                  No financial records found. Please add data.
+                <td colSpan="10" style={{textAlign: "center", padding: "30px", color: "#666"}}>
+                  No financial records found for {selectedYear}. Please add data.
                 </td>
               </tr>
             ) : (
               currentRows.map((item) => (
                 <tr key={item.id}>
                   <td className="id-cell">{item.id}</td>
+                  <td>{item.date}</td>
                   <td>
                     <div style={{fontWeight: 'bold', color: item.transactionType === 'Expense' ? '#d32f2f' : '#2f7d5b'}}>
                       {item.transactionType}
@@ -253,6 +316,9 @@ export default function FinanceAnalytics({ setPage }) {
             </button>
             <div className="year-label">
               Page <strong>{currentPage}</strong> of <strong>{totalPages}</strong>
+              <span style={{marginLeft: "10px", fontSize: "0.85rem", color: "#888"}}>
+                (Total records: {yearData.length})
+              </span>
             </div>
             <button className="nav-btn" onClick={() => { setCurrentPage(p => p + 1); setOpenMenuId(null); }} disabled={currentPage === totalPages}>
               Next →
@@ -273,13 +339,20 @@ export default function FinanceAnalytics({ setPage }) {
             <form className="add-form" onSubmit={handleSubmit}>
               <div className="form-row">
                 <div className="form-group">
+                  <label>Date</label>
+                  <input type="date" name="date" value={formData.date} onChange={handleFormChange} required />
+                </div>
+                <div className="form-group">
                   <label>Type</label>
                   <select name="transactionType" value={formData.transactionType} onChange={handleFormChange} required>
                     <option value="Expense">Expense</option>
                     <option value="Income">Income</option>
                   </select>
                 </div>
-                <div className="form-group">
+              </div>
+
+              <div className="form-row">
+                <div className="form-group" style={{ flex: 2 }}>
                   <label>Category</label>
                   <input type="text" name="category" value={formData.category} onChange={handleFormChange} placeholder="e.g., Labor - Plucking" required />
                 </div>
