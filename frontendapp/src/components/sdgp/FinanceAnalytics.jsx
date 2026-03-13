@@ -15,16 +15,17 @@ export default function FinanceAnalytics({ setPage }) {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [editingItemId, setEditingItemId] = useState(null);
   
+  // Updated to match Spring Boot DTO exactly
   const [formData, setFormData] = useState({
-    date: "", 
+    transactionDate: "", 
     transactionType: "Expense",
     category: "",
-    description: "",
+    descriptionDetails: "",
     quantity: "",
-    unitPrice: "",
+    unitPriceRate: "",
     totalAmount: "",
     paymentMethod: "Cash",
-    voucherRef: "",
+    voucherInvoiceRef: "",
     authorizedBy: ""
   });
 
@@ -41,14 +42,15 @@ export default function FinanceAnalytics({ setPage }) {
 
   const fetchFinanceData = async () => {
     try {
-      const response = await fetch("http://localhost:8080/api/finance-details");
+      // Updated Endpoint
+      const response = await fetch("http://localhost:8080/api/financial-data");
       if (!response.ok) throw new Error("Network response was not ok");
       
       const data = await response.json();
       setAllData(data);
 
-      // Extract unique years from the 'date' field (e.g., '2024' from '2024-03-01')
-      const years = [...new Set(data.map(item => item.date ? item.date.substring(0, 4) : null))]
+      // Extract unique years using 'transactionDate'
+      const years = [...new Set(data.map(item => item.transactionDate ? item.transactionDate.substring(0, 4) : null))]
         .filter(Boolean)
         .sort((a, b) => b - a);
         
@@ -64,17 +66,12 @@ export default function FinanceAnalytics({ setPage }) {
     } catch (error) {
       console.error("Error fetching data:", error);
       
-      // Fallback data with various years for testing the filter
+      // Fallback data mapping updated to match backend keys
       const sampleData = [
-        { id: 1, date: "2024-03-01", transactionType: "Expense", category: "Labor - Plucking", description: "Plucking wages Field 1", quantity: 350, unitPrice: 40, totalAmount: 14000, paymentMethod: "Cash", voucherRef: "V-101", authorizedBy: "Kumara Mallwathantri" },
-        { id: 2, date: "2024-03-02", transactionType: "Expense", category: "Labor - Plucking", description: "Plucking wages Field 2", quantity: 300, unitPrice: 40, totalAmount: 12000, paymentMethod: "Cash", voucherRef: "V-102", authorizedBy: "Kumara Mallwathantri" },
-        { id: 3, date: "2023-11-15", transactionType: "Expense", category: "Labor - Sundry", description: "Weeding Field 3", quantity: 5, unitPrice: 1000, totalAmount: 5000, paymentMethod: "Cash", voucherRef: "V-103", authorizedBy: "Kumara Mallwathantri" },
-        { id: 4, date: "2023-12-05", transactionType: "Expense", category: "Fertilizer", description: "T-65 Purchase", quantity: 150, unitPrice: 80, totalAmount: 12000, paymentMethod: "Bank Transfer", voucherRef: "V-104", authorizedBy: "Sadun Wijesighe" }
+        { id: 1, transactionDate: "2024-03-01", transactionType: "Expense", category: "Labor - Plucking", descriptionDetails: "Plucking wages Field 1", quantity: 350, unitPriceRate: 40, totalAmount: 14000, paymentMethod: "Cash", voucherInvoiceRef: "V-101", authorizedBy: "Kumara Mallwathantri" },
       ];
       setAllData(sampleData);
-      
-      const sampleYears = ["2024", "2023"];
-      setAvailableYears(sampleYears);
+      setAvailableYears(["2024"]);
       setSelectedYear("2024");
     }
   };
@@ -86,8 +83,7 @@ export default function FinanceAnalytics({ setPage }) {
   }, [selectedYear]);
 
   // --- FILTER BY YEAR & PAGINATE ---
-  // Filter where the date string starts with the selected year
-  const yearData = allData.filter(item => item.date && item.date.startsWith(selectedYear));
+  const yearData = allData.filter(item => item.transactionDate && item.transactionDate.startsWith(selectedYear));
   const totalPages = Math.ceil(yearData.length / rowsPerPage);
   const startIndex = (currentPage - 1) * rowsPerPage;
   const currentRows = yearData.slice(startIndex, startIndex + rowsPerPage);
@@ -100,7 +96,7 @@ export default function FinanceAnalytics({ setPage }) {
   const handleDelete = async (id) => {
     if (window.confirm(`Are you sure you want to delete Transaction ID ${id}?`)) {
       try {
-        const response = await fetch(`http://localhost:8080/api/finance-details/${id}`, {
+        const response = await fetch(`http://localhost:8080/api/financial-data/${id}`, {
           method: "DELETE"
         });
 
@@ -120,15 +116,15 @@ export default function FinanceAnalytics({ setPage }) {
   const openAddPopup = () => {
     setEditingItemId(null);
     setFormData({
-      date: getTodayDate(),
+      transactionDate: getTodayDate(),
       transactionType: "Expense",
       category: "",
-      description: "",
+      descriptionDetails: "",
       quantity: "",
-      unitPrice: "",
+      unitPriceRate: "",
       totalAmount: "",
       paymentMethod: "Cash",
-      voucherRef: "",
+      voucherInvoiceRef: "",
       authorizedBy: ""
     });
     setIsPopupOpen(true);
@@ -137,15 +133,15 @@ export default function FinanceAnalytics({ setPage }) {
   const handleUpdate = (item) => {
     setEditingItemId(item.id);
     setFormData({
-      date: item.date || getTodayDate(),
+      transactionDate: item.transactionDate || getTodayDate(),
       transactionType: item.transactionType,
       category: item.category,
-      description: item.description,
+      descriptionDetails: item.descriptionDetails,
       quantity: item.quantity,
-      unitPrice: item.unitPrice,
+      unitPriceRate: item.unitPriceRate,
       totalAmount: item.totalAmount,
       paymentMethod: item.paymentMethod,
-      voucherRef: item.voucherRef,
+      voucherInvoiceRef: item.voucherInvoiceRef,
       authorizedBy: item.authorizedBy
     });
     setIsPopupOpen(true);
@@ -157,9 +153,10 @@ export default function FinanceAnalytics({ setPage }) {
     const { name, value } = e.target;
     let newFormData = { ...formData, [name]: value };
 
-    if (name === "quantity" || name === "unitPrice") {
+    // Update auto-calculation to use unitPriceRate
+    if (name === "quantity" || name === "unitPriceRate") {
       const qty = parseFloat(newFormData.quantity) || 0;
-      const price = parseFloat(newFormData.unitPrice) || 0;
+      const price = parseFloat(newFormData.unitPriceRate) || 0;
       if (qty > 0 || price > 0) {
         newFormData.totalAmount = (qty * price).toFixed(2);
       }
@@ -172,22 +169,22 @@ export default function FinanceAnalytics({ setPage }) {
     e.preventDefault();
     
     const payload = {
-      date: formData.date,
+      transactionDate: formData.transactionDate,
       transactionType: formData.transactionType,
       category: formData.category,
-      description: formData.description,
+      descriptionDetails: formData.descriptionDetails,
       quantity: parseFloat(formData.quantity) || 0,
-      unitPrice: parseFloat(formData.unitPrice) || 0,
+      unitPriceRate: parseFloat(formData.unitPriceRate) || 0,
       totalAmount: parseFloat(formData.totalAmount),
       paymentMethod: formData.paymentMethod,
-      voucherRef: formData.voucherRef,
+      voucherInvoiceRef: formData.voucherInvoiceRef,
       authorizedBy: formData.authorizedBy
     };
 
     try {
       const url = editingItemId 
-        ? `http://localhost:8080/api/finance-details/${editingItemId}`
-        : "http://localhost:8080/api/finance-details";
+        ? `http://localhost:8080/api/financial-data/${editingItemId}`
+        : "http://localhost:8080/api/financial-data";
         
       const method = editingItemId ? "PUT" : "POST";
 
@@ -277,20 +274,20 @@ export default function FinanceAnalytics({ setPage }) {
               currentRows.map((item) => (
                 <tr key={item.id}>
                   <td className="id-cell">{item.id}</td>
-                  <td>{item.date}</td>
+                  <td>{item.transactionDate}</td>
                   <td>
                     <div style={{fontWeight: 'bold', color: item.transactionType === 'Expense' ? '#d32f2f' : '#2f7d5b'}}>
                       {item.transactionType}
                     </div>
                     <div style={{fontSize: '0.85rem', color: '#666'}}>{item.category}</div>
                   </td>
-                  <td>{item.description}</td>
+                  <td>{item.descriptionDetails}</td>
                   <td>{item.quantity === 0 ? '-' : item.quantity}</td>
-                  <td>{item.unitPrice === 0 ? '-' : `රු. ${item.unitPrice}`}</td>
+                  <td>{item.unitPriceRate === 0 ? '-' : `රු. ${item.unitPriceRate}`}</td>
                   <td className="currency-cell">රු. {item.totalAmount}</td>
                   <td>
                     <div>{item.paymentMethod}</div>
-                    <div style={{fontSize: '0.85rem', color: '#888'}}>Ref: {item.voucherRef}</div>
+                    <div style={{fontSize: '0.85rem', color: '#888'}}>Ref: {item.voucherInvoiceRef}</div>
                   </td>
                   <td>{item.authorizedBy}</td>
                   
@@ -340,7 +337,7 @@ export default function FinanceAnalytics({ setPage }) {
               <div className="form-row">
                 <div className="form-group">
                   <label>Date</label>
-                  <input type="date" name="date" value={formData.date} onChange={handleFormChange} required />
+                  <input type="date" name="transactionDate" value={formData.transactionDate} onChange={handleFormChange} required />
                 </div>
                 <div className="form-group">
                   <label>Type</label>
@@ -360,7 +357,7 @@ export default function FinanceAnalytics({ setPage }) {
 
               <div className="form-group">
                 <label>Description / Details</label>
-                <input type="text" name="description" value={formData.description} onChange={handleFormChange} placeholder="Enter details" required />
+                <input type="text" name="descriptionDetails" value={formData.descriptionDetails} onChange={handleFormChange} placeholder="Enter details" required />
               </div>
 
               <div className="form-row">
@@ -370,7 +367,7 @@ export default function FinanceAnalytics({ setPage }) {
                 </div>
                 <div className="form-group">
                   <label>Unit Price / Rate</label>
-                  <input type="number" name="unitPrice" value={formData.unitPrice} onChange={handleFormChange} placeholder="Optional" min="0" step="0.01" />
+                  <input type="number" name="unitPriceRate" value={formData.unitPriceRate} onChange={handleFormChange} placeholder="Optional" min="0" step="0.01" />
                 </div>
               </div>
 
@@ -399,7 +396,7 @@ export default function FinanceAnalytics({ setPage }) {
                 </div>
                 <div className="form-group">
                   <label>Voucher / Invoice Ref</label>
-                  <input type="text" name="voucherRef" value={formData.voucherRef} onChange={handleFormChange} placeholder="e.g., V-101" required />
+                  <input type="text" name="voucherInvoiceRef" value={formData.voucherInvoiceRef} onChange={handleFormChange} placeholder="e.g., V-101" required />
                 </div>
               </div>
 
