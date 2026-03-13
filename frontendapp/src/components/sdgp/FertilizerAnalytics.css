@@ -364,36 +364,9 @@
   background: #25684a;
 }
 
-/* Year Dropdown Container styles */
-.dropdown-container {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: white;
-  padding: 8px 15px;
-  border-radius: 8px;
-  border: 1px solid #e0e0e0;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-}
-
-.dropdown-container label {
-  font-weight: 600;
+/* Styling for the new Date column */
+.date-cell {
+  font-weight: 500;
   color: #444;
-  font-size: 0.9rem;
-}
-
-.year-dropdown {
-  padding: 6px 12px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 0.95rem;
-  font-family: inherit;
-  font-weight: bold;
-  color: #1a4331;
-  cursor: pointer;
-  outline: none;
-}
-
-.year-dropdown:focus {
-  border-color: #2f7d5b;
+  letter-spacing: 0.5px;
 }
