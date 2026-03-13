@@ -363,3 +363,10 @@
 .submit-btn:hover {
   background: #25684a;
 }
+
+/* Styling for the new Date column */
+.date-cell {
+  font-weight: 500;
+  color: #444;
+  letter-spacing: 0.5px;
+}

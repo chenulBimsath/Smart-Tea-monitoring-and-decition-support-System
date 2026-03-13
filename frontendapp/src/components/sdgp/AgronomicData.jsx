@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from "react";
-import "./AgronomicData.css"; // You can use a new CSS file or import your existing one
+import "./AgronomicData.css"; 
 
 export default function AgronomicData({ setPage }) {
   // --- INITIAL SAMPLE DATA ---
+  // Added date field to the sample data
   const initialData = [
-    { id: 1, fieldNo: "1", cloneType: "Clonal", pruningYear: "1st Year", pluckingInterval: 7, leafQuality: 82, rainfall: 12.5, soilPh: 4.8, pestDisease: "None", weedDensity: "5%", shadeTree: "Good", inspectedBy: "Kumara Mallwathantri" },
-    { id: 2, fieldNo: "2", cloneType: "Seedling", pruningYear: "3rd Year", pluckingInterval: 10, leafQuality: 68, rainfall: 12.5, soilPh: 5.1, pestDisease: "None", weedDensity: "12%", shadeTree: "Needs lopping", inspectedBy: "Kumara Mallwathantri" },
-    { id: 3, fieldNo: "3", cloneType: "Clonal", pruningYear: "4th Year", pluckingInterval: 12, leafQuality: 65, rainfall: 12.5, soilPh: 4.9, pestDisease: "None", weedDensity: "15%", shadeTree: "Good", inspectedBy: "Kumara Mallwathantri" },
-    { id: 4, fieldNo: "4", cloneType: "Seedling", pruningYear: "2nd Year", pluckingInterval: 8, leafQuality: 75, rainfall: 12.5, soilPh: 5.0, pestDisease: "Mites - Low", weedDensity: "8%", shadeTree: "Good", inspectedBy: "sadun wijesighe" },
-    { id: 5, fieldNo: "Clonal", cloneType: "Clonal", pruningYear: "1st Year", pluckingInterval: 7, leafQuality: 80, rainfall: 12.5, soilPh: 4.7, pestDisease: "None", weedDensity: "6%", shadeTree: "Good", inspectedBy: "jeraj fonseka" }
+    { id: 1, date: "2026-03-01", fieldNo: "1", cloneType: "Clonal", pruningYear: "1st Year", pluckingInterval: 7, leafQuality: 82, rainfall: 12.5, soilPh: 4.8, pestDisease: "None", weedDensity: "5%", shadeTree: "Good", inspectedBy: "Kumara Mallwathantri" },
+    { id: 2, date: "2026-03-02", fieldNo: "2", cloneType: "Seedling", pruningYear: "3rd Year", pluckingInterval: 10, leafQuality: 68, rainfall: 12.5, soilPh: 5.1, pestDisease: "None", weedDensity: "12%", shadeTree: "Needs lopping", inspectedBy: "Kumara Mallwathantri" },
+    { id: 3, date: "2026-03-05", fieldNo: "3", cloneType: "Clonal", pruningYear: "4th Year", pluckingInterval: 12, leafQuality: 65, rainfall: 12.5, soilPh: 4.9, pestDisease: "None", weedDensity: "15%", shadeTree: "Good", inspectedBy: "Kumara Mallwathantri" },
+    { id: 4, date: "2026-03-08", fieldNo: "4", cloneType: "Seedling", pruningYear: "2nd Year", pluckingInterval: 8, leafQuality: 75, rainfall: 12.5, soilPh: 5.0, pestDisease: "Mites - Low", weedDensity: "8%", shadeTree: "Good", inspectedBy: "sadun wijesighe" },
+    { id: 5, date: "2026-03-10", fieldNo: "Clonal", cloneType: "Clonal", pruningYear: "1st Year", pluckingInterval: 7, leafQuality: 80, rainfall: 12.5, soilPh: 4.7, pestDisease: "None", weedDensity: "6%", shadeTree: "Good", inspectedBy: "jeraj fonseka" }
   ];
 
   // --- STATE ---
@@ -22,6 +23,7 @@ export default function AgronomicData({ setPage }) {
   const [editingItemId, setEditingItemId] = useState(null); 
   
   const [formData, setFormData] = useState({
+    date: "", // <-- NEW: Added Date
     fieldNo: "",
     cloneType: "",
     pruningYear: "",
@@ -46,7 +48,7 @@ export default function AgronomicData({ setPage }) {
   };
 
   const handleDelete = (id) => {
-    if (window.confirm(`Are you sure you want to delete Field No ${id}?`)) {
+    if (window.confirm(`Are you sure you want to delete Record ID ${id}?`)) {
       // NOTE: Add your fetch DELETE request here when backend is ready
       setAllData(prevData => prevData.filter(item => item.id !== id));
       setOpenMenuId(null); 
@@ -57,6 +59,7 @@ export default function AgronomicData({ setPage }) {
   const openAddPopup = () => {
     setEditingItemId(null); 
     setFormData({
+      date: "", // <-- NEW: Reset Date
       fieldNo: "", cloneType: "", pruningYear: "", pluckingInterval: "",
       leafQuality: "", rainfall: "", soilPh: "", pestDisease: "",
       weedDensity: "", shadeTree: "", inspectedBy: ""
@@ -67,6 +70,7 @@ export default function AgronomicData({ setPage }) {
   const handleUpdate = (item) => {
     setEditingItemId(item.id); 
     setFormData({
+      date: item.date || "", // <-- NEW: Populate Date
       fieldNo: item.fieldNo, cloneType: item.cloneType, pruningYear: item.pruningYear,
       pluckingInterval: item.pluckingInterval, leafQuality: item.leafQuality, 
       rainfall: item.rainfall, soilPh: item.soilPh, pestDisease: item.pestDisease,
@@ -105,18 +109,15 @@ export default function AgronomicData({ setPage }) {
     <div className="yield-page">
       <div className="yield-header">
         
-        {/* LEFT: Title */}
         <div className="title-section">
           <h1>Rangala Agronomic Data</h1>
           <p>Tracking field conditions and crop health metrics</p>
         </div>
 
-        {/* CENTER: Add Button */}
         <button className="add-record-btn" onClick={openAddPopup}>
           + Add New Data Record
         </button>
 
-        {/* RIGHT: Controls */}
         <div className="header-controls">
           <button className="back-to-grid-btn" onClick={() => setPage("rangaladata")}>
             ← Back to Overview
@@ -125,11 +126,12 @@ export default function AgronomicData({ setPage }) {
       </div>
 
       <div className="table-card shadow-lg">
-        {/* Wrapped in a responsive container in case columns get too wide */}
         <div className="table-responsive">
           <table className="yield-table">
             <thead>
               <tr>
+                <th>ID</th> {/* <-- 1st Column */}
+                <th>Date</th> {/* <-- 2nd Column */}
                 <th>Field No</th>
                 <th>Clone/Type</th>
                 <th>Pruning Yr</th>
@@ -147,14 +149,16 @@ export default function AgronomicData({ setPage }) {
             <tbody>
               {currentRows.length === 0 ? (
                 <tr>
-                  <td colSpan="12" style={{textAlign: "center", padding: "30px", color: "#666"}}>
+                  <td colSpan="14" style={{textAlign: "center", padding: "30px", color: "#666"}}>
                     No agronomic records found. Please add data.
                   </td>
                 </tr>
               ) : (
                 currentRows.map((item, index) => (
                   <tr key={item.id || index}>
-                    <td className="id-cell">{item.fieldNo}</td>
+                    <td className="id-cell">{item.id}</td> {/* <-- ID Data */}
+                    <td className="date-cell">{item.date}</td> {/* <-- Date Data */}
+                    <td>{item.fieldNo}</td>
                     <td style={{fontWeight: '600', color: '#555'}}>{item.cloneType}</td>
                     <td>{item.pruningYear}</td>
                     <td><span className="yield-badge">{item.pluckingInterval}</span></td>
@@ -200,7 +204,6 @@ export default function AgronomicData({ setPage }) {
         )}
       </div>
 
-      {/* --- POPUP MODAL --- */}
       {isPopupOpen && (
         <div className="modal-overlay">
           <div className="modal-content agronomic-modal">
@@ -210,6 +213,19 @@ export default function AgronomicData({ setPage }) {
             </div>
 
             <form className="add-form grid-form" onSubmit={handleSubmit}>
+              
+              {/* <-- NEW: Date Input Field --> */}
+              <div className="form-group">
+                <label>Date</label>
+                <input 
+                  type="date" 
+                  name="date" 
+                  value={formData.date} 
+                  onChange={handleFormChange} 
+                  required 
+                />
+              </div>
+
               <div className="form-group">
                 <label>Field No</label>
                 <input type="text" name="fieldNo" value={formData.fieldNo} onChange={handleFormChange} required />
