@@ -7,11 +7,15 @@ export default function MyProfile() {
 
   const user = {
     fullname: "Kamal Perera",
-    email: "kamal@example.com",
     role: "Estate Officer",
-    estate_id: "EST-001",
-    division_id: "DIV-05",
+    email: "kamal@example.com",
     mobile: "+94 77 123 4567",
+    location: "Kandy, Sri Lanka",
+    estate_id: "EST-001",
+    estate_name: "Green Valley Estate",
+    division_id: "DIV-05",
+    department: "Field Management",
+    join_date: "12 Jan 2022",
     avatar: "/PROFILE.jpg"
   };
 
@@ -22,11 +26,14 @@ export default function MyProfile() {
 
         <div className="profile-header">
 
-          <img src={user.avatar} className="profile-avatar" />
+          <div className="profile-left">
+            <img src={user.avatar} className="profile-avatar" />
 
-          <div>
-            <h2>{user.fullname}</h2>
-            <p className="role">{user.role}</p>
+            <div>
+              <h2>{user.fullname}</h2>
+              <p className="role">{user.role}</p>
+              <span className="status">Active</span>
+            </div>
           </div>
 
           <button
@@ -38,28 +45,26 @@ export default function MyProfile() {
 
         </div>
 
-        <div className="profile-grid">
+        <div className="section">
+          <h3>Contact Information</h3>
 
-          <div className="profile-item">
-            <span>Email</span>
-            <strong>{user.email}</strong>
+          <div className="profile-grid">
+            <ProfileItem label="Email" value={user.email} />
+            <ProfileItem label="Mobile" value={user.mobile} />
+            <ProfileItem label="Location" value={user.location} />
+            <ProfileItem label="Joined Date" value={user.join_date} />
           </div>
+        </div>
 
-          <div className="profile-item">
-            <span>Mobile Number</span>
-            <strong>{user.mobile}</strong>
+        <div className="section">
+          <h3>Estate Information</h3>
+
+          <div className="profile-grid">
+            <ProfileItem label="Estate ID" value={user.estate_id} />
+            <ProfileItem label="Estate Name" value={user.estate_name} />
+            <ProfileItem label="Division ID" value={user.division_id} />
+            <ProfileItem label="Department" value={user.department} />
           </div>
-
-          <div className="profile-item">
-            <span>Estate ID</span>
-            <strong>{user.estate_id}</strong>
-          </div>
-
-          <div className="profile-item">
-            <span>Division ID</span>
-            <strong>{user.division_id}</strong>
-          </div>
-
         </div>
 
       </div>
@@ -68,6 +73,15 @@ export default function MyProfile() {
         <EditProfile close={() => setShowEdit(false)} user={user} />
       )}
 
+    </div>
+  );
+}
+
+function ProfileItem({ label, value }) {
+  return (
+    <div className="profile-box">
+      <span>{label}</span>
+      <p>{value}</p>
     </div>
   );
 }
@@ -86,8 +100,9 @@ function EditProfile({ close, user }) {
         <input defaultValue={user.fullname} />
         <input defaultValue={user.email} />
         <input defaultValue={user.mobile} />
+        <input defaultValue={user.location} />
 
-        <button className="save-btn">Save</button>
+        <button className="save-btn">Save Changes</button>
 
       </div>
 
