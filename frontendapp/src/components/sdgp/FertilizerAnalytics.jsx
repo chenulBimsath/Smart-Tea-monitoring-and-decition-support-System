@@ -16,7 +16,8 @@ export default function FertilizerAnalytics({ setPage }) {
   const [editingItemId, setEditingItemId] = useState(null); 
   
   const [formData, setFormData] = useState({
-    year: "2026", // Added year field
+    date: "", // <-- NEW: Added date field
+    year: "2026", 
     fieldNo: "",
     typeOfTea: "Clonal",
     cropStatus: "Mature",
@@ -59,11 +60,11 @@ export default function FertilizerAnalytics({ setPage }) {
       }
     } catch (error) {
       console.error("Error fetching data:", error);
-      // Fallback sample data with years
+      // Fallback sample data with dates added
       const sampleData = [
-        { id: 1, year: 2026, fieldNo: "1", typeOfTea: "Clonal", cropStatus: "Mature", fertilizerName: "T-65", nutrientRatio: "25:5:15", quantityPerHa: 150, totalQuantity: 450, applicationMethod: "Broadcasting", condition: "Moist", supervisor: "Kumara Mallwathantri" },
-        { id: 2, year: 2026, fieldNo: "2", typeOfTea: "Seedling", cropStatus: "Immature", fertilizerName: "T-200", nutrientRatio: "15:15:15", quantityPerHa: 100, totalQuantity: 200, applicationMethod: "Ring Placement", condition: "Sunny", supervisor: "Kumara Mallwathantri" },
-        { id: 3, year: 2025, fieldNo: "1", typeOfTea: "Clonal", cropStatus: "Mature", fertilizerName: "T-65", nutrientRatio: "25:5:15", quantityPerHa: 140, totalQuantity: 420, applicationMethod: "Broadcasting", condition: "Rain", supervisor: "Kumara Mallwathantri" }
+        { id: 1, date: "2026-03-01", year: 2026, fieldNo: "1", typeOfTea: "Clonal", cropStatus: "Mature", fertilizerName: "T-65", nutrientRatio: "25:5:15", quantityPerHa: 150, totalQuantity: 450, applicationMethod: "Broadcasting", condition: "Moist", supervisor: "Kumara Mallwathantri" },
+        { id: 2, date: "2026-03-02", year: 2026, fieldNo: "2", typeOfTea: "Seedling", cropStatus: "Immature", fertilizerName: "T-200", nutrientRatio: "15:15:15", quantityPerHa: 100, totalQuantity: 200, applicationMethod: "Ring Placement", condition: "Sunny", supervisor: "Kumara Mallwathantri" },
+        { id: 3, date: "2025-11-15", year: 2025, fieldNo: "1", typeOfTea: "Clonal", cropStatus: "Mature", fertilizerName: "T-65", nutrientRatio: "25:5:15", quantityPerHa: 140, totalQuantity: 420, applicationMethod: "Broadcasting", condition: "Rain", supervisor: "Kumara Mallwathantri" }
       ];
       setAllData(sampleData);
       setAvailableYears(["2026", "2025"]);
@@ -111,7 +112,8 @@ export default function FertilizerAnalytics({ setPage }) {
   const openAddPopup = () => {
     setEditingItemId(null); 
     setFormData({
-      year: selectedYear || "2026", // Default to currently viewed year
+      date: "", // <-- NEW: Reset date
+      year: selectedYear || "2026", 
       fieldNo: "",
       typeOfTea: "Clonal",
       cropStatus: "Mature",
@@ -129,6 +131,7 @@ export default function FertilizerAnalytics({ setPage }) {
   const handleUpdate = (item) => {
     setEditingItemId(item.id); 
     setFormData({
+      date: item.date || "", // <-- NEW: Populate date
       year: item.year || "2026",
       fieldNo: item.fieldNo,
       typeOfTea: item.typeOfTea,
@@ -155,7 +158,8 @@ export default function FertilizerAnalytics({ setPage }) {
     e.preventDefault();
 
     const payload = {
-      year: parseInt(formData.year, 10), // Include year in payload
+      date: formData.date, // <-- NEW: Include date in payload
+      year: parseInt(formData.year, 10), 
       fieldNo: formData.fieldNo,
       typeOfTea: formData.typeOfTea,
       cropStatus: formData.cropStatus,
@@ -201,21 +205,15 @@ export default function FertilizerAnalytics({ setPage }) {
     <div className="fertilizer-page">
       <div className="fertilizer-header">
         
-        {/* LEFT: Title */}
         <div className="title-section">
           <h1>Rangala Fertilizer Analytics</h1>
           <p>Tracking nutrient applications for the year {selectedYear}</p>
         </div>
 
-        {/* CENTER: Add Button */}
-        <button 
-          className="add-record-btn" 
-          onClick={openAddPopup}
-        >
+        <button className="add-record-btn" onClick={openAddPopup}>
           + Add Fertilizer Record
         </button>
 
-        {/* RIGHT: Controls (Added Year Dropdown) */}
         <div className="header-controls">
           <div className="dropdown-container">
             <label htmlFor="year-select">Select Year: </label>
@@ -245,6 +243,7 @@ export default function FertilizerAnalytics({ setPage }) {
           <table className="fertilizer-table">
             <thead>
               <tr>
+                <th>Date</th> {/* <-- NEW: Date Column Header */}
                 <th>Field No</th>
                 <th>Tea Type</th>
                 <th>Status</th>
@@ -261,13 +260,15 @@ export default function FertilizerAnalytics({ setPage }) {
             <tbody>
               {currentRows.length === 0 ? (
                 <tr>
-                  <td colSpan="11" style={{textAlign: "center", padding: "30px", color: "#666"}}>
+                  {/* Updated colSpan from 11 to 12 to match new column count */}
+                  <td colSpan="12" style={{textAlign: "center", padding: "30px", color: "#666"}}>
                     No records found for {selectedYear}. Please add data to your database.
                   </td>
                 </tr>
               ) : (
                 currentRows.map((item, index) => (
                   <tr key={item.id || index}>
+                    <td className="date-cell">{item.date}</td> {/* <-- NEW: Date Column Data */}
                     <td className="id-cell">{item.fieldNo}</td>
                     <td>{item.typeOfTea}</td>
                     <td><span className={`status-badge ${item.cropStatus.toLowerCase()}`}>{item.cropStatus}</span></td>
@@ -316,7 +317,6 @@ export default function FertilizerAnalytics({ setPage }) {
         )}
       </div>
 
-      {/* --- POPUP MODAL --- */}
       {isPopupOpen && (
         <div className="modal-overlay">
           <div className="modal-content large-modal">
@@ -327,7 +327,18 @@ export default function FertilizerAnalytics({ setPage }) {
 
             <form className="add-form grid-form" onSubmit={handleSubmit}>
               
-              {/* Added Year Field to the form */}
+              {/* <-- NEW: Date input field --> */}
+              <div className="form-group">
+                <label>Date</label>
+                <input 
+                  type="date" 
+                  name="date" 
+                  value={formData.date} 
+                  onChange={handleFormChange} 
+                  required 
+                />
+              </div>
+
               <div className="form-group">
                 <label>Year</label>
                 <input 

@@ -29,6 +29,11 @@
   margin: 25px 0;
 }
 
+.date-cell {
+  font-weight: 500;
+  color: #444;
+}
+
 /* Card base */
 .metric-card {
   border-radius: 18px;
