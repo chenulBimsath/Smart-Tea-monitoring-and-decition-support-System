@@ -7,10 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-/**
- * PLACE AT:
- * src/main/java/com/tea_management/tea_backend/repository/DivisionNdviClimateRepository.java
- */
+
 @Repository
 public interface DivisionNdviClimateRepository extends JpaRepository<DivisionNdviClimate, Integer> {
 
