@@ -2,11 +2,8 @@ import { useState } from "react";
 import "./App.css";
 import Header from "./components/layout/Header";
 import Sidebar from "./components/layout/Sidebar";
-<<<<<<< Updated upstream
-=======
 
 import Dashboard from "./components/sdgp/Dashboard";
->>>>>>> Stashed changes
 import FieldMap from "./components/sdgp/FieldMap";
 import FieldData from "./components/sdgp/FieldData";
 import ClimateRisk from "./components/sdgp/ClimateRisk";
