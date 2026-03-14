@@ -8,17 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
-/**
- * REST endpoints for the Yield Prediction page.
- *
- * PLACE AT:
- * src/main/java/com/tea_management/tea_backend/controller/YieldPredictionController.java
- *
- * Endpoints:
- *   GET /api/yield/predictions      → latest ML prediction per division
- *   GET /api/yield/history/monthly  → monthly totals from division_ndvi_climate
- *   GET /api/yield/history/yearly   → yearly totals from division_ndvi_climate
- */
+
 @RestController
 @RequestMapping("/api/yield")
 @CrossOrigin(origins = "*")

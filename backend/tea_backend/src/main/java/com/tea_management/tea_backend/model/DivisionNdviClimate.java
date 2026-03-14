@@ -3,15 +3,6 @@ package com.tea_management.tea_backend.model;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
-/**
- * Maps to: public.division_ndvi_climate
- *
- * This is the main historical training data table.
- * React uses this for the yield history chart.
- *
- * PLACE AT:
- * src/main/java/com/tea_management/tea_backend/model/DivisionNdviClimate.java
- */
 @Entity
 @Table(name = "division_ndvi_climate")
 public class DivisionNdviClimate {
