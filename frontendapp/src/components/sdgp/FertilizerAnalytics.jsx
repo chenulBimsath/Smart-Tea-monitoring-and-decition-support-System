@@ -16,8 +16,7 @@ export default function FertilizerAnalytics({ setPage }) {
   const [editingItemId, setEditingItemId] = useState(null); 
   
   const [formData, setFormData] = useState({
-    date: "", // <-- NEW: Added date field
-    year: "2026", 
+    date: "", 
     fieldNo: "",
     typeOfTea: "Clonal",
     cropStatus: "Mature",
@@ -42,32 +41,50 @@ export default function FertilizerAnalytics({ setPage }) {
 
   const fetchFertilizerData = async () => {
     try {
-      const response = await fetch("http://localhost:8080/api/fertilizer-details");
+      // Changed endpoint to match the new Spring Boot Controller
+      const response = await fetch("http://localhost:8080/api/fertilizer-data");
       if (!response.ok) throw new Error("Network response was not ok");
       
-      const data = await response.json();
-      setAllData(data);
+      const rawData = await response.json();
+      
+      // Map the backend DTO fields to the frontend state properties
+      const mappedData = rawData.map(item => ({
+        id: item.id,
+        date: item.applicationDate, // mapped from applicationDate
+        year: item.applicationDate ? item.applicationDate.substring(0, 4) : "2026", // auto-extract year
+        fieldNo: item.fieldNo,
+        typeOfTea: item.teaType, // mapped from teaType
+        cropStatus: item.cropStatus,
+        fertilizerName: item.fertilizerName,
+        nutrientRatio: item.nutrientRatio,
+        quantityPerHa: item.quantityPerHa,
+        totalQuantity: item.totalQuantityUsed, // mapped from totalQuantityUsed
+        applicationMethod: item.applicationMethod,
+        condition: item.weatherSoilCondition, // mapped from weatherSoilCondition
+        supervisor: item.supervisorName // mapped from supervisorName
+      }));
+
+      setAllData(mappedData);
 
       // Extract unique years for the dropdown
-      const years = [...new Set(data.map(item => item.year))].filter(Boolean).sort((a, b) => b - a);
+      const years = [...new Set(mappedData.map(item => item.year))].filter(Boolean).sort((a, b) => b - a);
       setAvailableYears(years);
       
       if (years.length > 0) {
         setSelectedYear(years[0].toString());
       } else {
-        setAvailableYears(["2026"]);
-        setSelectedYear("2026");
+        const currentYear = new Date().getFullYear().toString();
+        setAvailableYears([currentYear]);
+        setSelectedYear(currentYear);
       }
     } catch (error) {
       console.error("Error fetching data:", error);
-      // Fallback sample data with dates added
+      // Fallback sample data in case backend is down
       const sampleData = [
-        { id: 1, date: "2026-03-01", year: 2026, fieldNo: "1", typeOfTea: "Clonal", cropStatus: "Mature", fertilizerName: "T-65", nutrientRatio: "25:5:15", quantityPerHa: 150, totalQuantity: 450, applicationMethod: "Broadcasting", condition: "Moist", supervisor: "Kumara Mallwathantri" },
-        { id: 2, date: "2026-03-02", year: 2026, fieldNo: "2", typeOfTea: "Seedling", cropStatus: "Immature", fertilizerName: "T-200", nutrientRatio: "15:15:15", quantityPerHa: 100, totalQuantity: 200, applicationMethod: "Ring Placement", condition: "Sunny", supervisor: "Kumara Mallwathantri" },
-        { id: 3, date: "2025-11-15", year: 2025, fieldNo: "1", typeOfTea: "Clonal", cropStatus: "Mature", fertilizerName: "T-65", nutrientRatio: "25:5:15", quantityPerHa: 140, totalQuantity: 420, applicationMethod: "Broadcasting", condition: "Rain", supervisor: "Kumara Mallwathantri" }
+        { id: 1, date: "2026-03-01", year: "2026", fieldNo: "1", typeOfTea: "Clonal", cropStatus: "Mature", fertilizerName: "T-65", nutrientRatio: "25:5:15", quantityPerHa: 150, totalQuantity: 450, applicationMethod: "Broadcasting", condition: "Moist", supervisor: "Kumara Mallwathantri" }
       ];
       setAllData(sampleData);
-      setAvailableYears(["2026", "2025"]);
+      setAvailableYears(["2026"]);
       setSelectedYear("2026");
     }
   };
@@ -92,7 +109,7 @@ export default function FertilizerAnalytics({ setPage }) {
   const handleDelete = async (id) => {
     if (window.confirm(`Are you sure you want to delete Record ID ${id}?`)) {
       try {
-        const response = await fetch(`http://localhost:8080/api/fertilizer-details/${id}`, {
+        const response = await fetch(`http://localhost:8080/api/fertilizer-data/${id}`, {
           method: "DELETE"
         });
 
@@ -112,8 +129,7 @@ export default function FertilizerAnalytics({ setPage }) {
   const openAddPopup = () => {
     setEditingItemId(null); 
     setFormData({
-      date: "", // <-- NEW: Reset date
-      year: selectedYear || "2026", 
+      date: "", 
       fieldNo: "",
       typeOfTea: "Clonal",
       cropStatus: "Mature",
@@ -131,8 +147,7 @@ export default function FertilizerAnalytics({ setPage }) {
   const handleUpdate = (item) => {
     setEditingItemId(item.id); 
     setFormData({
-      date: item.date || "", // <-- NEW: Populate date
-      year: item.year || "2026",
+      date: item.date || "", 
       fieldNo: item.fieldNo,
       typeOfTea: item.typeOfTea,
       cropStatus: item.cropStatus,
@@ -157,25 +172,25 @@ export default function FertilizerAnalytics({ setPage }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Map frontend state back to backend DTO fields
     const payload = {
-      date: formData.date, // <-- NEW: Include date in payload
-      year: parseInt(formData.year, 10), 
-      fieldNo: formData.fieldNo,
-      typeOfTea: formData.typeOfTea,
+      applicationDate: formData.date,
+      fieldNo: parseInt(formData.fieldNo, 10), // Ensure it's an integer for backend
+      teaType: formData.typeOfTea,
       cropStatus: formData.cropStatus,
       fertilizerName: formData.fertilizerName,
       nutrientRatio: formData.nutrientRatio,
       quantityPerHa: parseFloat(formData.quantityPerHa),
-      totalQuantity: parseFloat(formData.totalQuantity),
+      totalQuantityUsed: parseFloat(formData.totalQuantity),
       applicationMethod: formData.applicationMethod,
-      condition: formData.condition,
-      supervisor: formData.supervisor
+      weatherSoilCondition: formData.condition,
+      supervisorName: formData.supervisor
     };
 
     try {
       const url = editingItemId 
-        ? `http://localhost:8080/api/fertilizer-details/${editingItemId}`
-        : "http://localhost:8080/api/fertilizer-details";
+        ? `http://localhost:8080/api/fertilizer-data/${editingItemId}`
+        : "http://localhost:8080/api/fertilizer-data";
         
       const method = editingItemId ? "PUT" : "POST";
 
@@ -186,7 +201,7 @@ export default function FertilizerAnalytics({ setPage }) {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to save data.");
+        throw new Error("Failed to save data. Please check your inputs.");
       }
 
       alert(editingItemId ? "Data Updated Successfully!" : "Fertilizer Record Added Successfully!");
@@ -243,7 +258,7 @@ export default function FertilizerAnalytics({ setPage }) {
           <table className="fertilizer-table">
             <thead>
               <tr>
-                <th>Date</th> {/* <-- NEW: Date Column Header */}
+                <th>Date</th>
                 <th>Field No</th>
                 <th>Tea Type</th>
                 <th>Status</th>
@@ -260,7 +275,6 @@ export default function FertilizerAnalytics({ setPage }) {
             <tbody>
               {currentRows.length === 0 ? (
                 <tr>
-                  {/* Updated colSpan from 11 to 12 to match new column count */}
                   <td colSpan="12" style={{textAlign: "center", padding: "30px", color: "#666"}}>
                     No records found for {selectedYear}. Please add data to your database.
                   </td>
@@ -268,7 +282,7 @@ export default function FertilizerAnalytics({ setPage }) {
               ) : (
                 currentRows.map((item, index) => (
                   <tr key={item.id || index}>
-                    <td className="date-cell">{item.date}</td> {/* <-- NEW: Date Column Data */}
+                    <td className="date-cell">{item.date}</td>
                     <td className="id-cell">{item.fieldNo}</td>
                     <td>{item.typeOfTea}</td>
                     <td><span className={`status-badge ${item.cropStatus.toLowerCase()}`}>{item.cropStatus}</span></td>
@@ -327,7 +341,6 @@ export default function FertilizerAnalytics({ setPage }) {
 
             <form className="add-form grid-form" onSubmit={handleSubmit}>
               
-              {/* <-- NEW: Date input field --> */}
               <div className="form-group">
                 <label>Date</label>
                 <input 
@@ -340,19 +353,8 @@ export default function FertilizerAnalytics({ setPage }) {
               </div>
 
               <div className="form-group">
-                <label>Year</label>
-                <input 
-                  type="number" 
-                  name="year" 
-                  value={formData.year} 
-                  onChange={handleFormChange} 
-                  required 
-                />
-              </div>
-
-              <div className="form-group">
                 <label>Field No</label>
-                <input type="text" name="fieldNo" value={formData.fieldNo} onChange={handleFormChange} placeholder="e.g., 1" required />
+                <input type="number" name="fieldNo" value={formData.fieldNo} onChange={handleFormChange} placeholder="e.g., 1" required />
               </div>
 
               <div className="form-group">
