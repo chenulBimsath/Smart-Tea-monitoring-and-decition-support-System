@@ -1,25 +1,40 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import "./YieldPrediction.css";
 
-// Spring Boot base URL — set VITE_API_BASE=http://localhost:8080 in your .env
-const API = import.meta.env.VITE_API_BASE || "http://localhost:8080";
+const API         = import.meta.env.VITE_API_BASE || "http://localhost:8080";
+const MONTH_NAMES = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 
-// Division display config
 const DIVISION_META = {
-  "Rangala":      { id: "F-01", risk: "Low"    },
-  "Poodelgodda":  { id: "F-02", risk: "Low"    },
-  "Ranwella":     { id: "F-03", risk: "Low"    },
-  "New Division": { id: "F-04", risk: "Medium" },
-  "Kalduriya":    { id: "F-05", risk: "Medium" },
-  "Peru Division":{ id: "F-06", risk: "High"   },
+  "Rangala":       { id: "F-01", risk: "Low",    accent: "#27ae60" },
+  "Poodelgodda":   { id: "F-02", risk: "Low",    accent: "#2ecc71" },
+  "Ranwella":      { id: "F-03", risk: "Low",    accent: "#17a589" },
+  "New Division":  { id: "F-04", risk: "Medium", accent: "#e67e22" },
+  "Kalduriya":     { id: "F-05", risk: "Medium", accent: "#f39c12" },
+  "Peru Division": { id: "F-06", risk: "High",   accent: "#e74c3c" },
 };
 
-// Capitalise first letter of each word
-const titleCase = (s) => s.toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+const tc = s => s.toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+
+function AnimCount({ to, dec = 0, suffix = "" }) {
+  const [val, setVal] = useState(0);
+  const raf = useRef();
+  useEffect(() => {
+    const end = parseFloat(to) || 0, t0 = Date.now(), dur = 900;
+    const tick = () => {
+      const p = Math.min((Date.now() - t0) / dur, 1);
+      setVal(end * (1 - Math.pow(1 - p, 3)));
+      if (p < 1) raf.current = requestAnimationFrame(tick);
+    };
+    raf.current = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf.current);
+  }, [to]);
+  return <>{val.toFixed(dec)}{suffix}</>;
+}
 
 export default function YieldPrediction() {
   const [predictions, setPredictions] = useState([]);
-  const [chartData,   setChartData]   = useState([]);
+  const [monthly,     setMonthly]     = useState([]);
+  const [yearly,      setYearly]      = useState([]);
   const [loading,     setLoading]     = useState(true);
   const [error,       setError]       = useState(null);
   const [activeDiv,   setActiveDiv]   = useState(null);
@@ -37,237 +52,289 @@ export default function YieldPrediction() {
 
   async function loadPredictions() {
     const res = await fetch(`${API}/api/yield/predictions`);
-    if (!res.ok) throw new Error(
-      `Cannot reach Spring Boot at ${API} (status ${res.status}). Is the backend running?`
-    );
+    if (!res.ok) throw new Error(`Cannot reach API at ${API} (${res.status})`);
     const data = await res.json();
-
-    // data = [{id, year, month, division, predictedYield}, ...]
-    // division_ndvi_climate doesn't have risk/confidence — we add them from DIVISION_META
-    const list = data.map((row) => {
-      const name = titleCase(row.division);
-      const meta = DIVISION_META[name] || { id: "?", risk: "Medium" };
+    setPredictions(data.map(row => {
+      const name = tc(row.division);
+      const meta = DIVISION_META[name] || { id: "?", risk: "Medium", accent: "#8aab98" };
       return {
-        id:          meta.id,
-        name,
-        division:    row.division,
-        predicted:   Math.round(row.predictedYield),
-        year:        row.year,
-        month:       row.month,
-        risk:        meta.risk,
-        // confidence is derived from a fixed formula since we don't store it in monthly_predicted_yield
-        confidence:  meta.risk === "Low" ? 85 : meta.risk === "Medium" ? 78 : 70,
+        ...meta, name,
+        division:   row.division,
+        predicted:  Math.round(row.predictedYield),
+        year:       row.year,
+        month:      row.month,
+        confidence: meta.risk === "Low" ? 85 : meta.risk === "Medium" ? 78 : 70,
       };
-    });
-
-    setPredictions(list);
+    }));
   }
 
   async function loadChart() {
-    const url = chartView === "monthly"
-      ? `${API}/api/yield/history/monthly`
-      : `${API}/api/yield/history/yearly`;
-
-    const res  = await fetch(url);
-    if (!res.ok) throw new Error(`Chart error: ${res.status}`);
-    const data = await res.json();
-
-    const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-
-    if (chartView === "monthly") {
-      // [{yearMonth: "2024-01", totalGreenLeaf: 42300}, ...]
-      const formatted = data.slice(-12).map((d) => {
-        const [yr, mo] = d.yearMonth.split("-");
-        return { cycle: `${MONTHS[parseInt(mo)-1]} '${yr.slice(2)}`, actual: d.totalGreenLeaf };
-      });
-      setChartData(formatted);
-    } else {
-      // [{year: 2021, totalGreenLeaf: 312000}, ...]
-      setChartData(data.map((d) => ({ cycle: String(d.year), actual: d.totalGreenLeaf })));
+    const [mr, yr] = await Promise.all([
+      fetch(`${API}/api/yield/history/monthly`),
+      fetch(`${API}/api/yield/history/yearly`),
+    ]);
+    if (mr.ok) {
+      const data = await mr.json();
+      setMonthly(data.slice(-12).map(d => {
+        const [yr, mo] = (d.yearMonth || "").split("-");
+        return { lbl: `${MONTH_NAMES[parseInt(mo)-1]}'${yr?.slice(2)}`, val: d.totalGreenLeaf };
+      }));
+    }
+    if (yr.ok) {
+      const data = await yr.json();
+      setYearly(data.map(d => ({ lbl: String(d.year), val: d.totalGreenLeaf })));
     }
   }
 
-  // ── Derived stats ──────────────────────────────────────────────────────────
-  const totalPredicted = predictions.reduce((s, d) => s + d.predicted, 0);
-  const avgConfidence  = predictions.length
+  // ── Derived ───────────────────────────────────────────────────────────────
+  const totalPred     = predictions.reduce((s, d) => s + d.predicted, 0);
+  const avgConf       = predictions.length
     ? Math.round(predictions.reduce((s, d) => s + d.confidence, 0) / predictions.length) : 0;
-  const highRiskCount  = predictions.filter((d) => d.risk === "High").length;
-  const chartMax       = Math.max(...chartData.map((d) => d.actual), 1);
-  const predMonth      = predictions[0]
-    ? `${predictions[0].year}-${String(predictions[0].month).padStart(2,"0")}` : "";
+  const highRisk      = predictions.filter(d => d.risk === "High").length;
+  const predLabel     = predictions[0]
+    ? `${MONTH_NAMES[(predictions[0].month || 1) - 1]} ${predictions[0].year}` : "—";
 
-  // ── Loading ────────────────────────────────────────────────────────────────
+  const chartData     = chartView === "monthly" ? monthly : yearly;
+  const chartMax      = Math.max(...chartData.map(d => d.val), 1);
+
+  // ── Loading ───────────────────────────────────────────────────────────────
   if (loading) return (
-    <div className="yield-page"><div className="yield-container">
-      <div className="loading-state">
-        <div className="loading-spinner" />
-        <p>Connecting to Spring Boot API...</p>
-        <span>{API}/api/yield/predictions</span>
+    <div className="yp-page">
+      <div className="yp-loading">
+        <div className="yp-spinner" />
+        <p>Loading predictions...</p>
       </div>
-    </div></div>
+    </div>
   );
 
-  // ── Error ──────────────────────────────────────────────────────────────────
+  // ── Error ─────────────────────────────────────────────────────────────────
   if (error) return (
-    <div className="yield-page"><div className="yield-container">
-      <div className="error-state">
-        <h3>⚠️ Could not load data</h3>
-        <p className="error-msg">{error}</p>
-        <p className="error-label">Make sure these steps are done in order:</p>
-        <div className="error-steps">
-          <code>1. Spring Boot backend running on {API}</code>
-          <code>2. division_ndvi_climate table has data in Supabase</code>
-          <code>3. python yield_prediction_ml.py  ← generates predictions</code>
-          <code>4. monthly_predicted_yield table now has rows</code>
+    <div className="yp-page">
+      <div className="yp-body">
+        <div className="db-card" style={{ padding: 28 }}>
+          <h3 style={{ color: "#e74c3c", marginBottom: 8 }}>Could not load data</h3>
+          <p style={{ color: "#8aab98", fontSize: 13 }}>{error}</p>
         </div>
       </div>
-    </div></div>
+    </div>
   );
 
-  // ── No data ────────────────────────────────────────────────────────────────
+  // ── No data ───────────────────────────────────────────────────────────────
   if (predictions.length === 0) return (
-    <div className="yield-page"><div className="yield-container">
-      <div className="error-state">
-        <h3>📭 No predictions found</h3>
-        <p className="error-msg">monthly_predicted_yield table is empty.</p>
-        <div className="error-steps">
-          <code>python yield_prediction_ml.py</code>
+    <div className="yp-page">
+      <div className="yp-body">
+        <div className="db-card" style={{ padding: 28, textAlign: "center" }}>
+          <p style={{ color: "#8aab98", marginBottom: 10 }}>No predictions found</p>
+          <code style={{ background: "#1a3a2a", color: "#7dcea0", padding: "6px 14px", borderRadius: 8, fontSize: 12 }}>
+            python yield_prediction_ml.py
+          </code>
         </div>
       </div>
-    </div></div>
+    </div>
   );
 
-  // ── Main render ────────────────────────────────────────────────────────────
   return (
-    <div className="yield-page">
-      <div className="yield-container">
+    <div className="yp-page">
+      <div className="yp-body">
 
-        {/* HEADER */}
-        <div className="yield-header">
-          <div>
-            <h2>Yield Prediction</h2>
-            <span>Random Forest ML · {predMonth && `Forecast for ${predMonth} · `}6 Divisions</span>
-          </div>
-          <div className="header-badges">
-            <span className="model-badge model-badge--live">🟢 API Live</span>
-            <span className="model-badge">🤖 ML Active</span>
-            <button className="refresh-btn" onClick={loadAll}>↻ Refresh</button>
-          </div>
-        </div>
-
-        {/* METRIC CARDS */}
-        <div className="metric-grid">
-          <div className="metric-card green">
-            <h1>{(totalPredicted / 1000).toFixed(1)}t</h1>
-            <p>Total Forecast</p>
-            <span className="badge">All Divisions</span>
-          </div>
-          <div className="metric-card teal">
-            <h1>{avgConfidence}%</h1>
-            <p>Avg Confidence</p>
-            <span className="badge">Random Forest</span>
-          </div>
-          <div className="metric-card orange">
-            <h1>{highRiskCount}</h1>
-            <p>High Risk Divisions</p>
-            <span className="badge">{highRiskCount > 0 ? "Needs Attention" : "All Clear"}</span>
-          </div>
-          <div className="metric-card blue">
-            <h1>{predictions.length}</h1>
-            <p>Active Divisions</p>
-            <span className="badge">Rangala Estate</span>
-          </div>
-        </div>
-
-        {/* DIVISION TABLE */}
-        <h3 className="section-title">Division-Level Forecast</h3>
-        <p className="section-sub">
-          Predictions from <code>monthly_predicted_yield</code> · Click row for details
-        </p>
-
-        <div className="field-table">
-          <div className="field-table-header">
-            <span>Division</span>
-            <span>Forecast Month</span>
-            <span>Predicted Yield</span>
-            <span>Risk Level</span>
-            <span>Confidence</span>
+        {/* ── KPI STRIP ── */}
+        <section className="db-kpi-strip">
+          <div className="db-kpi-card">
+            <div className="db-kpi-label">Total Forecast</div>
+            <div className="db-kpi-num green">
+              <AnimCount to={totalPred / 1000} dec={1} suffix="t" />
+            </div>
+            <div className="db-kpi-hint">{predLabel} · All divisions</div>
           </div>
 
-          {predictions.map((f) => (
-            <div key={f.id}>
-              <div
-                className={`field-row ${activeDiv?.id === f.id ? "active" : ""}`}
-                onClick={() => setActiveDiv(activeDiv?.id === f.id ? null : f)}
-              >
-                <span className="field-name">
-                  <span className="field-id">{f.id}</span>
-                  {f.name}
-                </span>
-                <span style={{ color: "#5f7c6b", fontSize: 13 }}>
-                  {f.year}-{String(f.month).padStart(2,"0")}
-                </span>
-                <span className="yield-val">{f.predicted.toLocaleString()} kg</span>
-                <span>
-                  <span className={`risk-badge risk-${f.risk.toLowerCase()}`}>{f.risk}</span>
-                </span>
-                <span className="conf-val">{f.confidence}%</span>
-              </div>
+          <div className="db-kpi-sep" />
 
-              {activeDiv?.id === f.id && (
-                <div className="expanded-row">
-                  <p className="expanded-title">Prediction details</p>
-                  <div className="expanded-grid">
-                    <div className="exp-item"><span>Division</span>        <strong>{f.name}</strong></div>
-                    <div className="exp-item"><span>Predicted Yield</span> <strong>{f.predicted.toLocaleString()} kg</strong></div>
-                    <div className="exp-item"><span>Forecast Month</span>  <strong>{f.year}-{String(f.month).padStart(2,"0")}</strong></div>
-                    <div className="exp-item"><span>Risk Level</span>      <strong>{f.risk}</strong></div>
-                    <div className="exp-item"><span>Model</span>           <strong>Random Forest</strong></div>
-                    <div className="exp-item"><span>Data Source</span>     <strong>division_ndvi_climate</strong></div>
+          <div className="db-kpi-card">
+            <div className="db-kpi-label">Avg Confidence</div>
+            <div className="db-kpi-num sky">
+              <AnimCount to={avgConf} suffix="%" />
+            </div>
+            <div className="db-kpi-hint">Random Forest model</div>
+          </div>
+
+          <div className="db-kpi-sep" />
+
+          <div className="db-kpi-card">
+            <div className="db-kpi-label">High Risk Divisions</div>
+            <div className={`db-kpi-num ${highRisk > 0 ? "red" : "green"}`}>
+              <AnimCount to={highRisk} />
+            </div>
+            <div className="db-kpi-hint">
+              {predictions.filter(d => d.risk === "Medium").length} medium ·{" "}
+              {predictions.filter(d => d.risk === "Low").length} low
+            </div>
+          </div>
+
+          <div className="db-kpi-sep" />
+
+          <div className="db-kpi-card">
+            <div className="db-kpi-label">Active Divisions</div>
+            <div className="db-kpi-num green">
+              <AnimCount to={predictions.length} />
+            </div>
+            <div className="db-kpi-hint">Rangala Estate</div>
+          </div>
+        </section>
+
+        {/* ── MAIN GRID ── */}
+        <div className="db-grid">
+
+          {/* Division table — full width */}
+          <div className="db-card span-4">
+            <div className="db-card-hd">
+              <span className="db-card-ttl">Division Forecast</span>
+              <span className="db-card-tag">{predLabel}</span>
+            </div>
+            <table className="db-tbl">
+              <thead>
+                <tr>
+                  <th>Division</th>
+                  <th>Forecast Month</th>
+                  <th>Predicted Yield</th>
+                  <th>Share</th>
+                  <th>Risk</th>
+                  <th>Confidence</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[...predictions].sort((a, b) => b.predicted - a.predicted).map(d => {
+                  const share = totalPred > 0 ? (d.predicted / totalPred * 100) : 0;
+                  return (
+                    <tr key={d.id}
+                        className={activeDiv?.id === d.id ? "yp-row-active" : ""}
+                        onClick={() => setActiveDiv(activeDiv?.id === d.id ? null : d)}
+                        style={{ cursor: "pointer" }}>
+                      <td>
+                        <div className="db-div-cell">
+                          <span className="db-dot" style={{ background: d.accent }} />
+                          <span className="db-div-nm">{d.name}</span>
+                          <span className="db-div-id">{d.id}</span>
+                        </div>
+                      </td>
+                      <td style={{ color: "#5f7c6b", fontSize: 13 }}>
+                        {d.year}-{String(d.month).padStart(2, "0")}
+                      </td>
+                      <td>
+                        <span className="db-mono">{d.predicted.toLocaleString()}</span>
+                        <span className="db-unit"> kg</span>
+                      </td>
+                      <td>
+                        <div className="db-share">
+                          <div className="db-share-track">
+                            <div className="db-share-fill"
+                              style={{ width: `${share}%`, background: d.accent }} />
+                          </div>
+                          <span className="db-share-num">{share.toFixed(1)}%</span>
+                        </div>
+                      </td>
+                      <td>
+                        <span className={`db-risk risk-${d.risk.toLowerCase()}`}>{d.risk}</span>
+                      </td>
+                      <td>
+                        <div className="db-conf">
+                          <div className="db-conf-track">
+                            <div className="db-conf-fill" style={{ width: `${d.confidence}%` }} />
+                          </div>
+                          <span>{d.confidence}%</span>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td><strong>Total</strong></td>
+                  <td />
+                  <td><strong className="db-mono">{totalPred.toLocaleString()} kg</strong></td>
+                  <td><strong>100%</strong></td>
+                  <td /><td />
+                </tr>
+              </tfoot>
+            </table>
+
+            {/* Expanded detail row */}
+            {activeDiv && (
+              <div className="yp-expanded">
+                <p className="yp-expanded-title">Prediction details · {activeDiv.name}</p>
+                <div className="yp-expanded-grid">
+                  <div className="db-wx-stat">
+                    <div className="db-wx-stat-val">{activeDiv.predicted.toLocaleString()}</div>
+                    <div className="db-wx-stat-lbl">Predicted kg</div>
+                  </div>
+                  <div className="db-wx-stat">
+                    <div className="db-wx-stat-val">{activeDiv.year}-{String(activeDiv.month).padStart(2,"0")}</div>
+                    <div className="db-wx-stat-lbl">Forecast Month</div>
+                  </div>
+                  <div className="db-wx-stat">
+                    <div className="db-wx-stat-val">{activeDiv.risk}</div>
+                    <div className="db-wx-stat-lbl">Risk Level</div>
+                  </div>
+                  <div className="db-wx-stat">
+                    <div className="db-wx-stat-val">{activeDiv.confidence}%</div>
+                    <div className="db-wx-stat-lbl">Confidence</div>
+                  </div>
+                  <div className="db-wx-stat">
+                    <div className="db-wx-stat-val">RF</div>
+                    <div className="db-wx-stat-lbl">Algorithm</div>
+                  </div>
+                  <div className="db-wx-stat">
+                    <div className="db-wx-stat-val">{activeDiv.id}</div>
+                    <div className="db-wx-stat-lbl">Division ID</div>
                   </div>
                 </div>
-              )}
-            </div>
-          ))}
-        </div>
-
-        {/* CHART */}
-        <div className="chart-card">
-          <div className="chart-header">
-            <div>
-              <h3 className="section-title" style={{ margin: 0 }}>
-                {chartView === "monthly" ? "Monthly Yield History (last 12 months)" : "Annual Yield History"}
-              </h3>
-              <p className="section-sub" style={{ margin: "4px 0 0" }}>
-                All divisions · kg · from <code>division_ndvi_climate</code>
-              </p>
-            </div>
-            <div className="chart-toggle">
-              <button className={chartView === "monthly" ? "toggle-btn active" : "toggle-btn"}
-                      onClick={() => setChartView("monthly")}>Monthly</button>
-              <button className={chartView === "yearly"  ? "toggle-btn active" : "toggle-btn"}
-                      onClick={() => setChartView("yearly")}>Yearly</button>
-            </div>
-          </div>
-
-          <div className="bar-chart">
-            {chartData.map((d, i) => (
-              <div className="bar-group" key={i}>
-                <div className="bars">
-                  <div className="bar actual"
-                       style={{ height: `${(d.actual / chartMax) * 130}px` }}
-                       title={`${d.cycle}: ${d.actual.toLocaleString()} kg`} />
-                </div>
-                <span className="bar-label">{d.cycle}</span>
               </div>
-            ))}
+            )}
           </div>
 
-          <div className="chart-legend">
-            <span><span className="legend-dot actual-dot" />Actual Green Leaf (kg)</span>
+          {/* Chart — full width */}
+          <div className="db-card span-4">
+            <div className="db-card-hd">
+              <span className="db-card-ttl">
+                {chartView === "monthly" ? "Monthly Yield History (last 12 months)" : "Annual Yield History"}
+              </span>
+              <div style={{ display: "flex", gap: 6 }}>
+                <button
+                  className={`yp-toggle ${chartView === "monthly" ? "active" : ""}`}
+                  onClick={() => setChartView("monthly")}>Monthly</button>
+                <button
+                  className={`yp-toggle ${chartView === "yearly" ? "active" : ""}`}
+                  onClick={() => setChartView("yearly")}>Yearly</button>
+              </div>
+            </div>
+
+            {chartData.length === 0 ? (
+              <div className="db-empty"><p>No history data yet</p></div>
+            ) : (
+              <>
+                <div className="db-chart" style={{ height: 200 }}>
+                  {chartData.map((d, i) => {
+                    const px = Math.max((d.val / chartMax) * 160, 3);
+                    const isLast = chartView === "monthly" && i === chartData.length - 1;
+                    return (
+                      <div className="db-chart-col" key={i}>
+                        <div className="db-chart-tip">{(d.val / 1000).toFixed(1)}t</div>
+                        <div className={`db-chart-bar ${isLast ? "highlight" : ""} ${chartView === "yearly" ? "amber-bar" : ""}`}
+                          style={{ height: `${px}px` }} />
+                        <div className="db-chart-lbl">{d.lbl}</div>
+                      </div>
+                    );
+                  })}
+                </div>
+                <div className="yp-legend">
+                  <span className="yp-legend-dot" />
+                  {chartView === "monthly" ? "Green Leaf Yield (kg)" : "Annual Total (kg)"}
+                </div>
+              </>
+            )}
           </div>
+
         </div>
-
       </div>
     </div>
   );
