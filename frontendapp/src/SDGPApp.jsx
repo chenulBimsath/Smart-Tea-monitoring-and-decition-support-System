@@ -32,7 +32,7 @@ import FinanceAnalytics from "./components/sdgp/FinanceAnalytics";
 import AgronomicData from "./components/sdgp/AgronomicData";
 
 export default function SDGPApp() {
-  const [page, setPage] = useState("fieldmap");
+  const [page, setPage] = useState("dashboard");
 
   return (
     <>
