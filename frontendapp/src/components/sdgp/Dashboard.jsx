@@ -1,11 +1,9 @@
 import { useState, useEffect, useRef } from "react";
 import "./Dashboard.css";
-import logo from "../../../public/logo.png";
 
 const API         = import.meta.env.VITE_API_BASE || "http://localhost:8080";
 const MONTH_NAMES = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 
-// Rangala estate coordinates
 const WEATHER_LAT = 7.327;
 const WEATHER_LON = 80.820;
 
@@ -20,14 +18,7 @@ const DIVISION_META = {
 
 const tc = s => s.toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
 
-function useClock() {
-  const [t, setT] = useState(new Date());
-  useEffect(() => {
-    const id = setInterval(() => setT(new Date()), 1000);
-    return () => clearInterval(id);
-  }, []);
-  return t;
-}
+// ── Inline animated counter ───────────────────────────────────────────────────
 
 function AnimCount({ to, dec = 0, suffix = "" }) {
   const [val, setVal] = useState(0);
@@ -52,14 +43,18 @@ export default function Dashboard() {
   const [weather,        setWeather]        = useState(null);
   const [weatherLoading, setWeatherLoading] = useState(true);
   const [dataLoading,    setDataLoading]    = useState(true);
-  const now = useClock();
 
   useEffect(() => {
     loadData();
     loadWeather();
   }, []);
 
-  // ── Spring Boot data ────────────────────────────────────────────────────────
+  function refresh() {
+    loadData();
+    loadWeather();
+  }
+
+  // ── Spring Boot data ──────────────────────────────────────────────────────
   async function loadData() {
     setDataLoading(true);
     await Promise.allSettled([fetchPreds(), fetchHistory()]);
@@ -90,15 +85,12 @@ export default function Dashboard() {
     } catch {}
   }
 
-  // ── Open-Meteo Archive API — no API key needed ─────────────────────────────
-  // Fetches yesterday's data (most recent complete day)
+  // ── Open-Meteo Archive — no API key needed ────────────────────────────────
   function loadWeather() {
     setWeatherLoading(true);
-
-    // Use yesterday as both start and end date (archive needs a complete day)
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
-    const dateStr = yesterday.toISOString().split("T")[0]; // "YYYY-MM-DD"
+    const dateStr = yesterday.toISOString().split("T")[0];
 
     const url =
       `https://archive-api.open-meteo.com/v1/archive` +
@@ -113,48 +105,39 @@ export default function Dashboard() {
       .then(data => {
         const daily  = data.daily;
         const hourly = data.hourly;
-
         if (!daily) return;
 
-        // Average humidity across the day
         const avgHumidity = hourly?.relative_humidity_2m?.length
-          ? Math.round(
-              hourly.relative_humidity_2m.reduce((a, b) => a + b, 0) /
-              hourly.relative_humidity_2m.length
-            )
+          ? Math.round(hourly.relative_humidity_2m.reduce((a, b) => a + b, 0) / hourly.relative_humidity_2m.length)
           : null;
 
-        // Average of max+min temp
         const tempMax = daily.temperature_2m_max?.[0] ?? null;
         const tempMin = daily.temperature_2m_min?.[0] ?? null;
-        const avgTemp = tempMax !== null && tempMin !== null
-          ? Math.round((tempMax + tempMin) / 2)
-          : null;
 
         setWeather({
-          temp:      avgTemp,
-          tempMax:   tempMax !== null ? Math.round(tempMax) : null,
-          tempMin:   tempMin !== null ? Math.round(tempMin) : null,
-          humidity:  avgHumidity,
-          rainfall:  daily.precipitation_sum?.[0] ?? 0,
-          wind:      daily.wind_speed_10m_max?.[0] ?? 0,
-          date:      dateStr,
+          temp:     tempMax !== null && tempMin !== null ? Math.round((tempMax + tempMin) / 2) : null,
+          tempMax:  tempMax !== null ? Math.round(tempMax) : null,
+          tempMin:  tempMin !== null ? Math.round(tempMin) : null,
+          humidity: avgHumidity,
+          rainfall: daily.precipitation_sum?.[0] ?? 0,
+          wind:     daily.wind_speed_10m_max?.[0] ?? 0,
+          date:     dateStr,
         });
       })
       .catch(() => setWeather(null))
       .finally(() => setWeatherLoading(false));
   }
 
-  // ── Derived ─────────────────────────────────────────────────────────────────
+  // ── Derived ───────────────────────────────────────────────────────────────
   const totalPred    = preds.reduce((s, d) => s + d.predicted, 0);
   const lastMonthRow = monthly.length >= 2 ? monthly[monthly.length - 2] : null;
   const lastMonthVal = lastMonthRow?.totalGreenLeaf || 0;
   const yoyPct       = lastMonthVal > 0
     ? ((totalPred - lastMonthVal) / lastMonthVal * 100).toFixed(1) : null;
-  const highRisk     = preds.filter(d => d.risk === "High").length;
-  const chartMax     = Math.max(...monthly.map(d => d.totalGreenLeaf || 0), 1);
-  const yearlyMax    = Math.max(...yearly.map(d => d.totalGreenLeaf || 0), 1);
-  const predLabel    = preds[0]
+  const highRisk  = preds.filter(d => d.risk === "High").length;
+  const chartMax  = Math.max(...monthly.slice(-12).map(d => d.totalGreenLeaf || 0), 1);
+  const yearlyMax = Math.max(...yearly.map(d => d.totalGreenLeaf || 0), 1);
+  const predLabel = preds[0]
     ? `${MONTH_NAMES[(preds[0].month || 1) - 1]} ${preds[0].year}` : "—";
 
   const temp     = weather?.temp     ?? null;
@@ -163,46 +146,10 @@ export default function Dashboard() {
   const rain     = weather?.rainfall ?? null;
   const wxDate   = weather?.date     ?? null;
 
-  // ── Boot screen ──────────────────────────────────────────────────────────────
-  if (dataLoading) return (
-    <div className="db-page">
-      <div className="db-boot">
-        <img src={logo} alt="Logo" className="db-boot-logo" />
-        <div className="db-boot-name">Smart Tea Monitor</div>
-        <div className="db-boot-hint">Loading dashboard...</div>
-        <div className="db-boot-track"><div className="db-boot-fill" /></div>
-      </div>
-    </div>
-  );
+  if (dataLoading) return <div className="db-loading">Loading...</div>;
 
   return (
     <div className="db-page">
-
-      {/* ── TOPBAR ── */}
-      <header className="db-top">
-        <div className="db-brand">
-          <img src={logo} alt="Logo" className="db-top-logo" />
-          <div>
-            <div className="db-estate-name">Smart Tea Monitor</div>
-            <div className="db-estate-sub">Rangala Estate · Dashboard</div>
-          </div>
-        </div>
-
-        <div className="db-top-right">
-          <div className="db-clock-wrap">
-            <div className="db-clock">
-              {now.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", second: "2-digit" })}
-            </div>
-            <div className="db-date-str">
-              {now.toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short", year: "numeric" })}
-            </div>
-          </div>
-          <button className="db-refresh-btn" onClick={() => { loadData(); loadWeather(); }}>
-            Refresh
-          </button>
-        </div>
-      </header>
-
       <div className="db-body">
 
         {/* ── KPI STRIP ── */}
@@ -241,7 +188,9 @@ export default function Dashboard() {
               {temp !== null ? `${temp}°C` : <span className="db-na">—</span>}
             </div>
             <div className="db-kpi-hint">
-              {weather ? `High ${weather.tempMax}° / Low ${weather.tempMin}°` : "Rangala Estate"}
+              {weather
+                ? `High ${weather.tempMax}° / Low ${weather.tempMin}°`
+                : "Rangala Estate"}
             </div>
           </div>
 
@@ -276,7 +225,7 @@ export default function Dashboard() {
         {/* ── MAIN GRID ── */}
         <div className="db-grid">
 
-          {/* Division forecast table — spans 2 cols, 2 rows */}
+          {/* Division forecast table */}
           <div className="db-card span-2 row-2">
             <div className="db-card-hd">
               <span className="db-card-ttl">Division Forecast</span>
@@ -351,7 +300,7 @@ export default function Dashboard() {
             )}
           </div>
 
-          {/* Live weather card */}
+          {/* Weather card */}
           <div className="db-card span-2">
             <div className="db-card-hd">
               <span className="db-card-ttl">Weather · Rangala</span>
@@ -359,7 +308,6 @@ export default function Dashboard() {
                 {weatherLoading ? "Loading..." : weather ? `● ${wxDate}` : "● Unavailable"}
               </span>
             </div>
-
             {weatherLoading ? (
               <div className="db-wx-loading">Fetching weather data...</div>
             ) : weather ? (
@@ -367,12 +315,8 @@ export default function Dashboard() {
                 <div className="db-wx-main">
                   <div>
                     <div className="db-wx-temp">{temp}°C</div>
-                    <div className="db-wx-desc">
-                      {weather.tempMax}° / {weather.tempMin}° · Yesterday
-                    </div>
-                    <div className="db-wx-feels">
-                      {wxDate} · Rangala Estate
-                    </div>
+                    <div className="db-wx-desc">{weather.tempMax}° / {weather.tempMin}° · Yesterday</div>
+                    <div className="db-wx-feels">{wxDate} · Rangala Estate</div>
                   </div>
                 </div>
                 <div className="db-wx-stats">
@@ -403,9 +347,7 @@ export default function Dashboard() {
                 </div>
               </div>
             ) : (
-              <div className="db-wx-loading">
-                Weather unavailable — check network connection
-              </div>
+              <div className="db-wx-loading">Weather unavailable — check network connection</div>
             )}
           </div>
 
@@ -467,16 +409,16 @@ export default function Dashboard() {
               <div className="db-empty"><p>No history data yet</p></div>
             ) : (
               <div className="db-chart">
-                {monthly.map((d, i) => {
+                {monthly.slice(-12).map((d, i) => {
                   const [yr, mo] = (d.yearMonth || "").split("-");
                   const lbl    = mo ? `${MONTH_NAMES[parseInt(mo) - 1]}'${yr?.slice(2)}` : d.yearMonth;
-                  const pct    = Math.max((d.totalGreenLeaf / chartMax) * 100, 1);
-                  const isLast = i === monthly.length - 1;
+                  const px     = Math.max((d.totalGreenLeaf / chartMax) * 140, 3);
+                  const isLast = i === monthly.slice(-12).length - 1;
                   return (
                     <div className="db-chart-col" key={i}>
                       <div className="db-chart-tip">{(d.totalGreenLeaf / 1000).toFixed(1)}t</div>
                       <div className={`db-chart-bar ${isLast ? "highlight" : ""}`}
-                        style={{ height: `${pct}%` }} />
+                        style={{ height: `${px}px` }} />
                       <div className="db-chart-lbl">{lbl}</div>
                     </div>
                   );
@@ -496,11 +438,11 @@ export default function Dashboard() {
             ) : (
               <div className="db-chart db-chart-yearly">
                 {yearly.map((d, i) => {
-                  const pct = Math.max((d.totalGreenLeaf / yearlyMax) * 100, 1);
+                  const px = Math.max((d.totalGreenLeaf / yearlyMax) * 140, 3);
                   return (
                     <div className="db-chart-col" key={i}>
                       <div className="db-chart-tip">{(d.totalGreenLeaf / 1000).toFixed(0)}t</div>
-                      <div className="db-chart-bar amber-bar" style={{ height: `${pct}%` }} />
+                      <div className="db-chart-bar amber-bar" style={{ height: `${px}px` }} />
                       <div className="db-chart-lbl">{d.year}</div>
                     </div>
                   );
@@ -511,12 +453,6 @@ export default function Dashboard() {
 
         </div>
       </div>
-
-      <footer className="db-foot">
-        <span>Smart Tea Monitor · Rangala Estate</span>
-        <span>Weather: Open-Meteo Archive · Yield: {API}</span>
-        <span>Updated {now.toLocaleTimeString()}</span>
-      </footer>
     </div>
   );
 }
