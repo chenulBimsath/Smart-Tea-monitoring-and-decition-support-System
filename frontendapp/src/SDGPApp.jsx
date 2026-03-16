@@ -3,6 +3,7 @@ import "./App.css";
 import Header from "./components/layout/Header";
 import Sidebar from "./components/layout/Sidebar";
 
+import Dashboard from "./components/sdgp/Dashboard";
 import FieldMap from "./components/sdgp/FieldMap";
 import FieldData from "./components/sdgp/FieldData";
 import ClimateRisk from "./components/sdgp/ClimateRisk";
@@ -41,6 +42,8 @@ export default function SDGPApp() {
         <Sidebar page={page} setPage={setPage} />
 
         <main className="app-main">
+
+          {page === "dashboard" && <Dashboard />}
 
           {page === "fieldmap" && <FieldMap />}
 
