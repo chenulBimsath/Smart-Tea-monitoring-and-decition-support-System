@@ -1,59 +1,66 @@
 import "./signinPopup.css";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 export default function SignInPopup({ closePopup, openSignUp }) {
   const navigate = useNavigate();
+  const [showPass, setShowPass] = useState(false);
 
-  
   const handleLogin = () => {
-    
-
-    closePopup();       
-    navigate("/dashboard"); 
+    closePopup();
+    navigate("/dashboard");
   };
 
   return (
     <div className="popup-overlay" onClick={closePopup}>
-      <div
-        className="signin-card"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <span className="close-btn" onClick={closePopup}>×</span>
+      <div className="signin-card" onClick={e => e.stopPropagation()}>
 
-        <h2 className="signin-title">SIGN IN</h2>
+        <button className="close-btn" onClick={closePopup} aria-label="Close">×</button>
 
-        <input
-          className="signin-input"
-          type="text"
-          placeholder="Username or Email"
-        />
-
-        <input
-          className="signin-input"
-          type="password"
-          placeholder="Password"
-        />
-
-        <div className="signin-options">
-          <label>
-            <input type="checkbox" />
-            Remember Me
-          </label>
-
-          <span className="forgot-link">
-            Forgot Password?
-          </span>
+        <div className="signin-logo">
+          <img src="/logo.png" alt="Logo" />
         </div>
 
-     
+        <h2 className="signin-title">Welcome back</h2>
+        <p className="signin-sub">Sign in to your estate dashboard</p>
+
+        <div className="signin-field">
+          <label>Username or Email</label>
+          <input type="text" placeholder="you@example.com" />
+        </div>
+
+        <div className="signin-field">
+          <label>Password</label>
+          <div className="signin-pass-wrap">
+            <input type={showPass ? "text" : "password"} placeholder="••••••••" />
+            <button
+              type="button"
+              className="signin-eye"
+              onClick={() => setShowPass(v => !v)}
+            >
+              {showPass ? "Hide" : "Show"}
+            </button>
+          </div>
+        </div>
+
+        <div className="signin-options">
+          <label className="signin-remember">
+            <input type="checkbox" />
+            Remember me
+          </label>
+          <span className="forgot-link">Forgot password?</span>
+        </div>
+
         <button className="signin-btn" onClick={handleLogin}>
-          SIGN IN
+          Sign In
+          <span className="signin-arrow">→</span>
         </button>
 
         <p className="signup-text">
           Don't have an account?{" "}
-          <span onClick={openSignUp}>Sign Up</span>
+          <span onClick={openSignUp}>Sign up</span>
         </p>
+
       </div>
     </div>
   );

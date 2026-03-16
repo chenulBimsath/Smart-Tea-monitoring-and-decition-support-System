@@ -1,41 +1,186 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=DM+Sans:wght@300;400;500&display=swap');
+
 .splash {
+  position: relative;
   height: 100vh;
-  margin-top: 70px;
+  min-height: 640px;
+  margin-top: 68px;
   background: url("/splash-bg.jpg") center / cover no-repeat;
+  overflow: hidden;
+  font-family: 'DM Sans', sans-serif;
+}
+
+/* Noise texture */
+.splash-noise {
+  pointer-events: none;
+  position: absolute; inset: 0; z-index: 1;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  opacity: 0.6;
 }
 
 .splash-overlay {
+  position: relative; z-index: 2;
   height: 100%;
-  background: rgba(0, 0, 0, 0.3);
-
+  background: linear-gradient(
+    135deg,
+    rgba(10, 35, 20, 0.82) 0%,
+    rgba(15, 50, 30, 0.65) 60%,
+    rgba(20, 60, 35, 0.45) 100%
+  );
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
+  padding: 0 8vw;
+  gap: 0;
+}
 
-  text-align: center;
-  color: white;
+.splash-eyebrow {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #7dcea0;
+  margin-bottom: 20px;
+  animation: fadeUp 0.8s ease both;
+}
+
+.splash-heading {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(42px, 6vw, 78px);
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.08;
+  letter-spacing: -1px;
+  margin: 0 0 24px;
+  max-width: 700px;
+  animation: fadeUp 0.8s 0.1s ease both;
+}
+
+.splash-amp {
+  color: #7dcea0;
+  font-style: italic;
+  font-weight: 700;
+}
+
+.splash-sub {
+  font-size: 16px;
+  color: rgba(255,255,255,0.75);
+  max-width: 480px;
+  line-height: 1.7;
+  margin: 0 0 40px;
+  font-weight: 300;
+  animation: fadeUp 0.8s 0.2s ease both;
 }
 
 .splash-buttons {
   display: flex;
-  gap: 20px;
-}
-
-.btn-primary,
-.btn-secondary {
-  padding: 12px 28px;
-  border-radius: 25px;
-  font-weight: bold;
-  text-decoration: none;
+  gap: 14px;
+  margin-bottom: 60px;
+  animation: fadeUp 0.8s 0.3s ease both;
 }
 
 .btn-primary {
-  background: white;
-  color: #1f6b4a;
+  background: #27ae60;
+  color: #ffffff;
+  padding: 13px 30px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+  font-family: 'DM Sans', sans-serif;
+  transition: all 0.2s;
+  box-shadow: 0 4px 20px rgba(39,174,96,0.4);
+}
+
+.btn-primary:hover {
+  background: #1a8a4a;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(39,174,96,0.5);
 }
 
 .btn-secondary {
-  border: 2px solid white;
-  color: white;
+  border: 1.5px solid rgba(255,255,255,0.5);
+  color: #ffffff;
+  padding: 13px 30px;
+  border-radius: 999px;
+  font-weight: 500;
+  font-size: 14px;
+  text-decoration: none;
+  font-family: 'DM Sans', sans-serif;
+  transition: all 0.2s;
+  backdrop-filter: blur(4px);
+}
+
+.btn-secondary:hover {
+  background: rgba(255,255,255,0.12);
+  border-color: rgba(255,255,255,0.8);
+}
+
+/* Stats strip */
+.splash-stats {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  animation: fadeUp 0.8s 0.4s ease both;
+}
+
+.splash-stat-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: #7dcea0;
+  line-height: 1;
+}
+
+.splash-stat-lbl {
+  font-size: 11px;
+  color: rgba(255,255,255,0.55);
+  margin-top: 4px;
+  font-weight: 400;
+  letter-spacing: 0.03em;
+}
+
+.splash-stat-div {
+  width: 1px;
+  height: 40px;
+  background: rgba(255,255,255,0.2);
+}
+
+/* Scroll hint */
+.splash-scroll-hint {
+  position: absolute;
+  bottom: 32px; left: 8vw;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 2;
+  animation: fadeUp 1s 0.6s ease both;
+}
+
+.splash-scroll-line {
+  width: 40px;
+  height: 1px;
+  background: rgba(255,255,255,0.4);
+}
+
+.splash-scroll-hint span {
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.4);
+  font-family: 'DM Sans', sans-serif;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+  .splash-overlay    { align-items: center; text-align: center; padding: 0 24px; }
+  .splash-heading    { font-size: 38px; }
+  .splash-sub        { font-size: 15px; }
+  .splash-stats      { gap: 20px; }
+  .splash-scroll-hint{ display: none; }
 }
