@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend/tea_backend
+      dockerfile: Dockerfile
+    container_name: smart-tea-backend
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+   
+
+  frontend:
+    build:
+      context: ./frontendapp
+      dockerfile: Dockerfile
+    container_name: smart-tea-frontend
+    ports:
+      - "80:80"
+    restart: unless-stopped
+    depends_on:
+      - backend
