@@ -1,0 +1,113 @@
+.new-division-page {
+  padding: 40px;
+  background: #f5f7f6;
+  min-height: 100vh;
+}
+
+.new-division-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 50px;
+}
+
+.header-buttons {
+  display: flex;
+  gap: 15px;
+}
+
+.back-btn {
+  background: #2f7d5b;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.3s ease;
+  font-weight: bold;
+}
+
+.back-btn:hover {
+  background: #25684a;
+}
+
+/* --- Smaller 2x2 Cards Grid --- */
+
+.cards-grid {
+  display: grid;
+  /* Forces a 2x2 layout */
+  grid-template-columns: repeat(2, 1fr); 
+  gap: 30px; 
+  padding: 10px 0;
+  max-width: 1200px; 
+  margin: 0 auto; 
+}
+
+/* Base Card Style */
+.large-data-card {
+  background: white;
+  border-radius: 16px; 
+  overflow: hidden; 
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.06); 
+  border: 3px solid transparent; 
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.large-data-card:hover {
+  transform: translateY(-5px); 
+  box-shadow: 0 10px 20px rgba(0,0,0,0.12);
+  border-color: #2f7d5b; 
+}
+
+/* Image Container */
+.card-image-container {
+  width: 100%;
+  height: 250px; 
+  overflow: hidden;
+  background-color: #eee; 
+}
+
+.card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; 
+  transition: transform 0.3s ease; 
+}
+
+.large-data-card:hover .card-image {
+  transform: scale(1.05); 
+}
+
+/* Content Area Below Image */
+.card-content {
+  padding: 20px 15px; 
+  text-align: center;
+  border-top: 1px solid #f0f0f0; 
+}
+
+.card-content h3 {
+  margin: 0;
+  color: #333;
+  font-size: 1.25rem; 
+  font-weight: 600;
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 900px) {
+  .cards-grid {
+    gap: 20px;
+    max-width: 700px;
+  }
+  .card-image-container {
+    height: 180px; 
+  }
+}
+
+@media (max-width: 700px) {
+  .cards-grid {
+    grid-template-columns: 1fr; /* Stacks vertically on mobile */
+  }
+}

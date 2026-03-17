@@ -4,13 +4,13 @@ export default function RangalaDivisions({ setPage }) {
 
   const divisions = [
     "Rangala Division",
-    "Pooddelgodda",
+    "New Division", // <-- Removed the extra space here!
     "Ranwella Division",
-    "New Division",
+    "Pooddelgodda",
     "Kalduriya Division",
     "Peru Division"
   ];
-
+ 
   return (
     <div className="division-page">
 
@@ -29,8 +29,11 @@ export default function RangalaDivisions({ setPage }) {
 
         {divisions.map((division, index) => (
 
-          <div key={index} className="division-card" onClick={(division === "Rangala Division" || division === "New Division") ? () => setPage(division === "Rangala Division" ? "rangaladata" : "newdivisiondata") : undefined}>
-
+          <div 
+            key={index} 
+            className="division-card" 
+            onClick={(division === "Rangala Division" || division === "New Division") ? () => setPage(division === "Rangala Division" ? "rangaladata" : "newdivisiondata") : undefined}
+          >
             <h3>{division}</h3>
 
             {(division === "Rangala Division" || division === "New Division") && <span className="arrow">→</span>}
