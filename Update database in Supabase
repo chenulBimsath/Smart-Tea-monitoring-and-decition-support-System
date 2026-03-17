@@ -1,0 +1,16 @@
+CREATE TABLE monthly_predicted_yield (
+    id SERIAL PRIMARY KEY,
+    year INTEGER NOT NULL,
+    month INTEGER NOT NULL,
+    division VARCHAR(50) NOT NULL,
+    predicted_yield NUMERIC(10,2)
+);
+CREATE TABLE daily_weather_ndvi (
+    id SERIAL PRIMARY KEY,
+    record_date DATE NOT NULL,
+    division VARCHAR(50) NOT NULL,
+    temperature NUMERIC(5,2),
+    rainfall NUMERIC(6,2),
+    humidity NUMERIC(5,2),
+    ndvi_value NUMERIC(5,3)
+);
