@@ -16,9 +16,15 @@ export default function NewDivFinancials({ setPage }) {
   const [editingItemId, setEditingItemId] = useState(null);
   
   const [formData, setFormData] = useState({
-    transactionDate: "", transactionType: "Expense", category: "",
-    descriptionDetails: "", quantity: "", unitPriceRate: "",
-    totalAmount: "", paymentMethod: "Cash", voucherInvoiceRef: "",
+    transactionDate: "", 
+    transactionType: "Expense",
+    category: "",
+    descriptionDetails: "",
+    quantity: "",
+    unitPriceRate: "",
+    totalAmount: "",
+    paymentMethod: "Cash",
+    voucherInvoiceRef: "",
     authorizedBy: ""
   });
 
@@ -77,13 +83,123 @@ export default function NewDivFinancials({ setPage }) {
   const startIndex = (currentPage - 1) * rowsPerPage;
   const currentRows = yearData.slice(startIndex, startIndex + rowsPerPage);
 
-  // Placeholders for final commit
-  const toggleMenu = (id) => setOpenMenuId(openMenuId === id ? null : id);
-  const openAddPopup = () => setIsPopupOpen(true);
-  const handleUpdate = (item) => {};
-  const handleDelete = async (id) => {};
-  const handleFormChange = (e) => {};
-  const handleSubmit = async (e) => { e.preventDefault(); };
+  // --- ACTIONS ---
+  const toggleMenu = (id) => {
+    setOpenMenuId(openMenuId === id ? null : id);
+  };
+
+  const handleDelete = async (id) => {
+    if (window.confirm(`Are you sure you want to delete Transaction ID ${id}?`)) {
+      try {
+        const response = await fetch(`http://localhost:8080/api/financial-data/${id}`, {
+          method: "DELETE"
+        });
+
+        if (response.ok) {
+          setAllData(prevData => prevData.filter(item => item.id !== id));
+          setOpenMenuId(null); 
+        } else {
+          alert("Failed to delete record from backend.");
+        }
+      } catch (error) {
+        console.error("Error deleting data:", error);
+      }
+    }
+  };
+
+  // --- POPUP OPENERS ---
+  const openAddPopup = () => {
+    setEditingItemId(null);
+    setFormData({
+      transactionDate: getTodayDate(),
+      transactionType: "Expense",
+      category: "",
+      descriptionDetails: "",
+      quantity: "",
+      unitPriceRate: "",
+      totalAmount: "",
+      paymentMethod: "Cash",
+      voucherInvoiceRef: "",
+      authorizedBy: ""
+    });
+    setIsPopupOpen(true);
+  };
+
+  const handleUpdate = (item) => {
+    setEditingItemId(item.id);
+    setFormData({
+      transactionDate: item.transactionDate || getTodayDate(),
+      transactionType: item.transactionType,
+      category: item.category,
+      descriptionDetails: item.descriptionDetails,
+      quantity: item.quantity,
+      unitPriceRate: item.unitPriceRate,
+      totalAmount: item.totalAmount,
+      paymentMethod: item.paymentMethod,
+      voucherInvoiceRef: item.voucherInvoiceRef,
+      authorizedBy: item.authorizedBy
+    });
+    setIsPopupOpen(true);
+    setOpenMenuId(null);
+  };
+
+  // --- FORM HANDLERS ---
+  const handleFormChange = (e) => {
+    const { name, value } = e.target;
+    let newFormData = { ...formData, [name]: value };
+
+    if (name === "quantity" || name === "unitPriceRate") {
+      const qty = parseFloat(newFormData.quantity) || 0;
+      const price = parseFloat(newFormData.unitPriceRate) || 0;
+      if (qty > 0 || price > 0) {
+        newFormData.totalAmount = (qty * price).toFixed(2);
+      }
+    }
+
+    setFormData(newFormData);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    const payload = {
+      transactionDate: formData.transactionDate,
+      transactionType: formData.transactionType,
+      category: formData.category,
+      descriptionDetails: formData.descriptionDetails,
+      quantity: parseFloat(formData.quantity) || 0,
+      unitPriceRate: parseFloat(formData.unitPriceRate) || 0,
+      totalAmount: parseFloat(formData.totalAmount),
+      paymentMethod: formData.paymentMethod,
+      voucherInvoiceRef: formData.voucherInvoiceRef,
+      authorizedBy: formData.authorizedBy
+    };
+
+    try {
+      const url = editingItemId 
+        ? `http://localhost:8080/api/financial-data/${editingItemId}`
+        : "http://localhost:8080/api/financial-data";
+        
+      const method = editingItemId ? "PUT" : "POST";
+
+      const response = await fetch(url, {
+        method: method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) throw new Error("Failed to save finance data.");
+
+      alert(editingItemId ? "Transaction Updated!" : "Transaction Added!");
+      setIsPopupOpen(false);
+      setEditingItemId(null);
+      fetchFinanceData(); 
+
+    } catch (error) {
+      console.error("Error saving data:", error);
+      alert(error.message);
+    }
+  };
 
   return (
     <div className="new-fin-page">
@@ -171,6 +287,12 @@ export default function NewDivFinancials({ setPage }) {
                   
                   <td className="new-fin-action-cell" onMouseLeave={() => setOpenMenuId(null)}>
                     <button className="new-fin-action-dots-btn" onClick={() => toggleMenu(item.id)}>⋮</button>
+                    {openMenuId === item.id && (
+                      <div className="new-fin-action-dropdown">
+                        <button onClick={() => handleUpdate(item)}>✎ Update</button>
+                        <button className="new-fin-delete-btn" onClick={() => handleDelete(item.id)}>🗑 Delete</button>
+                      </div>
+                    )}
                   </td>
                 </tr>
               ))
@@ -201,12 +323,84 @@ export default function NewDivFinancials({ setPage }) {
         <div className="new-fin-modal-overlay">
           <div className="new-fin-modal-content">
             <div className="new-fin-modal-header">
-              <h2>Add Transaction</h2>
+              <h2>{editingItemId ? "Edit Transaction" : "Add Transaction"}</h2>
               <button className="new-fin-close-btn" onClick={() => setIsPopupOpen(false)}>✕</button>
             </div>
+
             <form className="new-fin-add-form" onSubmit={handleSubmit}>
+              <div className="new-fin-form-row">
+                <div className="new-fin-form-group">
+                  <label>Date</label>
+                  <input type="date" name="transactionDate" value={formData.transactionDate} onChange={handleFormChange} required />
+                </div>
+                <div className="new-fin-form-group">
+                  <label>Type</label>
+                  <select name="transactionType" value={formData.transactionType} onChange={handleFormChange} required>
+                    <option value="Expense">Expense</option>
+                    <option value="Income">Income</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="new-fin-form-row">
+                <div className="new-fin-form-group" style={{ flex: 2 }}>
+                  <label>Category</label>
+                  <input type="text" name="category" value={formData.category} onChange={handleFormChange} placeholder="e.g., Labor - Plucking" required />
+                </div>
+              </div>
+
+              <div className="new-fin-form-group">
+                <label>Description / Details</label>
+                <input type="text" name="descriptionDetails" value={formData.descriptionDetails} onChange={handleFormChange} placeholder="Enter details" required />
+              </div>
+
+              <div className="new-fin-form-row">
+                <div className="new-fin-form-group">
+                  <label>Quantity</label>
+                  <input type="number" name="quantity" value={formData.quantity} onChange={handleFormChange} placeholder="Optional" min="0" step="0.01" />
+                </div>
+                <div className="new-fin-form-group">
+                  <label>Unit Price / Rate</label>
+                  <input type="number" name="unitPriceRate" value={formData.unitPriceRate} onChange={handleFormChange} placeholder="Optional" min="0" step="0.01" />
+                </div>
+              </div>
+
+              <div className="new-fin-form-group">
+                <label>Total Amount (LKR)</label>
+                <input 
+                  type="number" 
+                  name="totalAmount" 
+                  value={formData.totalAmount} 
+                  onChange={handleFormChange} 
+                  required 
+                  min="0" 
+                  step="0.01" 
+                  placeholder="Enter total amount"
+                />
+              </div>
+
+              <div className="new-fin-form-row">
+                <div className="new-fin-form-group">
+                  <label>Payment Method</label>
+                  <select name="paymentMethod" value={formData.paymentMethod} onChange={handleFormChange} required>
+                    <option value="Cash">Cash</option>
+                    <option value="Bank Transfer">Bank Transfer</option>
+                    <option value="Cheque">Cheque</option>
+                  </select>
+                </div>
+                <div className="new-fin-form-group">
+                  <label>Voucher / Invoice Ref</label>
+                  <input type="text" name="voucherInvoiceRef" value={formData.voucherInvoiceRef} onChange={handleFormChange} placeholder="e.g., V-101" required />
+                </div>
+              </div>
+
+              <div className="new-fin-form-group">
+                <label>Authorized By</label>
+                <input type="text" name="authorizedBy" value={formData.authorizedBy} onChange={handleFormChange} placeholder="Name" required />
+              </div>
+
               <button type="submit" className="new-fin-submit-btn">
-                Save Transaction
+                {editingItemId ? "Save Changes" : "Save Transaction"}
               </button>
             </form>
           </div>
