@@ -4,12 +4,13 @@ export default function RangalaDivisions({ setPage }) {
 
   const divisions = [
     "Rangala Division",
-    "Pooddelgodda",
+    " New Division",
     "Ranwella Division",
-    "New Division",
+    "Pooddelgodda",
     "Kalduriya Division",
     "Peru Division"
   ];
+ 
 
   return (
     <div className="division-page">
