@@ -29,13 +29,13 @@ import AgronomicData from "./components/sdgp/AgronomicData";
 
 // --- IMPORT NEW DIVISION COMPONENTS HERE ---
 import NewDivCropYields from "./components/sdgp/NewDivCropYields";
-// import NewDivFertilizer from "./components/sdgp/NewDivFertilizer";
-// import NewDivFinancials from "./components/sdgp/NewDivFinancials";
-// import NewDivAgronomic from "./components/sdgp/NewDivAgronomic";
+import NewDivFertilizer from "./components/sdgp/NewDivFertilizer"; 
+import NewDivFinancials from "./components/sdgp/NewDivFinancials";
+import NewDivAgronomic from "./components/sdgp/NewDivAgronomic";
 
 
 export default function SDGPApp() {
-  const [page, setPage] = useState("dashboard");
+  const [page, setPage] = useState("fieldmap");
 
   return (
     <>
@@ -115,26 +115,26 @@ export default function SDGPApp() {
           )}
 
           {/* ========================================== */}
-          {/* NEW DIVISION TARGET PAGES          */}
+          {/* NEW DIVISION TARGET PAGES                  */}
           {/* ========================================== */}
 
           {page === "new_div_crop_yields" && (
             <NewDivCropYields setPage={setPage} />
           )}
 
-          {/* Uncomment these once we build the files for them! */}
-          {/* {page === "new_div_fertilizer" && (
+          {page === "new_div_fertilizer" && (
             <NewDivFertilizer setPage={setPage} />
           )}
 
+          {/* This is now active and safe since the import is above */}
           {page === "new_div_financials" && (
             <NewDivFinancials setPage={setPage} />
           )}
 
+       
           {page === "new_div_agronomic" && (
             <NewDivAgronomic setPage={setPage} />
-          )} 
-          */}
+          )}
 
         </main>
       </div>
