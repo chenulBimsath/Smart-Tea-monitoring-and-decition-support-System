@@ -24,12 +24,15 @@ import YieldPrediction from "./components/sdgp/YieldPrediction";
 
 import CropYields from "./components/sdgp/CropYields";
 import FertilizerAnalytics from "./components/sdgp/FertilizerAnalytics";
-
-// 1. IMPORT YOUR FINANCE COMPONENT HERE
 import FinanceAnalytics from "./components/sdgp/FinanceAnalytics";
-
-// 2. IMPORT YOUR NEW AGRONOMIC DATA COMPONENT HERE
 import AgronomicData from "./components/sdgp/AgronomicData";
+
+// --- IMPORT NEW DIVISION COMPONENTS HERE ---
+import NewDivCropYields from "./components/sdgp/NewDivCropYields";
+// import NewDivFertilizer from "./components/sdgp/NewDivFertilizer";
+// import NewDivFinancials from "./components/sdgp/NewDivFinancials";
+// import NewDivAgronomic from "./components/sdgp/NewDivAgronomic";
+
 
 export default function SDGPApp() {
   const [page, setPage] = useState("fieldmap");
@@ -87,7 +90,6 @@ export default function SDGPApp() {
             <FinanceAnalytics setPage={setPage} />
           )}
 
-          {/* 3. ADD YOUR NEW AGRONOMIC DATA PAGE CONDITION HERE */}
           {page === "agronomic_data" && (
             <AgronomicData setPage={setPage} />
           )}
@@ -111,6 +113,28 @@ export default function SDGPApp() {
           {page === "addfertilizer" && (
             <AddFertilizerData setPage={setPage} />
           )}
+
+          {/* ========================================== */}
+          {/* NEW DIVISION TARGET PAGES          */}
+          {/* ========================================== */}
+
+          {page === "new_div_crop_yields" && (
+            <NewDivCropYields setPage={setPage} />
+          )}
+
+          {/* Uncomment these once we build the files for them! */}
+          {/* {page === "new_div_fertilizer" && (
+            <NewDivFertilizer setPage={setPage} />
+          )}
+
+          {page === "new_div_financials" && (
+            <NewDivFinancials setPage={setPage} />
+          )}
+
+          {page === "new_div_agronomic" && (
+            <NewDivAgronomic setPage={setPage} />
+          )} 
+          */}
 
         </main>
       </div>
