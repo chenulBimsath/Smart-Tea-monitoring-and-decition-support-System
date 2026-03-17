@@ -1,0 +1,98 @@
+.new-fert-page {
+  padding: 40px;
+  background-color: #f4f7f6;
+  min-height: 100vh;
+  font-family: 'Inter', sans-serif;
+}
+
+.new-fert-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; 
+  margin-bottom: 30px;
+}
+
+.new-fert-header h1 {
+  color: #1a4331;
+  margin: 0;
+  font-size: 2rem;
+}
+
+.new-fert-header p {
+  color: #666;
+  margin: 5px 0 0 0;
+}
+
+.new-fert-back-to-grid-btn {
+  background: #2f7d5b;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.new-fert-back-to-grid-btn:hover {
+  background: #246347;
+  transform: translateX(-5px);
+}
+
+.new-fert-header-controls {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.new-fert-dropdown-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.new-fert-dropdown-container label {
+  font-weight: 600;
+  color: #1a4331;
+  font-size: 0.9rem;
+}
+
+.new-fert-year-dropdown {
+  padding: 10px 15px;
+  border-radius: 8px;
+  border: 2px solid #2f7d5b;
+  background-color: white;
+  color: #1a4331;
+  font-weight: 700;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.new-fert-year-dropdown:hover {
+  border-color: #246347;
+  background-color: #f0f7f3;
+}
+
+.new-fert-year-dropdown:focus {
+  box-shadow: 0 0 0 3px rgba(47, 125, 91, 0.2);
+}
+
+.new-fert-add-record-btn {
+  background: #d32f2f; 
+  color: white;
+  border: 2px solid #d32f2f;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.new-fert-add-record-btn:hover {
+  background: #b71c1c;
+  border-color: #b71c1c;
+  transform: translateY(-2px); 
+  box-shadow: 0 4px 8px rgba(211, 47, 47, 0.2);
+}
