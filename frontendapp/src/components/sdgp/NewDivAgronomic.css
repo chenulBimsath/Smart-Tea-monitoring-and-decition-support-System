@@ -65,3 +65,183 @@
   transform: translateY(-2px); 
   box-shadow: 0 4px 8px rgba(211, 47, 47, 0.2);
 }
+
+/* --- Table Design --- */
+.new-agro-table-card {
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  overflow: visible;
+  border: 1px solid #e0e0e0;
+}
+
+.new-agro-table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: 15px 15px 0 0;
+}
+
+.new-agro-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  overflow: hidden;
+}
+
+.new-agro-table th {
+  background-color: #2f7d5b;
+  color: #ffffff;
+  text-align: left;
+  padding: 15px 20px;
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  white-space: nowrap; 
+}
+
+.new-agro-table td {
+  padding: 15px 20px;
+  border-bottom: 1px solid #f0f0f0;
+  color: #333;
+  font-size: 1rem;
+  white-space: nowrap; 
+}
+
+/* Zebra Stripes */
+.new-agro-table tbody tr:nth-child(even) {
+  background-color: #fafdfb;
+}
+
+.new-agro-table tbody tr:hover {
+  background-color: #f0f7f3;
+}
+
+/* Specific Cell Styling */
+.new-agro-id-cell {
+  font-weight: 700;
+  color: #2f7d5b;
+}
+
+.new-agro-badge {
+  background: #e8f5e9;
+  color: #2e7d32;
+  padding: 6px 14px;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+/* --- Footer & Pagination --- */
+.new-agro-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 25px;
+  background: #fdfdfd;
+  border-radius: 0 0 15px 15px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.new-agro-nav-btn {
+  background: #ffffff;
+  color: #2f7d5b;
+  border: 2px solid #2f7d5b;
+  padding: 8px 18px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 700;
+  transition: 0.3s;
+}
+
+.new-agro-nav-btn:hover:not(:disabled) {
+  background: #2f7d5b;
+  color: white;
+}
+
+.new-agro-nav-btn:disabled {
+  border-color: #ccc;
+  color: #ccc;
+  cursor: not-allowed;
+}
+
+.new-agro-year-label {
+  color: #555;
+  font-size: 1rem;
+}
+
+/* --- Action Menu Styles --- */
+.new-agro-action-header {
+  text-align: center !important;
+  width: 80px;
+}
+
+.new-agro-action-cell {
+  text-align: center;
+  position: relative;
+}
+
+.new-agro-action-dots-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #888;
+  cursor: pointer;
+  padding: 0 10px;
+  border-radius: 50%;
+  transition: background-color 0.2s, color 0.2s;
+  line-height: 1;
+  height: 35px;
+  width: 35px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.new-agro-action-dots-btn:hover {
+  background-color: #e8eee9;
+  color: #2f7d5b;
+}
+
+.new-agro-action-dropdown {
+  position: absolute;
+  right: 50px;
+  top: 15px;
+  background: white;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  border-radius: 8px;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  width: 140px;
+  overflow: hidden;
+}
+
+.new-agro-action-dropdown button {
+  padding: 12px 16px;
+  border: none;
+  background: white;
+  text-align: left;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-family: inherit;
+  font-weight: 600;
+  color: #444;
+  transition: background 0.2s;
+}
+
+.new-agro-action-dropdown button:hover {
+  background-color: #f4f7f6;
+  color: #2f7d5b;
+}
+
+.new-agro-action-dropdown button.new-agro-delete-btn {
+  color: #d32f2f;
+  border-top: 1px solid #f0f0f0;
+}
+
+.new-agro-action-dropdown button.new-agro-delete-btn:hover {
+  background-color: #ffebee;
+  color: #b71c1c;
+}
