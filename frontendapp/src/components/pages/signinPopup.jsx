@@ -6,49 +6,64 @@ export default function SignInPopup({ closePopup, openSignUp }) {
   const navigate = useNavigate();
   const [showPass, setShowPass] = useState(false);
 
-  const handleLogin = () => {
-    closePopup();
-    navigate("/dashboard");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+
+  const handleLogin = async () => {
+    try {
+      const response = await fetch("http://localhost:8080/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (response.ok) {
+        const user = await response.json();
+        localStorage.setItem("user", JSON.stringify(user));
+        closePopup();
+        navigate("/dashboard");
+      } else {
+        setError("Invalid email or password. Please try again.");
+      }
+    } catch (err) {
+      setError("Cannot connect to server. Please try again.");
+    }
   };
 
   return (
     <div className="popup-overlay" onClick={closePopup}>
-      <div className="signin-card" onClick={e => e.stopPropagation()}>
+      <div className="signin-card" onClick={(e) => e.stopPropagation()}>
+        <span className="close-btn" onClick={closePopup}>×</span>
 
         <button className="close-btn" onClick={closePopup} aria-label="Close">×</button>
 
-        <div className="signin-logo">
-          <img src="/logo.png" alt="Logo" />
-        </div>
+        <input
+          className="signin-input"
+          type="text"
+          placeholder="Username or Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
 
-        <h2 className="signin-title">Welcome back</h2>
-        <p className="signin-sub">Sign in to your estate dashboard</p>
+        <input
+          className="signin-input"
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
 
-        <div className="signin-field">
-          <label>Username or Email</label>
-          <input type="text" placeholder="you@example.com" />
-        </div>
-
-        <div className="signin-field">
-          <label>Password</label>
-          <div className="signin-pass-wrap">
-            <input type={showPass ? "text" : "password"} placeholder="••••••••" />
-            <button
-              type="button"
-              className="signin-eye"
-              onClick={() => setShowPass(v => !v)}
-            >
-              {showPass ? "Hide" : "Show"}
-            </button>
-          </div>
-        </div>
+        {error && <p style={{ color: "red", fontSize: "12px" }}>{error}</p>}
 
         <div className="signin-options">
-          <label className="signin-remember">
+          <label>
             <input type="checkbox" />
-            Remember me
+            Remember Me
           </label>
-          <span className="forgot-link">Forgot password?</span>
+          <span className="forgot-link">Forgot Password?</span>
         </div>
 
         <button className="signin-btn" onClick={handleLogin}>
