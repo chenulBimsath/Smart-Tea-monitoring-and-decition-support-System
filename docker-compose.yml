@@ -9,7 +9,7 @@ services:
     ports:
       - "8080:8080"
     restart: unless-stopped
-    # ඔබේ Database එක Supabase හි ඇති නිසා වෙනත් සම්බන්ධතා අවශ්‍ය නැත.
+   
 
   frontend:
     build:
