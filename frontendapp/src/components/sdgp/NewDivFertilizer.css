@@ -1,0 +1,393 @@
+.new-fert-page {
+  padding: 40px;
+  background-color: #f4f7f6;
+  min-height: 100vh;
+  font-family: 'Inter', sans-serif;
+}
+
+.new-fert-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; 
+  margin-bottom: 30px;
+}
+
+.new-fert-header h1 {
+  color: #1a4331;
+  margin: 0;
+  font-size: 2rem;
+}
+
+.new-fert-header p {
+  color: #666;
+  margin: 5px 0 0 0;
+}
+
+.new-fert-back-to-grid-btn {
+  background: #2f7d5b;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.new-fert-back-to-grid-btn:hover {
+  background: #246347;
+  transform: translateX(-5px);
+}
+
+.new-fert-header-controls {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.new-fert-dropdown-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.new-fert-dropdown-container label {
+  font-weight: 600;
+  color: #1a4331;
+  font-size: 0.9rem;
+}
+
+.new-fert-year-dropdown {
+  padding: 10px 15px;
+  border-radius: 8px;
+  border: 2px solid #2f7d5b;
+  background-color: white;
+  color: #1a4331;
+  font-weight: 700;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.new-fert-year-dropdown:hover {
+  border-color: #246347;
+  background-color: #f0f7f3;
+}
+
+.new-fert-year-dropdown:focus {
+  box-shadow: 0 0 0 3px rgba(47, 125, 91, 0.2);
+}
+
+.new-fert-table-card {
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e0e0e0;
+}
+
+.new-fert-table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: 15px 15px 0 0;
+}
+
+.new-fert-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  min-width: 1000px;
+}
+
+.new-fert-table th {
+  background-color: #2f7d5b;
+  color: #ffffff;
+  text-align: left;
+  padding: 16px 20px;
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.new-fert-table td {
+  padding: 16px 20px;
+  border-bottom: 1px solid #f0f0f0;
+  color: #333;
+  font-size: 0.95rem;
+  white-space: nowrap;
+}
+
+.new-fert-table tbody tr:nth-child(even) {
+  background-color: #fafdfb;
+}
+
+.new-fert-table tbody tr:hover {
+  background-color: #f0f7f3;
+}
+
+.new-fert-id-cell {
+  font-weight: 700;
+  color: #2f7d5b;
+}
+
+.new-fert-qty-badge {
+  background: #e8f5e9;
+  color: #2e7d32;
+  padding: 6px 14px;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.new-fert-status-badge {
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: bold;
+}
+.new-fert-status-badge.mature { background: #d4edda; color: #155724; }
+.new-fert-status-badge.immature { background: #fff3cd; color: #856404; }
+.new-fert-status-badge.pruned { background: #cce5ff; color: #004085; }
+
+.new-fert-table-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 25px;
+  background: #fdfdfd;
+  border-radius: 0 0 15px 15px;
+}
+
+.new-fert-nav-btn {
+  background: #ffffff;
+  color: #2f7d5b;
+  border: 2px solid #2f7d5b;
+  padding: 8px 18px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 700;
+  transition: 0.3s;
+}
+
+.new-fert-nav-btn:hover:not(:disabled) {
+  background: #2f7d5b;
+  color: white;
+}
+
+.new-fert-nav-btn:disabled {
+  border-color: #ccc;
+  color: #ccc;
+  cursor: not-allowed;
+}
+
+.new-fert-page-label {
+  color: #555;
+  font-size: 1rem;
+}
+
+.new-fert-action-header {
+  text-align: center !important;
+  width: 80px;
+}
+
+.new-fert-action-cell {
+  text-align: center;
+  position: relative;
+}
+
+.new-fert-action-dots-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #888;
+  cursor: pointer;
+  padding: 0 10px;
+  border-radius: 50%;
+  transition: background-color 0.2s, color 0.2s;
+  height: 35px;
+  width: 35px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.new-fert-action-dots-btn:hover {
+  background-color: #e8eee9;
+  color: #2f7d5b;
+}
+
+.new-fert-action-dropdown {
+  position: absolute;
+  right: 50px;
+  top: 15px;
+  background: white;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  border-radius: 8px;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  width: 140px;
+  overflow: hidden;
+}
+
+.new-fert-action-dropdown button {
+  padding: 12px 16px;
+  border: none;
+  background: white;
+  text-align: left;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-family: inherit;
+  font-weight: 600;
+  color: #444;
+  transition: background 0.2s;
+}
+
+.new-fert-action-dropdown button:hover {
+  background-color: #f4f7f6;
+  color: #2f7d5b;
+}
+
+.new-fert-action-dropdown button.new-fert-delete-btn {
+  color: #d32f2f;
+  border-top: 1px solid #f0f0f0;
+}
+
+.new-fert-action-dropdown button.new-fert-delete-btn:hover {
+  background-color: #ffebee;
+  color: #b71c1c;
+}
+
+.new-fert-add-record-btn {
+  background: #d32f2f; 
+  color: white;
+  border: 2px solid #d32f2f;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.new-fert-add-record-btn:hover {
+  background: #b71c1c;
+  border-color: #b71c1c;
+  transform: translateY(-2px); 
+  box-shadow: 0 4px 8px rgba(211, 47, 47, 0.2);
+}
+
+.new-fert-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(3px);
+}
+
+.new-fert-modal-content.new-fert-large-modal {
+  background: white;
+  padding: 35px;
+  border-radius: 16px;
+  width: 600px; 
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.new-fert-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.new-fert-modal-header h2 {
+  font-size: 22px;
+  color: #1a4331;
+  margin: 0;
+}
+
+.new-fert-close-btn {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #888;
+  transition: 0.2s;
+}
+
+.new-fert-close-btn:hover {
+  color: #d32f2f;
+}
+
+.new-fert-grid-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.new-fert-form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.new-fert-form-group label {
+  font-weight: 600;
+  margin-bottom: 5px;
+  color: #444;
+  font-size: 0.9rem;
+}
+
+.new-fert-form-group input,
+.new-fert-form-group select {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: 0.2s;
+  background-color: white;
+  font-family: inherit;
+}
+
+.new-fert-form-group input:focus,
+.new-fert-form-group select:focus {
+  outline: none;
+  border-color: #2f7d5b;
+  box-shadow: 0 0 0 2px rgba(47, 125, 91, 0.2);
+}
+
+.new-fert-full-width {
+  grid-column: span 2;
+}
+
+.new-fert-submit-btn {
+  margin-top: 10px;
+  padding: 12px;
+  border: none;
+  background: #2f7d5b;
+  color: white;
+  border-radius: 10px;
+  font-size: 15px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.2s;
+}
+
+.new-fert-submit-btn:hover {
+  background: #25684a;
+}
+
+.new-fert-date-cell {
+  font-weight: 500;
+  color: #444;
+  letter-spacing: 0.5px;
+}
