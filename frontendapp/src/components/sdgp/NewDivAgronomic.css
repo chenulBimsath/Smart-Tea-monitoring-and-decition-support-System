@@ -245,3 +245,117 @@
   background-color: #ffebee;
   color: #b71c1c;
 }
+
+/* --- Popup Modal Overlay --- */
+.new-agro-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(3px);
+}
+
+/* --- Popup Content Box --- */
+.new-agro-modal-content {
+  background: white;
+  padding: 35px;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.new-agro-modal {
+  width: 700px; 
+  max-width: 95vw;
+}
+
+.new-agro-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.new-agro-modal-header h2 {
+  font-size: 22px;
+  color: #1a4331;
+  margin: 0;
+}
+
+.new-agro-close-btn {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #888;
+  transition: 0.2s;
+}
+
+.new-agro-close-btn:hover {
+  color: #d32f2f;
+}
+
+/* --- Form Styles --- */
+.new-agro-grid-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr; 
+  gap: 20px;
+}
+
+.new-agro-form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.new-agro-form-group label {
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #444;
+  font-size: 0.9rem;
+}
+
+.new-agro-form-group input,
+.new-agro-form-group select {
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: 0.2s;
+  background-color: white;
+  font-family: inherit;
+}
+
+.new-agro-form-group input:focus,
+.new-agro-form-group select:focus {
+  outline: none;
+  border-color: #2f7d5b;
+  box-shadow: 0 0 0 2px rgba(47, 125, 91, 0.2);
+}
+
+.new-agro-full-width {
+  grid-column: 1 / -1;
+}
+
+.new-agro-submit-btn {
+  margin-top: 15px;
+  padding: 14px;
+  border: none;
+  background: #2f7d5b;
+  color: white;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.2s;
+}
+
+.new-agro-submit-btn:hover {
+  background: #25684a;
+}
