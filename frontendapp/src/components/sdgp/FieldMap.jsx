@@ -13,367 +13,288 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "./FieldMap.css";
 
+/* ================= NDVI COLOR SCALE ================= */
 
-/* NDVI color */
-
-function getNDVIColor(ndvi){
-  if(ndvi > 0.6) return "green";
-  if(ndvi > 0.4) return "yellow";
-  return "red";
+function getNDVIColor(ndvi) {
+  if (ndvi < 0.2) return "#8c510a";
+  if (ndvi < 0.4) return "#d97706";
+  if (ndvi < 0.6) return "#4ade80";
+  return "#16a34a";
 }
 
-/* NDVI health text */
+/* ================= NDVI STATUS ================= */
 
-function getNDVIStatus(ndvi){
-  if(ndvi > 0.6) return "Healthy Vegetation";
-  if(ndvi > 0.4) return "Moderate Vegetation";
-  return "Poor Vegetation";
+function getNDVIStatus(ndvi) {
+  if (ndvi >= 0.6) return "Dense Healthy Vegetation";
+  if (ndvi >= 0.4) return "Moderate Vegetation";
+  if (ndvi >= 0.2) return "Sparse Vegetation";
+  return "Very Low / Bare Soil";
 }
 
+function getNDVIDescription(ndvi) {
+  if (ndvi >= 0.6) return "Dense vegetation. Crops are healthy and growing well.";
+  if (ndvi >= 0.4) return "Moderate vegetation. Growth is normal but can be improved.";
+  if (ndvi >= 0.2) return "Sparse vegetation. Possible stress or low growth.";
+  return "Very low vegetation. Likely bare soil or unhealthy crops.";
+}
 
-/* district coordinates */
+/* ================= DISTRICTS ================= */
 
 const districtLocations = {
-  rangala: [7.327, 80.820],
-  galle: [6.0535, 80.221],
+  rangala:     [7.327,  80.820],
+  galle:       [6.0535, 80.221],
   nuwaraeliya: [6.9497, 80.7891]
 };
 
+/* ================= AUTO ZOOM ================= */
 
-/* zoom to layer */
-
-function ZoomToLayer({ data }){
-
+function ZoomToLayer({ data }) {
   const map = useMap();
-
-  useEffect(()=>{
-
-    if(!data?.features?.length) return;
-
+  useEffect(() => {
+    if (!data?.features?.length) return;
     const layer = L.geoJSON(data);
-
-    map.fitBounds(layer.getBounds(),{
-      padding:[80,80],
-      maxZoom:16
-    });
-
-  },[data,map]);
-
+    map.fitBounds(layer.getBounds(), { padding: [80, 80], maxZoom: 16 });
+  }, [data, map]);
   return null;
 }
 
+/* ================= FLY TO DISTRICT ================= */
 
-/* fly to district */
-
-function FlyToDistrict({ district }){
-
+function FlyToDistrict({ district }) {
   const map = useMap();
-
-  useEffect(()=>{
-
-    if(!district) return;
-
+  useEffect(() => {
     const coords = districtLocations[district];
-
-    if(coords){
-      map.flyTo(coords,12);
-    }
-
-  },[district,map]);
-
+    if (coords) map.flyTo(coords, 12);
+  }, [district, map]);
   return null;
 }
 
+/* ================= BOUNDARY LAYER ================= */
 
-/* boundary layer */
-
-function BoundaryLayer({ geoData, selectedDivision }){
-
-  if(!geoData || !selectedDivision) return null;
-
+function BoundaryLayer({ geoData, selectedDivision }) {
+  if (!geoData || !selectedDivision) return null;
   const target = selectedDivision.toLowerCase().trim();
-
-  const filtered = geoData.features.filter((feature)=>{
-
-    const name = feature.properties?.name?.toLowerCase().trim() || "";
-    return name.includes(target);
-
-  });
-
-  if(!filtered.length) return null;
-
-  const filteredData={
-    type:"FeatureCollection",
-    features:filtered
-  };
-
-  return(
+  const filtered = geoData.features.filter(
+    f => (f.properties?.name?.toLowerCase().trim() || "") === target
+  );
+  if (!filtered.length) return null;
+  const filteredData = { type: "FeatureCollection", features: filtered };
+  return (
     <>
-      <ZoomToLayer data={filteredData}/>
-
+      <ZoomToLayer data={filteredData} />
       <GeoJSON
-        key={selectedDivision}
+        key={selectedDivision + "_boundary"}
         data={filteredData}
-        style={{
-          color:"#2e7d32",
-          weight:2,
-          fillOpacity:0
-        }}
+        style={{ color: "#025520", weight: 2.5, fillOpacity: 0, dashArray: "6 4" }}
       />
     </>
   );
 }
 
+/* ================= NDVI LAYER ================= */
 
-/* NDVI layer */
-
-function NDVILayer({ ndviData, selectedDivision }){
-
-  if(!ndviData || !selectedDivision) return null;
-
+function NDVILayer({ ndviData, selectedDivision }) {
+  if (!ndviData || !selectedDivision) return null;
   const target = selectedDivision.toLowerCase().trim();
-
-  const filtered = ndviData.features.filter((feature)=>{
-
-    const name = feature.properties?.name?.toLowerCase().trim() || "";
-    return name.includes(target);
-
-  });
-
-  if(!filtered.length) return null;
-
-  const filteredData={
-    type:"FeatureCollection",
-    features:filtered
-  };
-
-  return(
+  const filtered = ndviData.features.filter(
+    f => (f.properties?.name?.toLowerCase().trim() || "") === target
+  );
+  if (!filtered.length) return null;
+  const filteredData = { type: "FeatureCollection", features: filtered };
+  return (
     <>
-      <ZoomToLayer data={filteredData}/>
-
+      <ZoomToLayer data={filteredData} />
       <GeoJSON
-        key={selectedDivision}
+        key={selectedDivision + "_ndvi"}
         data={filteredData}
-        style={(feature)=>{
-
-          const ndvi = feature.properties.mean;
-
-          return{
-            color:"#000",
-            weight:2,
-            fillColor:getNDVIColor(ndvi),
-            fillOpacity:0.6
+        style={(feature) => {
+          let ndvi = feature.properties?.mean ?? 0;
+          if (ndvi > 1) ndvi = ndvi / 100;
+          return {
+            color: "#0f1a12",
+            weight: 1.5,
+            fillColor: getNDVIColor(ndvi),
+            fillOpacity: 0.75
           };
-
+        }}
+        onEachFeature={(feature, layer) => {
+          let ndvi = feature.properties?.mean ?? 0;
+          if (ndvi > 1) ndvi = ndvi / 100;
+          layer.bindPopup(`
+            <b>${feature.properties.name}</b><br/>
+            NDVI: ${ndvi.toFixed(2)}<br/>
+            Status: ${getNDVIStatus(ndvi)}<br/>
+            ${getNDVIDescription(ndvi)}
+          `);
         }}
       />
     </>
   );
 }
 
+/* ================= MAIN COMPONENT ================= */
 
-/* MAIN COMPONENT */
+export default function FieldMap() {
+  const [geoData,          setGeoData]          = useState(null);
+  const [ndviData,         setNdviData]          = useState(null);
+  const [selectedDistrict, setSelectedDistrict]  = useState("rangala");
+  const [selectedDivision, setSelectedDivision]  = useState("");
+  const [viewMode,         setViewMode]           = useState("boundary");
+  const [selectedNDVI,     setSelectedNDVI]       = useState(null);
+  const [markerPosition,   setMarkerPosition]     = useState(districtLocations["rangala"]);
 
-export default function FieldMap(){
-
-  const [geoData,setGeoData]=useState(null);
-  const [ndviData,setNdviData]=useState(null);
-
-  const [selectedDistrict,setSelectedDistrict]=useState("rangala");
-  const [selectedDivision,setSelectedDivision]=useState("");
-  const [viewMode,setViewMode]=useState("boundary");
-
-  const [selectedNDVI,setSelectedNDVI]=useState(null);
-
-  const [markerPosition,setMarkerPosition]=useState(
-    districtLocations["rangala"]
-  );
-
-
-  /* load boundary geojson */
-
-  useEffect(()=>{
-
+  /* ── Load GeoJSON data ── */
+  useEffect(() => {
     fetch("/data/tea-fields.json")
-      .then(res=>res.json())
-      .then(data=>setGeoData(data));
+      .then(res => res.json())
+      .then(setGeoData)
+      .catch(err => console.error("Failed to load tea-fields.json:", err));
 
-  },[]);
+    fetch("/data/division_ndvi1.geojson")
+      .then(res => res.json())
+      .then(data => {
+        console.log("=== division_ndvi1.geojson loaded ===");
+        data.features.forEach((f, i) => {
+          const raw = f.properties?.mean;
+          const ndvi = raw > 1 ? raw / 100 : raw;
+          console.log(`  [${i}] name: "${f.properties?.name}" | mean: ${raw} | normalized: ${ndvi?.toFixed(4)}`);
+        });
+        setNdviData(data);
+      })
+      .catch(err => console.error("Failed to load division_ndvi1.geojson:", err));
+  }, []);
 
-
-  /* load NDVI geojson */
-
-  useEffect(()=>{
-
-    fetch("/data/division_ndvi.geojson")
-      .then(res=>res.json())
-      .then(data=>setNdviData(data));
-
-  },[]);
-
-
-  /* detect NDVI for selected division */
-
-  useEffect(()=>{
-
-    if(!ndviData || !selectedDivision) return;
-
+  /* ── Extract NDVI value ── */
+  useEffect(() => {
+    if (!ndviData || !selectedDivision) { setSelectedNDVI(null); return; }
     const target = selectedDivision.toLowerCase().trim();
-
-    const feature = ndviData.features.find(f => {
-
-      const name = f.properties?.name?.toLowerCase().trim() || "";
-      return name.includes(target);
-
-    });
-
-    if(feature){
-      setSelectedNDVI(feature.properties.mean);
+    const feature = ndviData.features.find(
+      f => (f.properties?.name?.toLowerCase().trim() || "") === target
+    );
+    if (feature) {
+      let ndvi = feature.properties.mean;
+      if (ndvi > 1) ndvi = ndvi / 100;
+      setSelectedNDVI(ndvi);
+    } else {
+      setSelectedNDVI(null);
+      console.warn(`No NDVI data found for: "${selectedDivision}"`);
     }
+  }, [selectedDivision, ndviData]);
 
-  },[selectedDivision, ndviData]);
-
-
-  /* district divisions */
-
-  const districtDivisions={
-
-    rangala:[
-      "NEW DIVIDON",
-      "RANGALA 1",
-      "RANGALA 2",
-      "RANGALA 3"
-    ],
-
-    galle:[],
-    nuwaraeliya:[]
+  /* ── Division list per district ── */
+  const districtDivisions = {
+    rangala:     ["NEW DIVIDON", "RANGALA 1", "RANGALA 2", "RANGALA 3"],
+    galle:       [],
+    nuwaraeliya: []
   };
+  const divisions = districtDivisions[selectedDistrict] || [];
 
-  const divisions=districtDivisions[selectedDistrict]||[];
+  /* ── Handlers ── */
+  function handleDistrictChange(district) {
+    setSelectedDistrict(district);
+    setSelectedDivision("");
+    setViewMode("boundary");
+    setSelectedNDVI(null);
+    setMarkerPosition(districtLocations[district]);
+  }
 
+  function handleDivisionChange(division) {
+    setSelectedDivision(division);
+  }
 
-  return(
+  /* ── NDVI level indicator (0–5 bars) ── */
+  function getNDVIBars(ndvi) {
+    if (ndvi >= 0.8) return 5;
+    if (ndvi >= 0.6) return 4;
+    if (ndvi >= 0.4) return 3;
+    if (ndvi >= 0.2) return 2;
+    return 1;
+  }
 
+  return (
     <div className="fieldmap-layout">
 
+      {/* ================= MAP ================= */}
       <div className="fieldmap-map">
-
         <MapContainer
-          center={[7.34,80.80]}
+          center={[7.34, 80.80]}
           zoom={13}
           zoomControl={false}
           className="leaflet-map"
         >
-
-          <ZoomControl position="topleft"/>
-
+          <ZoomControl position="topleft" />
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
           />
 
-          {viewMode==="ndvi" && (
+          {viewMode === "ndvi" && (
             <TileLayer
-              url="https://earthengine.googleapis.com/v1/projects/ndvi-project-489709/maps/47d6a46acbca51f3caf83df9a8240758-e08d069fb2b6012b5ac2de48365d3956/tiles/{z}/{x}/{y}"
-              opacity={0.7}
+              url="https://earthengine.googleapis.com/v1/projects/ndvi-project-489709/maps/54cb69814ffe943110e52daa14361072-19db71a9e1765cac40ec18af782b7315/tiles/{z}/{x}/{y}"
+              opacity={0.3}
             />
           )}
 
-          <FlyToDistrict district={selectedDistrict}/>
+          <FlyToDistrict district={selectedDistrict} />
 
-          {markerPosition &&(
-            <Marker position={markerPosition}>
-              <Popup>{selectedDistrict.toUpperCase()}</Popup>
-            </Marker>
+          <Marker position={markerPosition}>
+            <Popup>{selectedDistrict.toUpperCase()}</Popup>
+          </Marker>
+
+          <BoundaryLayer geoData={geoData} selectedDivision={selectedDivision} />
+
+          {viewMode === "ndvi" && selectedDivision && (
+            <NDVILayer ndviData={ndviData} selectedDivision={selectedDivision} />
           )}
-
-          {viewMode==="boundary" &&(
-            <BoundaryLayer
-              geoData={geoData}
-              selectedDivision={selectedDivision}
-            />
-          )}
-
-          {viewMode==="ndvi" &&(
-            <NDVILayer
-              ndviData={ndviData}
-              selectedDivision={selectedDivision}
-            />
-          )}
-
         </MapContainer>
-
       </div>
 
-
-      {/* FILTER PANEL */}
-
+      {/* ================= SIDE PANEL ================= */}
       <div className="filter-card">
 
         <h3>Districts</h3>
 
-        {["rangala","galle","nuwaraeliya"].map((district)=>(
-
+        {["rangala", "galle", "nuwaraeliya"].map((district) => (
           <label key={district}>
-
             <input
               type="radio"
-              name="district"
-              checked={selectedDistrict===district}
-              onChange={()=>{
-
-                setSelectedDistrict(district);
-                setSelectedDivision("");
-                setViewMode("boundary");
-                setMarkerPosition(districtLocations[district]);
-
-              }}
+              checked={selectedDistrict === district}
+              onChange={() => handleDistrictChange(district)}
             />
-
-            {district}
-
+            {district.charAt(0).toUpperCase() + district.slice(1)}
           </label>
-
         ))}
 
-        <div className="divider"/>
+        <div className="divider" />
 
         <h3>Division</h3>
 
-        {divisions.length===0 ?(
-
-          <p>No divisions added yet</p>
-
-        ):(
-          divisions.map((division)=>(
-
+        {divisions.length === 0 ? (
+          <p>No divisions available</p>
+        ) : (
+          divisions.map((division) => (
             <label key={division}>
-
               <input
                 type="radio"
-                name="division"
-                checked={selectedDivision===division}
-                onChange={()=>setSelectedDivision(division)}
+                checked={selectedDivision === division}
+                onChange={() => handleDivisionChange(division)}
               />
-
               {division}
-
             </label>
-
           ))
         )}
 
-        {divisions.length>0 &&(
+        {divisions.length > 0 && (
           <>
-            <div className="divider"/>
+            <div className="divider" />
 
             <h3>View Mode</h3>
 
             <label>
               <input
                 type="radio"
-                name="view"
-                checked={viewMode==="boundary"}
-                onChange={()=>setViewMode("boundary")}
+                checked={viewMode === "boundary"}
+                onChange={() => setViewMode("boundary")}
               />
               Boundary Only
             </label>
@@ -381,74 +302,76 @@ export default function FieldMap(){
             <label>
               <input
                 type="radio"
-                name="view"
-                checked={viewMode==="ndvi"}
-                onChange={()=>setViewMode("ndvi")}
+                disabled={!selectedDivision}
+                checked={viewMode === "ndvi"}
+                onChange={() => setViewMode("ndvi")}
               />
-              NDVI (Vegetation)
+              NDVI Vegetation
             </label>
 
-            {viewMode==="ndvi" && selectedNDVI!==null &&(
+            {/* NDVI Dashboard */}
+            {viewMode === "ndvi" && selectedNDVI !== null && (
+              <div className="ndvi-dashboard">
+                <h3>{selectedDivision}</h3>
 
-   <div className="ndvi-dashboard">
+                <div className="ndvi-score">
+                  <span className="ndvi-number">{selectedNDVI.toFixed(2)}</span>
+                  <span className="ndvi-label">{getNDVIStatus(selectedNDVI)}</span>
+                </div>
 
-  <h3>Vegetation Health</h3>
+                <p style={{ fontSize: "11px", marginTop: "8px", marginBottom: "10px" }}>
+                  {getNDVIDescription(selectedNDVI)}
+                </p>
 
-  <div className="ndvi-score">
-    <span className="ndvi-number">
-      {selectedNDVI.toFixed(2)}
-    </span>
-    <span className="ndvi-label">
-      {getNDVIStatus(selectedNDVI)}
-    </span>
-  </div>
+                <div className="ndvi-bar">
+                  <div
+                    className="ndvi-progress"
+                    style={{
+                      width: `${Math.max(selectedNDVI * 100, 2)}%`,
+                      background: getNDVIColor(selectedNDVI)
+                    }}
+                  />
+                </div>
 
-  <div className="ndvi-bar">
-    <div
-      className="ndvi-progress"
-      style={{
-        width: `${selectedNDVI * 100}%`,
-        background:
-          selectedNDVI > 0.6
-            ? "#2e7d32"
-            : selectedNDVI > 0.4
-            ? "#f9a825"
-            : "#c62828"
-      }}
-    />
-  </div>
-
-  <div className="ndvi-stats">
-
-    <div className="stat">
-      <span className="label">Vegetation</span>
-      <span className="value">
-        {selectedNDVI > 0.6 && "Dense"}
-        {selectedNDVI > 0.4 && selectedNDVI <= 0.6 && "Moderate"}
-        {selectedNDVI <= 0.4 && "Low"}
-      </span>
-    </div>
-
-    <div className="stat">
-      <span className="label">Health</span>
-      <span className="value">
-        {selectedNDVI > 0.6 && "Excellent"}
-        {selectedNDVI > 0.4 && selectedNDVI <= 0.6 && "Average"}
-        {selectedNDVI <= 0.4 && "Poor"}
-      </span>
-    </div>
-
-  </div>
-
-</div>
-
+                <div className="ndvi-legend" style={{ marginTop: "14px" }}>
+                  {[
+                    { color: "#16a34a", label: "0.8 – 1.0", status: "Very Healthy" },
+                    { color: "#4ade80", label: "0.6 – 0.8", status: "Healthy" },
+                    { color: "#86efac", label: "0.4 – 0.6", status: "Moderate" },
+                    { color: "#d97706", label: "0.2 – 0.4", status: "Stressed" },
+                    { color: "#8c510a", label: "0.0 – 0.2", status: "Bare Soil" },
+                  ].map(({ color, label, status }) => (
+                    <div key={label} style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "5px" }}>
+                      <span style={{
+                        width: 10, height: 10,
+                        background: color,
+                        display: "inline-block",
+                        borderRadius: 2,
+                        flexShrink: 0,
+                        opacity: selectedNDVI !== null && getNDVIColor(selectedNDVI) === color ? 1 : 0.45
+                      }} />
+                      <span style={{
+                        fontSize: "10px",
+                        fontFamily: "'Space Mono', monospace",
+                        color: getNDVIColor(selectedNDVI) === color ? "#e8f5e9" : "#4a6350"
+                      }}>
+                        {label} <span style={{ color: "#7da882" }}>{status}</span>
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
             )}
 
+            {viewMode === "ndvi" && !selectedDivision && (
+              <p style={{ fontSize: "11px", color: "#4a6350", marginTop: "8px", padding: "0 20px" }}>
+                Select a division to view NDVI data.
+              </p>
+            )}
           </>
         )}
 
       </div>
-
     </div>
   );
 }
