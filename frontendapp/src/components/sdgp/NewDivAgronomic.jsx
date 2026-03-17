@@ -22,10 +22,62 @@ export default function NewDivAgronomic({ setPage }) {
     weedDensity: "", shadeTree: "", inspectedBy: ""
   });
 
-  // Placeholders for future commits
-  const currentRows = []; 
-  const totalPages = 0;
+  // --- FETCH DATA ON LOAD ---
+  useEffect(() => {
+    fetchAgronomicData();
+  }, []);
 
+  const fetchAgronomicData = async () => {
+    try {
+      const response = await fetch(API_BASE_URL);
+      if (!response.ok) throw new Error("Failed to fetch data");
+      const data = await response.json();
+      
+      const mappedData = data.map(item => ({
+        ...item,
+        date: item.inspectionDate 
+      }));
+      
+      setAllData(mappedData);
+
+      // --- EXTRACT UNIQUE YEARS FROM DATES ---
+      const years = [...new Set(mappedData.map(item => {
+        if (!item.date) return null;
+        return item.date.substring(0, 4); 
+      }))].filter(Boolean).sort((a, b) => b - a);
+
+      setAvailableYears(years);
+      
+      if (years.length > 0) {
+        setSelectedYear(years[0]);
+      } else {
+        const currentYear = new Date().getFullYear().toString();
+        setAvailableYears([currentYear]);
+        setSelectedYear(currentYear);
+      }
+
+    } catch (error) {
+      console.error("Error fetching agronomic data:", error);
+    }
+  };
+
+  // --- RESET PAGE WHEN YEAR CHANGES ---
+  useEffect(() => {
+    setCurrentPage(1);
+    setOpenMenuId(null); 
+  }, [selectedYear]);
+
+  // --- FILTER BY YEAR & PAGINATE ---
+  const yearData = allData.filter(item => {
+    if (!item.date) return false;
+    return item.date.substring(0, 4) === selectedYear;
+  });
+
+  const totalPages = Math.ceil(yearData.length / rowsPerPage);
+  const startIndex = (currentPage - 1) * rowsPerPage;
+  const currentRows = yearData.slice(startIndex, startIndex + rowsPerPage);
+
+  // Placeholders for the final commit
   const toggleMenu = (id) => setOpenMenuId(openMenuId === id ? null : id);
   const openAddPopup = () => setIsPopupOpen(true);
   const handleUpdate = (item) => {};
@@ -36,6 +88,7 @@ export default function NewDivAgronomic({ setPage }) {
   return (
     <div className="new-agro-page">
       <div className="new-agro-header">
+        
         <div className="new-agro-title-section">
           <h1>New Division Agronomic Data</h1>
           <p>Tracking field conditions and crop health metrics for {selectedYear}</p>
@@ -55,7 +108,12 @@ export default function NewDivAgronomic({ setPage }) {
               onChange={(e) => setSelectedYear(e.target.value)}
               style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
             >
-              <option>No data</option>
+              {availableYears.length === 0 && <option>No data</option>}
+              {availableYears.map((year) => (
+                <option key={year} value={year}>
+                  {year}
+                </option>
+              ))}
             </select>
           </div>
           <button className="new-agro-back-btn" onClick={() => setPage("newdivisiondata")}>
@@ -77,14 +135,54 @@ export default function NewDivAgronomic({ setPage }) {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td colSpan="14" style={{textAlign: "center", padding: "30px", color: "#666"}}>
-                  No agronomic records found for {selectedYear}. Please add data.
-                </td>
-              </tr>
+              {currentRows.length === 0 ? (
+                <tr>
+                  <td colSpan="14" style={{textAlign: "center", padding: "30px", color: "#666"}}>
+                    No agronomic records found for {selectedYear}. Please add data.
+                  </td>
+                </tr>
+              ) : (
+                currentRows.map((item, index) => (
+                  <tr key={item.id || index}>
+                    <td className="new-agro-id-cell">{item.id}</td> 
+                    <td className="new-agro-date-cell">{item.date}</td> 
+                    <td>{item.fieldNo}</td>
+                    <td style={{fontWeight: '600', color: '#555'}}>{item.cloneType}</td>
+                    <td>{item.pruningYear}</td>
+                    <td><span className="new-agro-badge">{item.pluckingInterval}</span></td>
+                    <td>{item.leafQuality}%</td>
+                    <td>{item.rainfall}</td>
+                    <td>{item.soilPh}</td>
+                    <td>{item.pestDisease}</td>
+                    <td>{item.weedDensity}</td>
+                    <td>{item.shadeTree}</td>
+                    <td style={{fontSize: '0.85rem'}}>{item.inspectedBy}</td>
+                    <td className="new-agro-action-cell" onMouseLeave={() => setOpenMenuId(null)}>
+                      <button className="new-agro-action-dots-btn" onClick={() => toggleMenu(item.id)}>⋮</button>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
+
+        {totalPages > 0 && (
+          <div className="new-agro-footer">
+            <button className="new-agro-nav-btn" onClick={() => { setCurrentPage(p => p - 1); setOpenMenuId(null); }} disabled={currentPage === 1}>
+              ← Previous 25
+            </button>
+            <div className="new-agro-year-label">
+              Page <strong>{currentPage}</strong> of <strong>{totalPages}</strong>
+              <span style={{marginLeft: "10px", fontSize: "0.85rem", color: "#888"}}>
+                (Total records for {selectedYear}: {yearData.length})
+              </span>
+            </div>
+            <button className="new-agro-nav-btn" onClick={() => { setCurrentPage(p => p + 1); setOpenMenuId(null); }} disabled={currentPage === totalPages}>
+              Next 25 →
+            </button>
+          </div>
+        )}
       </div>
 
       {isPopupOpen && (
