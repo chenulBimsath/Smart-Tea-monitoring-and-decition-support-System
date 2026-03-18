@@ -178,6 +178,74 @@
   transform: translateX(4px);
 }
 
+.contact-submit:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Required star */
+.required { color: #e74c3c; margin-left: 2px; }
+
+/* Spinner inside button */
+.contact-spinner {
+  width: 14px; height: 14px;
+  border: 2px solid rgba(255,255,255,0.4);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  display: inline-block;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Error message */
+.contact-error {
+  background: #fde8e8;
+  border: 1px solid #f5b8b8;
+  color: #b91c1c;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* Success state */
+.contact-success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px 20px;
+  gap: 12px;
+  min-height: 300px;
+}
+
+.contact-success-icon {
+  width: 56px; height: 56px;
+  background: #d4f5e2;
+  color: #1a7a40;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.contact-success h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  color: #1a3a2a;
+  margin: 0;
+}
+
+.contact-success p {
+  font-size: 14px;
+  color: #5f7c6b;
+  margin: 0;
+  line-height: 1.6;
+}
+
 @media (max-width: 960px) {
   .contact-inner   { grid-template-columns: 1fr; gap: 48px; }
   .contact-section { padding: 72px 24px; }

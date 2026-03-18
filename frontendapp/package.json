@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emailjs/browser": "^4.4.1",
     "chart.js": "^4.5.1",
     "i18next": "^25.8.13",
     "leaflet": "^1.9.4",
