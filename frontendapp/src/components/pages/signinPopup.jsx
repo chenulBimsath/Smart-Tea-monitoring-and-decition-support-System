@@ -36,30 +36,45 @@ export default function SignInPopup({ closePopup, openSignUp }) {
   return (
     <div className="popup-overlay" onClick={closePopup}>
       <div className="signin-card" onClick={(e) => e.stopPropagation()}>
-        <span className="close-btn" onClick={closePopup}>×</span>
 
+        {/* Single close button — removed duplicate span */}
         <button className="close-btn" onClick={closePopup} aria-label="Close">×</button>
 
-        <input
-          className="signin-input"
-          type="text"
-          placeholder="Username or Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
+        {/* Email field — uses signin-field wrapper so CSS applies */}
+        <div className="signin-field">
+          <label>Email</label>
+          <input
+            type="text"
+            placeholder="Username or Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </div>
 
-        <input
-          className="signin-input"
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+        {/* Password field — with show/hide toggle wired up */}
+        <div className="signin-field">
+          <label>Password</label>
+          <div className="signin-pass-wrap">
+            <input
+              type={showPass ? "text" : "password"}
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <button
+              className="signin-eye"
+              type="button"
+              onClick={() => setShowPass((prev) => !prev)}
+            >
+              {showPass ? "HIDE" : "SHOW"}
+            </button>
+          </div>
+        </div>
 
         {error && <p style={{ color: "red", fontSize: "12px" }}>{error}</p>}
 
         <div className="signin-options">
-          <label>
+          <label className="signin-remember">
             <input type="checkbox" />
             Remember Me
           </label>

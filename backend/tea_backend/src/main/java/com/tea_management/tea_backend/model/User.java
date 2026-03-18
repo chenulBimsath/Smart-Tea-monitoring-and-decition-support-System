@@ -3,7 +3,7 @@ package com.tea_management.tea_backend.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "users")
+@Table(name = "\"User\"")
 public class User {
 
     @Id
@@ -25,6 +25,9 @@ public class User {
     @Column(name = "division_id")
     private String divisionId;
 
+    @Column(name = "password")
+    private String password;
+
     // Getters and Setters
     public String getUserId() { return userId; }
     public void setUserId(String userId) { this.userId = userId; }
@@ -43,4 +46,7 @@ public class User {
 
     public String getDivisionId() { return divisionId; }
     public void setDivisionId(String divisionId) { this.divisionId = divisionId; }
+
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
 }
