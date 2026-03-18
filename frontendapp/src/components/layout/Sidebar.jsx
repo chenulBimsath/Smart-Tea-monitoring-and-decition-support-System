@@ -11,7 +11,11 @@ import {
   Leaf
 } from "lucide-react";
 
+import { useTranslation } from "react-i18next"; // ✅ ADD
+
 export default function Sidebar({ page, setPage }) {
+  const { t } = useTranslation(); // ✅ ADD
+
   return (
     <aside className="sidebar">
 
@@ -19,50 +23,49 @@ export default function Sidebar({ page, setPage }) {
 
         <SidebarItem
           icon={<LayoutGrid size={18} />}
-          label="Dashboard"
+          label={t("dashboard")}
           active={page === "dashboard"}
           onClick={() => setPage("dashboard")}
         />
 
         <SidebarItem
           icon={<MapPin size={18} />}
-          label="Field Map"
+          label={t("fieldMap")}
           active={page === "fieldmap"}
           onClick={() => setPage("fieldmap")}
         />
 
         <SidebarItem
           icon={<Database size={18} />}
-          label="Field Data"
+          label={t("fieldData")}
           active={page === "fielddata"}
           onClick={() => setPage("fielddata")}
         />
 
-        {/* NEW MENU */}
         <SidebarItem
           icon={<Leaf size={18} />}
-          label="Fertilizer Data"
+          label={t("fertilizerData")}
           active={page === "fertilizerdata"}
           onClick={() => setPage("fertilizerdata")}
         />
 
         <SidebarItem
           icon={<Cloud size={18} />}
-          label="Climate Risk"
+          label={t("climateRisk")}
           active={page === "climaterisk"}
           onClick={() => setPage("climaterisk")}
         />
 
         <SidebarItem
           icon={<TrendingUp size={18} />}
-          label="Yield Prediction"
+          label={t("yieldPrediction")}
           active={page === "yield_prediction"}
           onClick={() => setPage("yield_prediction")}
         />
 
         <SidebarItem
           icon={<FileText size={18} />}
-          label="Reports"
+          label={t("reports")}
           active={page === "reports"}
           onClick={() => setPage("reports")}
         />
@@ -71,18 +74,16 @@ export default function Sidebar({ page, setPage }) {
 
       <div className="sidebar-bottom">
 
-
         <SidebarItem
           icon={<User size={18} />}
-          label="My Profile"
+          label={t("myProfile")}
           active={page === "profile"}
           onClick={() => setPage("profile")}
         />
 
-
         <SidebarItem
           icon={<LogOut size={18} />}
-          label="Logout"
+          label={t("logout")}
         />
 
       </div>
