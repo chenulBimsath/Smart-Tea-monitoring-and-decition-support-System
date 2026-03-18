@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-supabase   = create_client(os.environ["SUPABASE_URL"], os.environ["SUPABASE_SERVICE_KEY"])
+supabase   = create_client(os.environ["https://hipkrdtfkamsbwjbtsat.supabase.co"], os.environ["eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpcGtyZHRma2Ftc2J3amJ0c2F0Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2ODkxNjY0MiwiZXhwIjoyMDg0NDkyNjQyfQ.u2dtBOYSDd1zCqRflRJulhWBbxqC1HUlA2KMx9cS6j8"])
 MODEL_PATH = "yield_model.pkl"
 
 MONTH_MAP = {
