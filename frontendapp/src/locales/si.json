@@ -7,5 +7,34 @@
   "yieldPrediction": "ඵලදායීතාව අනාවැකිය",
   "reports": "වාර්තා",
   "myProfile": "මගේ පැතිකඩ",
-  "logout": "පිටවීම"
+  "logout": "පිටවීම",
+
+
+  "currentMonthForecast": "වත්මන් මාස අනාවැකිය",
+  "lastMonthActual": "පසුගිය මාසයේ සැබෑ අගය",
+  "temperature": "උෂ්ණත්වය",
+  "humidity": "ආර්ද්‍රතාවය",
+  "highRiskDivisions": "ඉහළ අවදානම් කලාප",
+  "divisionForecast": "කලාප අනාවැකිය",
+  "weatherRangala": "කාලගුණය · රංගල",
+  "thisMonthPrediction": "මෙම මාසයේ අනාවැකිය",
+  "monthlyYieldHistory": "මාසික ඵලදායීතා ඉතිහාසය",
+  "annualYield": "වාර්ෂික ඵලදායීතාව",
+
+  "predictedYield": "අනාවැකි ඵලදායීතාව",
+  "share": "ප්‍රතිශතය",
+  "risk": "අවදානම",
+  "confidence": "විශ්වාසය",
+
+  "windSpeed": "සුළං වේගය",
+  "precipitation": "වර්ෂාපතනය",
+  "maxTemp": "උපරිම උෂ්ණත්වය",
+
+  "loading": "පූරණය වෙමින්...",
+  "noData": "දත්ත නොමැත",
+  "yesterday": "ඊයේ",
+  "normal": "සාමාන්‍ය",
+  "highRisk": "ඉහළ අවදානම"
+
+
 }

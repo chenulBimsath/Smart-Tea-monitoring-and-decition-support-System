@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import "./Dashboard.css";
 
 const API         = import.meta.env.VITE_API_BASE || "http://localhost:8080";
@@ -37,6 +38,8 @@ function AnimCount({ to, dec = 0, suffix = "" }) {
 }
 
 export default function Dashboard() {
+  const { t } = useTranslation();
+  
   const [preds,          setPreds]          = useState([]);
   const [monthly,        setMonthly]        = useState([]);
   const [yearly,         setYearly]         = useState([]);
@@ -146,7 +149,7 @@ export default function Dashboard() {
   const rain     = weather?.rainfall ?? null;
   const wxDate   = weather?.date     ?? null;
 
-  if (dataLoading) return <div className="db-loading">Loading...</div>;
+  if (dataLoading) return <div className="db-loading">{t("loading")}</div>;
 
   return (
     <div className="db-page">
@@ -155,7 +158,7 @@ export default function Dashboard() {
         {/* ── KPI STRIP ── */}
         <section className="db-kpi-strip">
           <div className="db-kpi-card">
-            <div className="db-kpi-label">Current Month Forecast</div>
+            <div className="db-kpi-label">{t("currentMonthForecast")}</div>
             <div className="db-kpi-num green">
               <AnimCount to={totalPred / 1000} dec={1} suffix="t" />
             </div>
@@ -165,25 +168,25 @@ export default function Dashboard() {
           <div className="db-kpi-sep" />
 
           <div className="db-kpi-card">
-            <div className="db-kpi-label">Last Month Actual</div>
+            <div className="db-kpi-label">{t("lastMonthActual")}</div>
             <div className="db-kpi-num amber">
               {lastMonthVal > 0
                 ? <AnimCount to={lastMonthVal / 1000} dec={1} suffix="t" />
-                : <span className="db-na">No data</span>}
+                : <span className="db-na">{t("noData")}</span>}
             </div>
             <div className="db-kpi-hint">
               {yoyPct !== null
                 ? <span className={parseFloat(yoyPct) >= 0 ? "pos-txt" : "neg-txt"}>
                     {parseFloat(yoyPct) >= 0 ? "+" : ""}{yoyPct}% vs this month
                   </span>
-                : "Awaiting data"}
+                : t("noData")}
             </div>
           </div>
 
           <div className="db-kpi-sep" />
 
           <div className="db-kpi-card">
-            <div className="db-kpi-label">Temperature</div>
+            <div className="db-kpi-label">{t("temperature")}</div>
             <div className="db-kpi-num red">
               {temp !== null ? `${temp}°C` : <span className="db-na">—</span>}
             </div>
@@ -197,21 +200,21 @@ export default function Dashboard() {
           <div className="db-kpi-sep" />
 
           <div className="db-kpi-card">
-            <div className="db-kpi-label">Humidity</div>
+            <div className="db-kpi-label">{t("humidity")}</div>
             <div className="db-kpi-num sky">
               {humidity !== null ? `${humidity}%` : <span className="db-na">—</span>}
             </div>
             <div className="db-kpi-hint">
               {humidity !== null
                 ? humidity > 80 ? "High — monitor disease risk" : "Normal levels"
-                : "Loading..."}
+                : t("loading")}
             </div>
           </div>
 
           <div className="db-kpi-sep" />
 
           <div className="db-kpi-card">
-            <div className="db-kpi-label">High Risk Divisions</div>
+            <div className="db-kpi-label">{t("highRiskDivisions")}</div>
             <div className={`db-kpi-num ${highRisk > 0 ? "red" : "green"}`}>
               <AnimCount to={highRisk} />
             </div>
@@ -228,23 +231,23 @@ export default function Dashboard() {
           {/* Division forecast table */}
           <div className="db-card span-2 row-2">
             <div className="db-card-hd">
-              <span className="db-card-ttl">Division Forecast</span>
+              <span className="db-card-ttl">{t("divisionForecast")}</span>
               <span className="db-card-tag">{predLabel}</span>
             </div>
             {preds.length === 0 ? (
               <div className="db-empty">
-                <p>No predictions found</p>
+                <p>{t("noData")}</p>
                 <code>python yield_prediction_ml.py</code>
               </div>
             ) : (
               <table className="db-tbl">
                 <thead>
                   <tr>
-                    <th>Division</th>
-                    <th>Predicted Yield</th>
-                    <th>Share</th>
-                    <th>Risk</th>
-                    <th>Confidence</th>
+                    <th>{t("division")}</th>
+                    <th>{t("predictedYield")}</th>
+                    <th>{t("share")}</th>
+                    <th>{t("risk")}</th>
+                    <th>{t("confidence")}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -303,9 +306,9 @@ export default function Dashboard() {
           {/* Weather card */}
           <div className="db-card span-2">
             <div className="db-card-hd">
-              <span className="db-card-ttl">Weather · Rangala</span>
+              <span className="db-card-ttl">{t("weatherRangala")}</span>
               <span className={`db-card-tag ${weather ? "live" : ""}`}>
-                {weatherLoading ? "Loading..." : weather ? `● ${wxDate}` : "● Unavailable"}
+                {weatherLoading ? t("loading") : weather ? `● ${wxDate}` : "● Unavailable"}
               </span>
             </div>
             {weatherLoading ? (
@@ -315,34 +318,34 @@ export default function Dashboard() {
                 <div className="db-wx-main">
                   <div>
                     <div className="db-wx-temp">{temp}°C</div>
-                    <div className="db-wx-desc">{weather.tempMax}° / {weather.tempMin}° · Yesterday</div>
+                    <div className="db-wx-desc">{weather.tempMax}° / {weather.tempMin}° · {t("yesterday")}</div>
                     <div className="db-wx-feels">{wxDate} · Rangala Estate</div>
                   </div>
                 </div>
                 <div className="db-wx-stats">
                   <div className="db-wx-stat">
                     <div className="db-wx-stat-val">{humidity}%</div>
-                    <div className="db-wx-stat-lbl">Humidity</div>
+                    <div className="db-wx-stat-lbl">{t("humidity")}</div>
                     <div className={`db-wx-stat-badge ${humidity > 80 ? "warn" : "ok"}`}>
-                      {humidity > 80 ? "High Risk" : "Normal"}
+                      {humidity > 80 ? t("highRisk") : t("normal")}
                     </div>
                   </div>
                   <div className="db-wx-stat">
                     <div className="db-wx-stat-val">{wind} km/h</div>
-                    <div className="db-wx-stat-lbl">Wind Speed</div>
+                    <div className="db-wx-stat-lbl">{t("windSpeed")}</div>
                     <div className={`db-wx-stat-badge ${wind > 10 ? "warn" : "ok"}`}>
-                      {wind > 10 ? "High Risk" : "Normal"}
+                      {wind > 10 ? t("highRisk") : t("normal")}
                     </div>
                   </div>
                   <div className="db-wx-stat">
                     <div className="db-wx-stat-val">{rain} mm</div>
-                    <div className="db-wx-stat-lbl">Precipitation</div>
-                    <div className="db-wx-stat-badge ok">Daily total</div>
+                    <div className="db-wx-stat-lbl">{t("precipitation")}</div>
+                    <div className="db-wx-stat-badge ok">{t("yesterday")}</div>
                   </div>
                   <div className="db-wx-stat">
                     <div className="db-wx-stat-val">{weather.tempMax}°C</div>
-                    <div className="db-wx-stat-lbl">Max Temp</div>
-                    <div className="db-wx-stat-badge ok">Yesterday</div>
+                    <div className="db-wx-stat-lbl">{t("maxTemp")}</div>
+                    <div className="db-wx-stat-badge ok">{t("yesterday")}</div>
                   </div>
                 </div>
               </div>
@@ -354,14 +357,14 @@ export default function Dashboard() {
           {/* Last month actual */}
           <div className="db-card">
             <div className="db-card-hd">
-              <span className="db-card-ttl">Last Month Actual</span>
+              <span className="db-card-ttl">{t("lastMonthActual")}</span>
               <span className="db-card-tag">Historical</span>
             </div>
             <div className="db-single-stat">
               <div className="db-single-num amber">
                 {lastMonthVal > 0
                   ? `${(lastMonthVal / 1000).toFixed(1)}t`
-                  : <span className="db-na">No data</span>}
+                  : <span className="db-na">{t("noData")}</span>}
               </div>
               {lastMonthVal > 0 && (
                 <div className="db-single-kg">{lastMonthVal.toLocaleString()} kg</div>
@@ -378,14 +381,14 @@ export default function Dashboard() {
           {/* Current month prediction */}
           <div className="db-card">
             <div className="db-card-hd">
-              <span className="db-card-ttl">This Month Prediction</span>
+              <span className="db-card-ttl">{t("thisMonthPrediction")}</span>
               <span className="db-card-tag">{predLabel}</span>
             </div>
             <div className="db-single-stat">
               <div className="db-single-num green">
                 {totalPred > 0
                   ? `${(totalPred / 1000).toFixed(1)}t`
-                  : <span className="db-na">No predictions</span>}
+                  : <span className="db-na">{t("noData")}</span>}
               </div>
               {totalPred > 0 && (
                 <div className="db-single-kg">{totalPred.toLocaleString()} kg</div>
@@ -402,11 +405,11 @@ export default function Dashboard() {
           {/* Monthly chart */}
           <div className="db-card span-2">
             <div className="db-card-hd">
-              <span className="db-card-ttl">Monthly Yield History</span>
+              <span className="db-card-ttl">{t("monthlyYieldHistory")}</span>
               <span className="db-card-tag">Last 12 months</span>
             </div>
             {monthly.length === 0 ? (
-              <div className="db-empty"><p>No history data yet</p></div>
+              <div className="db-empty"><p>{t("noData")}</p></div>
             ) : (
               <div className="db-chart">
                 {monthly.slice(-12).map((d, i) => {
@@ -430,11 +433,11 @@ export default function Dashboard() {
           {/* Yearly chart */}
           <div className="db-card span-2">
             <div className="db-card-hd">
-              <span className="db-card-ttl">Annual Yield</span>
+              <span className="db-card-ttl">{t("annualYield")}</span>
               <span className="db-card-tag">2021 – present</span>
             </div>
             {yearly.length === 0 ? (
-              <div className="db-empty"><p>No yearly data yet</p></div>
+              <div className="db-empty"><p>{t("noData")}</p></div>
             ) : (
               <div className="db-chart db-chart-yearly">
                 {yearly.map((d, i) => {

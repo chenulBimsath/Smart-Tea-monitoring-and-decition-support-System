@@ -7,5 +7,33 @@
   "yieldPrediction": "மகசூல் கணிப்பு",
   "reports": "அறிக்கைகள்",
   "myProfile": "என் சுயவிவரம்",
-  "logout": "வெளியேறு"
+  "logout": "வெளியேறு",
+
+
+  "currentMonthForecast": "இந்த மாத கணிப்பு",
+  "lastMonthActual": "கடந்த மாத உண்மை",
+  "temperature": "வெப்பநிலை",
+  "humidity": "ஈரப்பதம்",
+  "highRiskDivisions": "அதிக ஆபத்து பிரிவுகள்",
+  "divisionForecast": "பிரிவு கணிப்பு",
+  "weatherRangala": "வானிலை · ரங்கலா",
+  "thisMonthPrediction": "இந்த மாத கணிப்பு",
+  "monthlyYieldHistory": "மாதாந்திர விளைச்சல் வரலாறு",
+  "annualYield": "வருடாந்திர விளைச்சல்",
+
+  "predictedYield": "கணிக்கப்பட்ட விளைச்சல்",
+  "share": "பங்கு",
+  "risk": "ஆபத்து",
+  "confidence": "நம்பிக்கை",
+
+  "windSpeed": "காற்றின் வேகம்",
+  "precipitation": "மழைப்பொழிவு",
+  "maxTemp": "அதிகபட்ச வெப்பநிலை",
+
+  "loading": "ஏற்றப்படுகிறது...",
+  "noData": "தரவு இல்லை",
+  "yesterday": "நேற்று",
+  "normal": "சாதாரணம்",
+  "highRisk": "அதிக ஆபத்து"
+
 }
