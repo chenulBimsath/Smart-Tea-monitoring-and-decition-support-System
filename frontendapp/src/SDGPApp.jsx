@@ -35,7 +35,7 @@ import NewDivAgronomic from "./components/sdgp/NewDivAgronomic";
 
 
 export default function SDGPApp() {
-  const [page, setPage] = useState("fieldmap");
+  const [page, setPage] = useState("dashboard");
 
   return (
     <>
