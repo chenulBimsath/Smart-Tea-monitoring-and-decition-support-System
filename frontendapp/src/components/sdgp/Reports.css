@@ -259,57 +259,62 @@
 
 /* ══════════════════════════════════════════════════════
    PRINT / PDF STYLES
-   window.print() triggered by Download PDF button
    ══════════════════════════════════════════════════════ */
 @media print {
   @page {
     size: A4;
-    margin: 10mm 12mm;
+    margin: 12mm 14mm;
   }
 
-  /* Hide controls */
+  /* Hide sidebar, navbar, header */
+  .sidebar,
+  .app-sidebar,
+  .side-bar,
+  .sidenav,
+  .side-nav,
+  .app-header,
+  .navbar,
+  .nav-top,
+  .db-top,
   .no-print { display: none !important; }
 
-  /* Reset backgrounds for print */
-  body, .rp-page { background: #fff !important; padding: 0 !important; }
+  /* Reset page layout so report fills full width */
+  body, html          { margin: 0 !important; padding: 0 !important; background: #fff !important; }
+  .rp-page            { padding: 0 !important; background: #fff !important; min-height: unset !important; }
 
+  /* Report takes full width, no card styling */
   .rp-report {
     border: none !important;
     box-shadow: none !important;
     border-radius: 0 !important;
     max-width: 100% !important;
+    width: 100% !important;
   }
 
-  /* Avoid page breaks inside sections */
-  .rp-section   { page-break-inside: avoid; padding: 18px 24px; }
-  .rp-kpi       { page-break-inside: avoid; }
-  .rp-table tr  { page-break-inside: avoid; }
+  /* Sections flow naturally — avoid breaks inside */
+  .rp-cover          { page-break-after: avoid; }
+  .rp-section        { page-break-inside: avoid; padding: 16px 20px; }
+  .rp-kpi            { page-break-inside: avoid; }
+  .rp-table tr       { page-break-inside: avoid; }
+  .rp-kpi-grid       { page-break-inside: avoid; }
+  .rp-two-col        { page-break-inside: avoid; }
 
-  /* Force page break before major sections */
-  .rp-section:nth-child(3) { page-break-before: auto; }
-
-  /* Font sizes for print */
-  .rp-kpi-val   { font-size: 16px !important; }
+  /* Font sizes for A4 */
+  .rp-kpi-val        { font-size: 15px !important; }
+  .rp-kpi-label      { font-size: 8px !important; }
+  .rp-kpi-sub        { font-size: 9px !important; }
   .rp-table td,
-  .rp-table th  { font-size: 10px !important; padding: 6px 8px !important; }
+  .rp-table th       { font-size: 9px !important; padding: 5px 7px !important; }
+  .rp-section-title  { font-size: 11px !important; }
 
-  /* Cover stays green */
-  .rp-cover {
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-    background: linear-gradient(135deg, #1a3a2a, #27ae60) !important;
+  /* Preserve background colors */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
 
-  .rp-table th,
-  .rp-section-title,
-  .rp-kpi,
-  .rp-ndvi-badge,
-  .rp-type-badge {
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-  }
-
-  .rp-scroll-table { max-height: none !important; overflow: visible !important; }
+  /* Remove scroll limit on weather table */
+  .rp-scroll-table   { max-height: none !important; overflow: visible !important; }
 }
 
 /* ── Responsive ── */

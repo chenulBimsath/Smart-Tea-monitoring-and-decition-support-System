@@ -17,7 +17,7 @@ export default function Sidebar({ page, setPage }) {
   const { t } = useTranslation(); // ✅ ADD
 
   return (
-    <aside className="sidebar">
+    <aside className="sidebar no-print">
 
       <div className="sidebar-menu">
 

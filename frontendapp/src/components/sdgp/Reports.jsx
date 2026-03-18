@@ -37,7 +37,13 @@ export default function Reports() {
   }
 
   function handlePrint() {
+    if (!report) return;
+    // Set document title → browser uses it as the PDF filename
+    const estatePart = (report.estateName || "Estate").replace(/\s+/g, "_");
+    const prev = document.title;
+    document.title = `${report.monthName}_${report.year}_${estatePart}`;
     window.print();
+    document.title = prev;
   }
 
   if (loading) return (
