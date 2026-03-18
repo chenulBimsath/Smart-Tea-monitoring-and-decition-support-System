@@ -1,0 +1,11 @@
+{
+  "dashboard": "Dashboard",
+  "fieldMap": "Field Map",
+  "fieldData": "Field Data",
+  "fertilizerData": "Fertilizer Data",
+  "climateRisk": "Climate Risk",
+  "yieldPrediction": "Yield Prediction",
+  "reports": "Reports",
+  "myProfile": "My Profile",
+  "logout": "Logout"
+}
