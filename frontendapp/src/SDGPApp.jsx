@@ -106,6 +106,10 @@ export default function SDGPApp() {
             <RangalaFertilizerData setPage={setPage} />
           )}
 
+          {page === "fertilizerdata" && (
+            <FertilizerData setPage={setPage} />
+          )}
+
           {page === "newdivisionfertilizer" && (
             <NewDivisionFertilizerData setPage={setPage} />
           )}
