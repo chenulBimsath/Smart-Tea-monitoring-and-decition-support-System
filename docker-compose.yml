@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   backend:
     build:
@@ -10,14 +8,14 @@ services:
       - "8080:8080"
     restart: unless-stopped
    
-
-  frontend:
+  ml-service:
     build:
-      context: ./frontendapp
+      context: "./ml-models/yield ML"
       dockerfile: Dockerfile
-    container_name: smart-tea-frontend
+    container_name: smart-tea-ml
     ports:
-      - "80:80"
+      - "5001:5000"
     restart: unless-stopped
-    depends_on:
-      - backend
+    # This loads your SUPABASE_URL and SUPABASE_SERVICE_KEY into the container
+    env_file:
+      - "./ml-models/yield ML/.env"
