@@ -43,7 +43,7 @@ export default function FinanceAnalytics({ setPage }) {
   const fetchFinanceData = async () => {
     try {
       // Updated Endpoint
-      const response = await fetch("http://localhost:8080/api/financial-data");
+      const response = await fetch("http://13.233.134.204:8080/api/financial-data");
       if (!response.ok) throw new Error("Network response was not ok");
       
       const data = await response.json();
@@ -96,7 +96,7 @@ export default function FinanceAnalytics({ setPage }) {
   const handleDelete = async (id) => {
     if (window.confirm(`Are you sure you want to delete Transaction ID ${id}?`)) {
       try {
-        const response = await fetch(`http://localhost:8080/api/financial-data/${id}`, {
+        const response = await fetch(`http://13.233.134.204:8080/api/financial-data/${id}`, {
           method: "DELETE"
         });
 
@@ -183,8 +183,8 @@ export default function FinanceAnalytics({ setPage }) {
 
     try {
       const url = editingItemId 
-        ? `http://localhost:8080/api/financial-data/${editingItemId}`
-        : "http://localhost:8080/api/financial-data";
+        ? `http://13.233.134.204:8080/api/financial-data/${editingItemId}`
+        : "http://13.233.134.204:8080/api/financial-data";
         
       const method = editingItemId ? "PUT" : "POST";
 
