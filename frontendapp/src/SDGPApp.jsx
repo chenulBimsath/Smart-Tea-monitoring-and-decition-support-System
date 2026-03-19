@@ -22,8 +22,6 @@ import AddFertilizerData from "./components/sdgp/AddFertilizerData";
 
 import YieldPrediction from "./components/sdgp/YieldPrediction";
 
-import Reports from "./components/sdgp/Reports";
-
 import CropYields from "./components/sdgp/CropYields";
 import FertilizerAnalytics from "./components/sdgp/FertilizerAnalytics";
 import FinanceAnalytics from "./components/sdgp/FinanceAnalytics";
@@ -37,7 +35,7 @@ import NewDivAgronomic from "./components/sdgp/NewDivAgronomic";
 
 
 export default function SDGPApp() {
-  const [page, setPage] = useState("dashboard");
+  const [page, setPage] = useState("fieldmap");
 
   return (
     <>
@@ -82,10 +80,6 @@ export default function SDGPApp() {
 
           {page === "yield_prediction" && (
             <YieldPrediction setPage={setPage} />
-          )}
-
-          {page === "reports" && (
-            <Reports setPage={setPage} />
           )}
 
           {page === "fertilizer_analytics" && (
