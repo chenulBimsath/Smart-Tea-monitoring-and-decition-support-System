@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import "./Reports.css";
 
-const API        = import.meta.env.VITE_API_BASE || "http://localhost:8080";
+const API        = import.meta.env.VITE_API_BASE || "http://13.233.134.204:8080";
 const MONTH_NAMES = ["","January","February","March","April","May","June",
                      "July","August","September","October","November","December"];
 

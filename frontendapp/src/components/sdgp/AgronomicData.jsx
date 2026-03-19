@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./AgronomicData.css"; 
 
 export default function AgronomicData({ setPage }) {
-  const API_BASE_URL = "http://localhost:8080/api/agronomic-data";
+  const API_BASE_URL = "http://13.233.134.204:8080/api/agronomic-data";
 
   // --- STATE ---
   const [allData, setAllData] = useState([]); 

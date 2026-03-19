@@ -36,7 +36,7 @@ export default function NewDivCropYields({ setPage }) {
 
   const fetchCropData = async () => {
     try {
-      const response = await fetch("http://localhost:8080/api/crop-details");
+      const response = await fetch("http://13.233.134.204:8080/api/crop-details");
       if (!response.ok) throw new Error("Network response was not ok");
       
       const data = await response.json();
@@ -72,7 +72,7 @@ export default function NewDivCropYields({ setPage }) {
   const handleDelete = async (cropId) => {
     if (window.confirm(`Are you sure you want to delete Crop ID ${cropId}?`)) {
       try {
-        const response = await fetch(`http://localhost:8080/api/crop-details/${cropId}`, {
+        const response = await fetch(`http://13.233.134.204:8080/api/crop-details/${cropId}`, {
           method: "DELETE"
         });
 
@@ -141,8 +141,8 @@ export default function NewDivCropYields({ setPage }) {
 
     try {
       const url = editingItemId 
-        ? `http://localhost:8080/api/crop-details/${editingItemId}`
-        : "http://localhost:8080/api/crop-details";
+        ? `http://13.233.134.204:8080/api/crop-details/${editingItemId}`
+        : "http://13.233.134.204:8080/api/crop-details";
         
       const method = editingItemId ? "PUT" : "POST";
 
