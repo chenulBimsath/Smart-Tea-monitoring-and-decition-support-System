@@ -33,5 +33,5 @@ jobs:
 
       - name: Deploy to S3 Bucket
         run: |
-          # මෙතන 'smart-tea-frontend' 
+        
           aws s3 sync frontendapp/dist/ s3://smart-tea-frontend --delete
