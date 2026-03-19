@@ -4,7 +4,7 @@ import "./AgronomicData.css";
 export default function AgronomicData({ setPage }) {
   const API_BASE_URL = "http://13.233.134.204:8080/api/agronomic-data";
 
-  // --- STATE ---
+  // --- test 2STATE ---
   const [allData, setAllData] = useState([]); 
   
   // --- NEW: YEAR FILTERING STATE ---
