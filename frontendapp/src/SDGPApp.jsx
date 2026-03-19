@@ -14,7 +14,6 @@ import RangalaDivisions from "./components/sdgp/RangalaDivisions";
 import NewDivisionData from "./components/sdgp/NewDivisionData";
 import AddFieldData from "./components/sdgp/AddFieldData";
 
-import FertilizerData from "./components/sdgp/FertilizerData";
 import FertilizerRangalaDivisions from "./components/sdgp/FertilizerRangalaDivisions";
 import RangalaFertilizerData from "./components/sdgp/RangalaFertilizerData";
 import NewDivisionFertilizerData from "./components/sdgp/NewDivisionFertilizerData";
@@ -94,20 +93,12 @@ export default function SDGPApp() {
             <AgronomicData setPage={setPage} />
           )}
 
-          {page === "fertilizerdata" && (
-            <FertilizerData setPage={setPage} />
-          )}
-
           {page === "fertilizerrangaladivisions" && (
             <FertilizerRangalaDivisions setPage={setPage} />
           )}
 
           {page === "rangalafertilizer" && (
             <RangalaFertilizerData setPage={setPage} />
-          )}
-
-          {page === "fertilizerdata" && (
-            <FertilizerData setPage={setPage} />
           )}
 
           {page === "newdivisionfertilizer" && (
