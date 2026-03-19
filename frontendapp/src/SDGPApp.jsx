@@ -96,7 +96,7 @@ export default function SDGPApp() {
 
           {page === "fertilizerdata" && (
             <FertilizerData setPage={setPage} />
-)}
+          )}
 
           {page === "fertilizerrangaladivisions" && (
             <FertilizerRangalaDivisions setPage={setPage} />
