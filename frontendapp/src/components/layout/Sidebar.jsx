@@ -42,12 +42,7 @@ export default function Sidebar({ page, setPage }) {
           onClick={() => setPage("fielddata")}
         />
 
-        <SidebarItem
-          icon={<Leaf size={18} />}
-          label={t("fertilizerData")}
-          active={page === "fertilizerdata"}
-          onClick={() => setPage("fertilizerdata")}
-        />
+        
 
         <SidebarItem
           icon={<Cloud size={18} />}
