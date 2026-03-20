@@ -22,12 +22,13 @@ jobs:
         run: |
           cd frontendapp
           npm install
+          npm install -D vitest
 
       # Automated Testing Phase
       - name: Run Frontend Tests
         run: |
           cd frontendapp
-          npm test -- --watchAll=false 
+          npx vitest run
 
       - name: Build Application
         run: |
