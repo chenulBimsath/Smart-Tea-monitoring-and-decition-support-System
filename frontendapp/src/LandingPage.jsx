@@ -1,16 +1,16 @@
 import { useState } from "react";
 
-
-import Navbar from "./components/layout/navbar";
-import Splash from "./components/pages/splash";
-import Features from "./components/pages/features";
-import HowItWorks from "./components/pages/howItWorks";
-import Contact from "./components/pages/contact";
-import SignInPopup from "./components/pages/signinPopup";
-import <SignUpPopup> from 
+import Navbar    from "./components/layout/Navbar";
+import Splash    from "./components/pages/Splash";
+import Features  from "./components/pages/Features";
+import HowItWorks from "./components/pages/HowItWorks";
+import Contact   from "./components/pages/Contact";
+import SignInPopup  from "./components/pages/SigninPopup";
+import SignUpPopup  from "./components/pages/SignUpPopup";
 
 export default function LandingPage() {
   const [showSignIn, setShowSignIn] = useState(false);
+  const [showSignUp, setShowSignUp] = useState(false);
 
   return (
     <>
@@ -22,7 +22,17 @@ export default function LandingPage() {
       <Contact />
 
       {showSignIn && (
-        <SignInPopup closePopup={() => setShowSignIn(false)} />
+        <SignInPopup
+          closePopup={() => setShowSignIn(false)}
+          openSignUp={() => { setShowSignIn(false); setShowSignUp(true); }}
+        />
+      )}
+
+      {showSignUp && (
+        <SignUpPopup
+          closePopup={() => setShowSignUp(false)}
+          openSignIn={() => { setShowSignUp(false); setShowSignIn(true); }}
+        />
       )}
     </>
   );
