@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import "./YieldPrediction.css";
 
-const API         = import.meta.env.VITE_API_BASE || "http://localhost:8080";
+const API         = import.meta.env.VITE_API_BASE || "http://13.233.134.204:8080";
 const MONTH_NAMES = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 
 const DIVISION_META = {

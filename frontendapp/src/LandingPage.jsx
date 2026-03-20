@@ -1,11 +1,12 @@
 import { useState } from "react";
 
-import Navbar from "./components/layout/Navbar";
-import Splash from "./components/pages/Splash";
-import Features from "./components/pages/Features";
-import HowItWorks from "./components/pages/HowItWorks";
-import Contact from "./components/pages/Contact";
-import SignInPopup from "./components/pages/SigninPopup";
+// 👇 Notice how the ends of these paths are now lowercase/camelCase
+import Navbar from "./components/layout/navbar";
+import Splash from "./components/pages/splash";
+import Features from "./components/pages/features";
+import HowItWorks from "./components/pages/howItWorks";
+import Contact from "./components/pages/contact";
+import SignInPopup from "./components/pages/signinPopup";
 
 export default function LandingPage() {
   const [showSignIn, setShowSignIn] = useState(false);
