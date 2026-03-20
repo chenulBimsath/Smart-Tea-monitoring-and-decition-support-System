@@ -1,0 +1,94 @@
+/* signupPopup.css — extends signinPopup.css */
+
+/* Wider card for 2-col layout */
+.signup-card {
+  width: 560px;
+  max-height: 92vh;
+  overflow-y: auto;
+}
+
+/* 2-column field row */
+.signup-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 0;
+}
+
+.signup-row .signin-field {
+  margin-bottom: 14px;
+}
+
+/* Role/department select — matches input style */
+.signup-select {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1.5px solid #ddeee5;
+  border-radius: 10px;
+  font-size: 14px;
+  font-family: 'DM Sans', sans-serif;
+  color: #1a3a2a;
+  background: #f8fdf9;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  box-sizing: border-box;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238aab98' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+}
+
+.signup-select:focus {
+  border-color: #27ae60;
+  background-color: #ffffff;
+}
+
+/* Required star */
+.signup-req {
+  color: #e74c3c;
+  margin-left: 2px;
+}
+
+/* Error pill */
+.signup-error {
+  color: #e74c3c;
+  font-size: 12px;
+  font-family: 'DM Sans', sans-serif;
+  margin: 0 0 14px;
+  padding: 8px 12px;
+  background: #fde8e8;
+  border: 1px solid #f5b8b8;
+  border-radius: 8px;
+  line-height: 1.5;
+}
+
+/* Success state */
+.signup-success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 20px 0 8px;
+  gap: 8px;
+}
+
+.signup-success-icon {
+  width: 56px;
+  height: 56px;
+  background: #d4f5e2;
+  color: #1a7a40;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+/* Responsive — stack to 1 col on small screens */
+@media (max-width: 620px) {
+  .signup-card  { width: calc(100vw - 32px); }
+  .signup-row   { grid-template-columns: 1fr; }
+}
