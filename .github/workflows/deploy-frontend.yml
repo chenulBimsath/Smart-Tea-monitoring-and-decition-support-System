@@ -7,7 +7,7 @@ on:
       - 'frontendapp/**' 
 
 jobs:
-  deploy:
+  test-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -18,10 +18,20 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install Dependencies and Build
+      - name: Install Dependencies
         run: |
           cd frontendapp
           npm install
+
+      # Automated Testing Phase
+      - name: Run Frontend Tests
+        run: |
+          cd frontendapp
+          npm test -- --watchAll=false 
+
+      - name: Build Application
+        run: |
+          cd frontendapp
           npm run build
 
       - name: Configure AWS credentials
@@ -33,5 +43,4 @@ jobs:
 
       - name: Deploy to S3 Bucket
         run: |
-        
           aws s3 sync frontendapp/dist/ s3://smart-tea-frontend --delete
