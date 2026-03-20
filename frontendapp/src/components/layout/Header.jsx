@@ -7,7 +7,7 @@ export default function Header({ onRefresh, subtitle = "Rangala Estate" }) {
   return (
     <header className="app-header no-print">
 
-      {/* LEFT: Logo + title */}
+      {/* LEFT: Logo + title test */}
       <div className="header-left">
         <img src="/logo.png" alt="Logo" className="header-logo" />
         <div className="header-title-wrap">

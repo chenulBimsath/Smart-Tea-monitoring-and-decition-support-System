@@ -1,0 +1,62 @@
+name: Deploy Backend and ML to ECR
+
+on:
+  push:
+    branches: [ main ] 
+
+jobs:
+  test-build-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # Automated Testing Phase
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Run Spring Boot Backend Tests
+        run: |
+          cd backend/tea_backend
+          mvn test
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+          
+      - name: Run ML Tests
+        run: |
+          cd "ml-models/yield ML"
+          pip install -r requirements.txt
+          pip install pytest 
+          pytest
+
+      # Build and Push Phase
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-south-1 
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build and Push Backend Image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        run: |
+          docker build -t $ECR_REGISTRY/smart-tea-backend:latest ./backend/tea_backend
+          docker push $ECR_REGISTRY/smart-tea-backend:latest
+
+      - name: Build and Push ML Image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        run: |
+          docker build -t $ECR_REGISTRY/smart-tea-ml:latest "./ml-models/yield ML"
+          docker push $ECR_REGISTRY/smart-tea-ml:latest

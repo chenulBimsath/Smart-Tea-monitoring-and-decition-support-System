@@ -14,15 +14,12 @@ import RangalaDivisions from "./components/sdgp/RangalaDivisions";
 import NewDivisionData from "./components/sdgp/NewDivisionData";
 import AddFieldData from "./components/sdgp/AddFieldData";
 
-import FertilizerData from "./components/sdgp/FertilizerData";
 import FertilizerRangalaDivisions from "./components/sdgp/FertilizerRangalaDivisions";
 import RangalaFertilizerData from "./components/sdgp/RangalaFertilizerData";
 import NewDivisionFertilizerData from "./components/sdgp/NewDivisionFertilizerData";
 import AddFertilizerData from "./components/sdgp/AddFertilizerData";
 
 import YieldPrediction from "./components/sdgp/YieldPrediction";
-
-import Reports from "./components/sdgp/Reports";
 
 import CropYields from "./components/sdgp/CropYields";
 import FertilizerAnalytics from "./components/sdgp/FertilizerAnalytics";
@@ -34,6 +31,9 @@ import NewDivCropYields from "./components/sdgp/NewDivCropYields";
 import NewDivFertilizer from "./components/sdgp/NewDivFertilizer"; 
 import NewDivFinancials from "./components/sdgp/NewDivFinancials";
 import NewDivAgronomic from "./components/sdgp/NewDivAgronomic";
+
+// --- IMPORT REPORTS COMPONENT HERE ---
+import Reports from "./components/sdgp/Reports";
 
 
 export default function SDGPApp() {
@@ -84,10 +84,6 @@ export default function SDGPApp() {
             <YieldPrediction setPage={setPage} />
           )}
 
-          {page === "reports" && (
-            <Reports setPage={setPage} />
-          )}
-
           {page === "fertilizer_analytics" && (
             <FertilizerAnalytics setPage={setPage} />
           )}
@@ -98,10 +94,6 @@ export default function SDGPApp() {
 
           {page === "agronomic_data" && (
             <AgronomicData setPage={setPage} />
-          )}
-
-          {page === "fertilizerdata" && (
-            <FertilizerData setPage={setPage} />
           )}
 
           {page === "fertilizerrangaladivisions" && (
@@ -132,14 +124,20 @@ export default function SDGPApp() {
             <NewDivFertilizer setPage={setPage} />
           )}
 
-          {/* This is now active and safe since the import is above */}
           {page === "new_div_financials" && (
             <NewDivFinancials setPage={setPage} />
           )}
-
        
           {page === "new_div_agronomic" && (
             <NewDivAgronomic setPage={setPage} />
+          )}
+
+          {/* ========================================== */}
+          {/* REPORTS PAGE                               */}
+          {/* ========================================== */}
+
+          {page === "reports" && (
+            <Reports />
           )}
 
         </main>
