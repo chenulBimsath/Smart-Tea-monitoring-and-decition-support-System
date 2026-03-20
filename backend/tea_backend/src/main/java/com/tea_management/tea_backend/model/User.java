@@ -3,8 +3,15 @@ package com.tea_management.tea_backend.model;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 
+/**
+ * PLACE AT:
+ * src/main/java/com/tea_management/tea_backend/model/User.java
+ *
+ * Maps to: public."User"
+ * Table name is quoted because User is a reserved word in PostgreSQL.
+ */
 @Entity
-@Table(name = "\"User\"")
+@Table(name = "\"User\"", schema = "public")
 public class User {
 
     @Id
@@ -14,11 +21,26 @@ public class User {
     @Column(name = "full_name")
     private String fullName;
 
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     private String email;
+
+    @Column(name = "password")
+    private String password;
 
     @Column(name = "role")
     private String role;
+
+    @Column(name = "mobile_num")
+    private String mobileNum;
+
+    @Column(name = "department")
+    private String department;
+
+    @Column(name = "address")
+    private String address;
+
+    @Column(name = "joined_date")
+    private LocalDate joinedDate;
 
     @Column(name = "estate_id")
     private Integer estateId;
@@ -26,52 +48,37 @@ public class User {
     @Column(name = "division_id")
     private Integer divisionId;
 
-    @Column(name = "password")
-    private String password;
+    // ── Getters & Setters ─────────────────────────────────────────────────────
+    public String    getUserId()                { return userId; }
+    public void      setUserId(String v)        { this.userId = v; }
 
-    @Column(name = "mobile_num")
-    private String mobileNum;
+    public String    getFullName()              { return fullName; }
+    public void      setFullName(String v)      { this.fullName = v; }
 
-    @Column(name = "joined_date")
-    private LocalDate joinedDate;
+    public String    getEmail()                 { return email; }
+    public void      setEmail(String v)         { this.email = v; }
 
-    @Column(name = "address")
-    private String address;
+    public String    getPassword()              { return password; }
+    public void      setPassword(String v)      { this.password = v; }
 
-    @Column(name = "department")
-    private String department;
+    public String    getRole()                  { return role; }
+    public void      setRole(String v)          { this.role = v; }
 
-    // Getters & Setters
-    public String getUserId()               { return userId; }
-    public void setUserId(String userId)    { this.userId = userId; }
+    public String    getMobileNum()             { return mobileNum; }
+    public void      setMobileNum(String v)     { this.mobileNum = v; }
 
-    public String getFullName()                { return fullName; }
-    public void setFullName(String fullName)   { this.fullName = fullName; }
+    public String    getDepartment()            { return department; }
+    public void      setDepartment(String v)    { this.department = v; }
 
-    public String getEmail()                { return email; }
-    public void setEmail(String email)      { this.email = email; }
+    public String    getAddress()               { return address; }
+    public void      setAddress(String v)       { this.address = v; }
 
-    public String getRole()                 { return role; }
-    public void setRole(String role)        { this.role = role; }
+    public LocalDate getJoinedDate()            { return joinedDate; }
+    public void      setJoinedDate(LocalDate v) { this.joinedDate = v; }
 
-    public Integer getEstateId()               { return estateId; }
-    public void setEstateId(Integer estateId)  { this.estateId = estateId; }
+    public Integer   getEstateId()              { return estateId; }
+    public void      setEstateId(Integer v)     { this.estateId = v; }
 
-    public Integer getDivisionId()                 { return divisionId; }
-    public void setDivisionId(Integer divisionId)  { this.divisionId = divisionId; }
-
-    public String getPassword()                { return password; }
-    public void setPassword(String password)   { this.password = password; }
-
-    public String getMobileNum()               { return mobileNum; }
-    public void setMobileNum(String mobileNum) { this.mobileNum = mobileNum; }
-
-    public LocalDate getJoinedDate()               { return joinedDate; }
-    public void setJoinedDate(LocalDate joinedDate) { this.joinedDate = joinedDate; }
-
-    public String getAddress()                { return address; }
-    public void setAddress(String address)    { this.address = address; }
-
-    public String getDepartment()                 { return department; }
-    public void setDepartment(String department)  { this.department = department; }
+    public Integer   getDivisionId()            { return divisionId; }
+    public void      setDivisionId(Integer v)   { this.divisionId = v; }
 }
