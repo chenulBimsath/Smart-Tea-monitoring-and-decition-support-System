@@ -37,7 +37,7 @@ import Reports from "./components/sdgp/Reports";
 
 
 export default function SDGPApp() {
-  const [page, setPage] = useState("fieldmap");
+  const [page, setPage] = useState("dashboard");
 
   return (
     <>
