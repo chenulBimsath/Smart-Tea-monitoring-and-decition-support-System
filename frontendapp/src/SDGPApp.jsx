@@ -32,6 +32,9 @@ import NewDivFertilizer from "./components/sdgp/NewDivFertilizer";
 import NewDivFinancials from "./components/sdgp/NewDivFinancials";
 import NewDivAgronomic from "./components/sdgp/NewDivAgronomic";
 
+// --- IMPORT REPORTS COMPONENT HERE ---
+import Reports from "./components/sdgp/Reports";
+
 
 export default function SDGPApp() {
   const [page, setPage] = useState("fieldmap");
@@ -93,8 +96,6 @@ export default function SDGPApp() {
             <AgronomicData setPage={setPage} />
           )}
 
-         
-
           {page === "fertilizerrangaladivisions" && (
             <FertilizerRangalaDivisions setPage={setPage} />
           )}
@@ -123,14 +124,20 @@ export default function SDGPApp() {
             <NewDivFertilizer setPage={setPage} />
           )}
 
-          {/* This is now active and safe since the import is above */}
           {page === "new_div_financials" && (
             <NewDivFinancials setPage={setPage} />
           )}
-
        
           {page === "new_div_agronomic" && (
             <NewDivAgronomic setPage={setPage} />
+          )}
+
+          {/* ========================================== */}
+          {/* REPORTS PAGE                               */}
+          {/* ========================================== */}
+
+          {page === "reports" && (
+            <Reports />
           )}
 
         </main>
