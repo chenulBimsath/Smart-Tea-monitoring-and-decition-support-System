@@ -176,7 +176,8 @@
 .cr-forecast-day  { font-size: 12px; font-weight: 600; color: var(--text2); }
 .cr-forecast-icon { width: 28px; height: 28px; }
 .cr-forecast-desc { font-size: 11px; color: var(--text3); }
-.cr-forecast-temp { font-size: 14px; font-weight: 700; color: var(--text); min-width: 40px; text-align: right; }
+.cr-forecast-temp { font-size: 14px; font-weight: 700; color: var(--text); min-width: 40px; text-align: right; 
+}
 .cr-forecast-bar-wrap {
   height: 4px; background: #e8f5ed;
   border-radius: 99px; overflow: hidden;
@@ -187,7 +188,6 @@
 }
 
 /* ── Chart card ── */
-.cr-chart-card { }
 .cr-chart-wrap { padding: 16px 18px 12px; }
 
 /* ── Risk list ── */

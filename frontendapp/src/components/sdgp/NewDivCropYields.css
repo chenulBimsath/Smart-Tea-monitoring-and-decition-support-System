@@ -1,384 +1,467 @@
-.new-yield-page {
-  padding: 40px;
-  background-color: #f4f7f6;
-  min-height: 100vh;
-  font-family: 'Inter', sans-serif;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* Scope everything under page class to prevent bleed */
+.new-yield-page { 
+  padding: 24px 28px; 
+  background: linear-gradient(180deg,#eef7f1,#f6f9f8); 
+  min-height: 100vh; 
+  font-family: 'Inter',sans-serif; 
+  color: #1a3a2a; }
+.new-yield-page *, .new-yield-page *::before, .new-yield-page *::after { 
+  box-sizing: border-box; 
+  margin: 0; padding: 0; 
 }
 
-.new-yield-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 30px;
+/* Header */
+.new-yield-header { 
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center; 
+  margin-bottom: 20px; 
+  flex-wrap: wrap; 
+  gap: 12px; 
+}
+.new-yield-header h1 { 
+  font-size: 20px; 
+  font-weight: 700; 
+  color: #1a3a2a; 
+  letter-spacing: -0.3px; 
+  margin: 0; 
+}
+.new-yield-header p { 
+  font-size: 12px; 
+  color: #8aab98; 
+  margin-top: 2px; 
+}
+.new-yield-page .new-back-to-grid-btn, .new-yield-page .back-to-grid-btn { 
+  padding: 7px 16px; 
+  border-radius: 999px; 
+  border: 1px solid #ddeee5; 
+  background: #fff; 
+  color: #5f7c6b; 
+  font-size: 12px; 
+  font-weight: 600; 
+  cursor: pointer; 
+  font-family: 'Inter',sans-serif; 
+  transition: all 0.15s; 
+}
+.new-yield-page .new-back-to-grid-btn:hover, .new-yield-page .back-to-grid-btn:hover { 
+  background: #27ae60; 
+  color: #fff; 
+  border-color: #27ae60; 
+}
+.new-yield-page .new-add-record-btn, .new-yield-page .add-record-btn { 
+  padding: 7px 16px; 
+  border-radius: 999px; 
+  border: none; 
+  background: #e74c3c; 
+  color: #fff; 
+  font-size: 12px; 
+  font-weight: 600; 
+  cursor: pointer; 
+  font-family: 'Inter',sans-serif; 
+  transition: all 0.15s; 
+}
+.new-yield-page .new-add-record-btn:hover, .new-yield-page .add-record-btn:hover { 
+  background: #c0392b; 
+  transform: translateY(-1px); 
+}
+.new-yield-page .header-controls, .new-yield-page .new-header-controls, .new-yield-page .new-agro-controls, .new-yield-page .new-fert-header-controls, .new-yield-page .new-fin-controls {
+  display: flex; 
 }
 
-.new-yield-header h1 {
-  color: #1a4331;
-  margin: 0;
-  font-size: 2rem;
+
+/* Dropdown */
+.new-yield-page .dropdown-container, .new-yield-page .new-dropdown-container, .new-yield-page .new-agro-dropdown-container, .new-yield-page .new-fert-dropdown-container, .new-yield-page .new-fin-dropdown-container { 
+  display: flex; 
+  align-items: center; 
+  gap: 8px; 
+}
+.new-yield-page .dropdown-container label, .new-yield-page .new-dropdown-container label, .new-yield-page .new-agro-dropdown-container label, .new-yield-page .new-fert-dropdown-container label, .new-yield-page .new-fin-dropdown-container label { 
+  font-size: 12px; 
+  font-weight: 600; 
+  color: #5f7c6b; 
+}
+.new-yield-page .year-dropdown, .new-yield-page .new-year-dropdown, .new-yield-page .new-agro-year-dropdown, .new-yield-page .new-fert-year-dropdown, .new-yield-page .new-fin-year-dropdown { 
+  padding: 7px 14px; 
+  border-radius: 10px; 
+  border: 1px solid #ddeee5; 
+  font-size: 13px; 
+  font-weight: 600; 
+  background: #fff; 
+  color: #1a3a2a; 
+  cursor: pointer; 
+  outline: none; 
+  font-family: 'Inter',sans-serif; 
+}
+.new-yield-page .year-dropdown:focus, .new-yield-page .new-year-dropdown:focus, .new-yield-page .new-agro-year-dropdown:focus, .new-yield-page .new-fert-year-dropdown:focus, .new-yield-page .new-fin-year-dropdown:focus { 
+  border-color: #27ae60; 
 }
 
-.new-yield-header p {
-  color: #666;
-  margin: 5px 0 0 0;
+/* Table card */
+.new-yield-page .table-card, .new-yield-page .new-table-card, .new-yield-page .new-agro-table-card, .new-yield-page .new-fert-table-card, .new-yield-page .new-fin-table-card { 
+  background: #fff; 
+  border: 1px solid #ddeee5;
+  border-radius: 16px; 
+  overflow: hidden; 
+  box-shadow: 0 4px 16px rgba(0,0,0,0.05); 
+}
+.new-yield-page .table-responsive, .new-yield-page .new-agro-table-responsive, .new-yield-page .new-fert-table-responsive { 
+  width: 100%; 
+  overflow-x: auto; 
+}
+.new-yield-page .shadow-lg { 
+  box-shadow: 0 4px 16px rgba(0,0,0,0.07) !important; 
 }
 
-.new-back-to-grid-btn {
-  background: #2f7d5b;
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: all 0.2s ease;
+/* Table */
+.new-yield-page .new-yield-table { 
+  width: 100%; 
+  border-collapse: collapse; 
+  font-size: 13px; 
+  font-family: 'Inter',sans-serif; 
+  min-width: 700px; 
+}
+.new-yield-page .new-yield-table thead tr { 
+  background: #eef7f1; 
+}
+.new-yield-page .new-yield-table th { 
+  padding: 9px 16px; 
+  text-align: left; 
+  font-size: 10px; 
+  font-weight: 700; 
+  letter-spacing: 0.06em; 
+  text-transform: uppercase; 
+  color: #5f7c6b; 
+  border-bottom: 1px solid #ddeee5; 
+  white-space: nowrap; 
+}
+.new-yield-page .new-yield-table td { 
+  padding: 11px 16px; 
+  border-bottom: 1px solid #e8f5ed; 
+  color: #1a3a2a; 
+  vertical-align: middle; 
+  white-space: nowrap; 
+}
+.new-yield-page .new-yield-table tbody tr:last-child td { 
+  border-bottom: none; 
+}
+.new-yield-page .new-yield-table tbody tr:hover td { 
+  background: #f5fbf7; 
 }
 
-.new-back-to-grid-btn:hover {
-  background: #246347;
-  transform: translateX(-5px);
+/* Footer/pagination */
+.new-yield-page .table-footer, .new-yield-page .new-table-footer, .new-yield-page .new-agro-footer, .new-yield-page .new-fert-table-footer, .new-yield-page .new-fin-footer { 
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center; 
+  padding: 12px 18px; 
+  background: #fafdfb; 
+  border-top: 1px solid #e8f5ed; 
+  font-size: 12px; color: #8aab98; 
+}
+.new-yield-page .nav-btn, .new-yield-page .new-nav-btn, .new-yield-page .new-agro-nav-btn, .new-yield-page .new-fert-nav-btn, .new-yield-page .new-fin-nav-btn { 
+  padding: 5px 14px; 
+  border-radius: 8px; 
+  border: 1px solid #ddeee5; 
+  background: #fff; 
+  color: #5f7c6b; 
+  font-size: 12px; 
+  font-weight: 600; 
+  cursor: pointer; 
+  font-family: 'Inter',sans-serif; 
+  transition: all 0.15s; 
+}
+.new-yield-page .nav-btn:hover:not(:disabled), .new-yield-page .new-nav-btn:hover:not(:disabled), .new-yield-page .new-agro-nav-btn:hover:not(:disabled), .new-yield-page .new-fert-nav-btn:hover:not(:disabled), .new-yield-page .new-fin-nav-btn:hover:not(:disabled) { 
+  background: #27ae60; 
+  color: #fff; 
+  border-color: #27ae60;
+ }
+.new-yield-page .nav-btn:disabled, .new-yield-page .new-nav-btn:disabled, .new-yield-page .new-agro-nav-btn:disabled, .new-yield-page .new-fert-nav-btn:disabled, .new-yield-page .new-fin-nav-btn:disabled { 
+  opacity: 0.35; 
+  cursor: not-allowed; 
+}
+.new-yield-page .year-label, .new-yield-page .new-year-label, .new-yield-page .new-agro-year-label, .new-yield-page .new-fert-page-label, .new-yield-page .new-fin-year-label, .new-yield-page .page-label { 
+  font-size: 12px; 
+  color: #8aab98; 
 }
 
-.new-header-controls {
-  display: flex;
-  align-items: center;
-  gap: 20px;
+/* Cells */
+.new-yield-page .id-cell, .new-yield-page .new-id-cell, .new-yield-page .new-agro-id-cell, .new-yield-page .new-fert-id-cell, .new-yield-page .new-fin-id-cell { 
+  font-weight: 700; 
+  color: #27ae60; 
+  font-size: 12px; 
+}
+.new-yield-page .yield-badge, .new-yield-page .new-yield-badge, .new-yield-page .qty-badge, .new-yield-page .new-agro-badge, .new-yield-page .new-fert-qty-badge { 
+  display: inline-block; 
+  background: #d4f5e2; 
+  color: #1a7a40; 
+  border: 1px solid #b6dfc4; 
+  padding: 3px 10px; 
+  border-radius: 999px; 
+  font-size: 11px; 
+  font-weight: 700; 
+}
+.new-yield-page .currency-cell, .new-yield-page .new-currency-cell, .new-yield-page .new-fin-currency-cell { 
+  font-family: 'Courier New',monospace; 
+  font-weight: 700; 
+  color: #1a3a2a; 
+}
+.new-yield-page .date-cell, .new-yield-page .new-agro-date-cell, .new-yield-page .new-fert-date-cell, .new-yield-page .month-cell, .new-yield-page .new-month-cell { 
+  color: #5f7c6b; 
+  font-size: 12px; 
+}
+.new-yield-page .status-badge, .new-yield-page .new-fert-status-badge { 
+  padding: 3px 10px; 
+  border-radius: 999px; 
+  font-size: 11px; 
+  font-weight: 700; 
+  display: inline-block; 
+}
+.new-yield-page .status-badge.mature, .new-yield-page .new-fert-status-badge.mature { 
+  background: #d4f5e2; 
+  color: #1a7a40; 
+  border: 1px solid #b6dfc4; 
+}
+.new-yield-page .status-badge.immature, .new-yield-page .new-fert-status-badge.immature { 
+  background: #fef3cd; 
+  color: #9a6e00; 
+  border: 1px solid #f0d580; 
+}
+.new-yield-page .status-badge.pruned, .new-yield-page .new-fert-status-badge.pruned { 
+  background: #dbeafe; 
+  color: #1e40af; 
+  border: 1px solid #bfdbfe; 
 }
 
-.new-dropdown-container {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+/* Action menu */
+.new-yield-page .action-cell, .new-yield-page .new-action-cell, .new-yield-page .new-agro-action-cell, .new-yield-page .new-fert-action-cell, .new-yield-page .new-fin-action-cell { 
+  text-align: center; 
+  position: relative; 
+}
+.new-yield-page .action-header, .new-yield-page .new-action-header, .new-yield-page .new-agro-action-header, .new-yield-page .new-fert-action-header, .new-yield-page .new-fin-action-header { 
+  text-align: center; 
+  width: 60px; 
+}
+.new-yield-page .action-dots-btn, .new-yield-page .new-action-dots-btn, .new-yield-page .new-agro-action-dots-btn, .new-yield-page .new-fert-action-dots-btn, .new-yield-page .new-fin-action-dots-btn { 
+  background: none; 
+  border: none; 
+  font-size: 18px; 
+  font-weight: 700; 
+  color: #8aab98; 
+  cursor: pointer; 
+  width: 32px; 
+  height: 32px; 
+  border-radius: 50%; 
+  display: inline-flex; 
+  align-items: center; 
+  justify-content: center; 
+  transition: all 0.15s; 
+}
+.new-yield-page .action-dots-btn:hover, .new-yield-page .new-action-dots-btn:hover, .new-yield-page .new-agro-action-dots-btn:hover, .new-yield-page .new-fert-action-dots-btn:hover, .new-yield-page .new-fin-action-dots-btn:hover { 
+  background: #e8f5ed; 
+  color: #27ae60; 
+}
+.new-yield-page .action-dropdown, .new-yield-page .new-action-dropdown, .new-yield-page .new-agro-action-dropdown, .new-yield-page .new-fert-action-dropdown, .new-yield-page .new-fin-action-dropdown { 
+  position: absolute; 
+  right: 36px; 
+  top: 8px; 
+  background: #fff; 
+  border: 1px solid #ddeee5; 
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1); 
+  border-radius: 10px; 
+  z-index: 200; 
+  min-width: 130px; 
+  overflow: hidden; 
+}
+.new-yield-page .action-dropdown button, .new-yield-page .new-action-dropdown button, .new-yield-page .new-agro-action-dropdown button, .new-yield-page .new-fert-action-dropdown button, .new-yield-page .new-fin-action-dropdown button { 
+  display: block; 
+  width: 100%; 
+  padding: 10px 16px; 
+  border: none; 
+  background: #fff; 
+  text-align: left; 
+  cursor: pointer; 
+  font-size: 13px; 
+  font-family: 'Inter',sans-serif; 
+  font-weight: 500; 
+  color: #1a3a2a; 
+  transition: background 0.15s; 
+}
+.new-yield-page .action-dropdown button:hover, .new-yield-page .new-action-dropdown button:hover, .new-yield-page .new-agro-action-dropdown button:hover, .new-yield-page .new-fert-action-dropdown button:hover, .new-yield-page .new-fin-action-dropdown button:hover { 
+  background: #f5fbf7; 
+  color: #27ae60; 
+}
+.new-yield-page .delete-btn, .new-yield-page .new-delete-btn, .new-yield-page .new-agro-delete-btn, .new-yield-page .new-fert-delete-btn, .new-yield-page .new-fin-delete-btn { 
+  color: #e74c3c !important; 
+  border-top: 1px solid #e8f5ed !important; 
+}
+.new-yield-page .delete-btn:hover, .new-yield-page .new-delete-btn:hover, .new-yield-page .new-agro-delete-btn:hover, .new-yield-page .new-fert-delete-btn:hover, .new-yield-page .new-fin-delete-btn:hover { 
+  background: #fde8e8 !important; 
+  color: #b91c1c !important; 
 }
 
-.new-dropdown-container label {
-  font-weight: 600;
-  color: #1a4331;
-  font-size: 0.9rem;
+/* Modal - these are fixed/overlay so scope with page-specific animation names */
+.new-yield-page-modal-overlay, .new-modal-overlay[data-page="new-yield-page"] { 
+  position: fixed; 
+  inset: 0; 
+  background: rgba(10,30,18,0.5); 
+  backdrop-filter: blur(4px); 
+  display: flex; 
+  justify-content: center; 
+  align-items: center; 
+  z-index: 2000; 
+}
+.modal-overlay { 
+  position: fixed; 
+  inset: 0; 
+  background: rgba(10,30,18,0.5); 
+  backdrop-filter: blur(4px); 
+  display: flex; 
+  justify-content: center; 
+  align-items: center; 
+  z-index: 2000; 
+}
+.new-modal-overlay, .new-agro-modal-overlay, .new-fert-modal-overlay, .new-fin-modal-overlay { 
+  position: fixed; 
+  inset: 0; 
+  background: rgba(10,30,18,0.5); 
+  backdrop-filter: blur(4px); 
+  display: flex; 
+  justify-content: center; 
+  align-items: center; 
+  z-index: 2000; 
+}
+.modal-content, .new-modal-content, .new-agro-modal-content, .new-fert-modal-content, .new-fin-modal-content { 
+  background: #fff; 
+  border-radius: 18px; 
+  padding: 32px 28px; 
+  width: 440px; 
+  max-width: calc(100vw - 32px); 
+  max-height: 90vh; 
+  overflow-y: auto; 
+  box-shadow: 0 20px 60px rgba(0,0,0,0.2); 
+  animation: modalSlideUpnew-yield-page 0.25s ease; 
+  box-sizing: border-box; 
+  font-family: 'Inter',sans-serif;
+}
+.modal-content.large-modal, .new-fert-modal-content.new-fert-large-modal, .new-agro-modal-content.new-agro-modal, .agronomic-modal { 
+  width: 660px;
+}
+@keyframes modalSlideUpnew-yield-page { 
+  from{opacity:0;transform:translateY(16px) scale(0.97)} to{opacity:1;transform:translateY(0) scale(1)} 
+}
+.modal-header, .new-modal-header, .new-agro-modal-header, .new-fert-modal-header, .new-fin-modal-header { 
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center; 
+  margin-bottom: 22px; 
+}
+.modal-header h2, .new-modal-header h2, .new-agro-modal-header h2, .new-fert-modal-header h2, .new-fin-modal-header h2 { 
+  font-size: 17px; 
+  font-weight: 700; 
+  color: #1a3a2a; 
+  margin: 0; 
+}
+.close-btn, .new-close-btn, .new-agro-close-btn, .new-fert-close-btn, .new-fin-close-btn { 
+  background: none; 
+  border: none; 
+  font-size: 20px; 
+  cursor: pointer; 
+  color: #8aab98; 
+  transition: color 0.15s; 
+  padding: 2px; 
+}
+.close-btn:hover, .new-close-btn:hover, .new-agro-close-btn:hover, .new-fert-close-btn:hover, .new-fin-close-btn:hover { 
+  color: #e74c3c; 
 }
 
-.new-year-dropdown {
-  padding: 10px 15px;
-  border-radius: 8px;
-  border: 2px solid #2f7d5b;
-  background-color: white;
-  color: #1a4331;
-  font-weight: 700;
-  cursor: pointer;
-  outline: none;
-  transition: all 0.2s ease;
+/* Form */
+.add-form, .new-add-form, .new-fin-add-form { 
+  display: flex; 
+  flex-direction: column; 
+  gap: 14px; 
+}
+.grid-form, .new-agro-grid-form { 
+  display: grid; 
+  grid-template-columns: 1fr 1fr; 
+  gap: 14px; 
+}
+.new-fert-add-form.new-fert-grid-form { 
+  display: grid; 
+  grid-template-columns: 1fr 1fr; 
+  gap: 14px; 
+}
+.form-row, .new-fin-form-row { 
+  display: flex; 
+  gap: 14px; 
+}
+.form-row .form-group, .new-fin-form-row .new-fin-form-group { 
+  flex: 1; 
+}
+.full-width, .new-agro-full-width, .new-fert-full-width {
+   grid-column: 1/-1; 
+  }
+.form-group, .new-form-group, .new-agro-form-group, .new-fert-form-group, .new-fin-form-group { 
+  display: flex; 
+  flex-direction: column; 
+  gap: 5px; 
+}
+.form-group label, .new-form-group label, .new-agro-form-group label, .new-fert-form-group label, .new-fin-form-group label { 
+  font-size: 11px; 
+  font-weight: 700; 
+  letter-spacing: 0.06em; 
+  text-transform: uppercase; 
+  color: #5f7c6b; 
+}
+.form-group input, .form-group select, .new-form-group input, .new-form-group select, .new-agro-form-group input, .new-agro-form-group select, .new-fert-form-group input, .new-fert-form-group select, .new-fin-form-group input, .new-fin-form-group select { 
+  padding: 10px 14px; 
+  border: 1.5px solid #ddeee5; 
+  border-radius: 10px; 
+  font-size: 13px; 
+  font-family: 'Inter',sans-serif; 
+  color: #1a3a2a; 
+  background: #f8fdf9; 
+  outline: none; 
+  transition: all 0.15s; 
+  width: 100%; 
+  box-sizing: border-box; 
+}
+.form-group input:focus, .form-group select:focus, .new-form-group input:focus, .new-form-group select:focus, .new-agro-form-group input:focus, .new-agro-form-group select:focus, .new-fert-form-group input:focus, .new-fert-form-group select:focus, .new-fin-form-group input:focus, .new-fin-form-group select:focus { 
+  border-color: #27ae60; 
+  background: #fff; 
+}
+.readonly-input, .new-readonly-input { 
+  background: #eef7f1 !important; 
+  color: #5f7c6b; 
+  cursor: not-allowed; 
+}
+.submit-btn, .new-submit-btn, .new-agro-submit-btn, .new-fert-submit-btn, .new-fin-submit-btn { 
+  width: 100%; 
+  padding: 12px; 
+  border: none; 
+  background: #27ae60; 
+  color: #fff; 
+  border-radius: 10px; 
+  font-size: 14px; 
+  font-weight: 700; 
+  cursor: pointer; 
+  font-family: 'Inter',sans-serif; 
+  margin-top: 6px; 
+  transition: all 0.15s; 
+  box-shadow: 0 4px 12px rgba(39,174,96,0.25); 
+}
+.submit-btn:hover, .new-submit-btn:hover, .new-agro-submit-btn:hover, .new-fert-submit-btn:hover, .new-fin-submit-btn:hover { 
+  background: #1a8a4a; 
+  transform: translateY(-1px); 
+}
+.title-section, .new-title-section, .new-agro-title-section, .new-fert-title-section, .new-fin-title-section { 
+  display: flex; 
+  flex-direction: column; 
+  gap: 2px; 
 }
 
-.new-year-dropdown:hover {
-  border-color: #246347;
-  background-color: #f0f7f3;
+@media (max-width: 900px) { .modal-content.large-modal, .new-fert-modal-content.new-fert-large-modal, .new-agro-modal-content.new-agro-modal { 
+  width: calc(100vw - 32px); } 
 }
-
-.new-year-dropdown:focus {
-  box-shadow: 0 0 0 3px rgba(47, 125, 91, 0.2);
-}
-
-.new-table-card {
-  background: white;
-  border-radius: 15px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  overflow: visible;
-  border: 1px solid #e0e0e0;
-}
-
-.new-yield-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: white;
-  border-radius: 15px 15px 0 0;
-  overflow: hidden;
-}
-
-.new-yield-table th {
-  background-color: #2f7d5b;
-  color: #ffffff;
-  text-align: left;
-  padding: 20px 25px;
-  font-size: 0.9rem;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-}
-
-.new-yield-table td {
-  padding: 20px 25px;
-  border-bottom: 1px solid #f0f0f0;
-  color: #333;
-  font-size: 1rem;
-}
-
-.new-yield-table tbody tr:nth-child(even) {
-  background-color: #fafdfb;
-}
-
-.new-yield-table tbody tr:hover {
-  background-color: #f0f7f3;
-}
-
-.new-id-cell {
-  font-weight: 700;
-  color: #2f7d5b;
-}
-
-.new-yield-badge {
-  background: #e8f5e9;
-  color: #2e7d32;
-  padding: 6px 14px;
-  border-radius: 50px;
-  font-weight: 600;
-  font-size: 0.9rem;
-}
-
-.new-currency-cell {
-  font-family: 'Courier New', Courier, monospace;
-  font-weight: bold;
-}
-
-.new-table-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px 25px;
-  background: #fdfdfd;
-  border-radius: 0 0 15px 15px;
-}
-
-.new-nav-btn {
-  background: #ffffff;
-  color: #2f7d5b;
-  border: 2px solid #2f7d5b;
-  padding: 8px 18px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 700;
-  transition: 0.3s;
-}
-
-.new-nav-btn:hover:not(:disabled) {
-  background: #2f7d5b;
-  color: white;
-}
-
-.new-nav-btn:disabled {
-  border-color: #ccc;
-  color: #ccc;
-  cursor: not-allowed;
-}
-
-.new-year-label {
-  color: #555;
-  font-size: 1rem;
-}
-
-.new-action-header {
-  text-align: center !important;
-  width: 80px;
-}
-
-.new-action-cell {
-  text-align: center;
-  position: relative;
-}
-
-.new-action-dots-btn {
-  background: none;
-  border: none;
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #888;
-  cursor: pointer;
-  padding: 0 10px;
-  border-radius: 50%;
-  transition: background-color 0.2s, color 0.2s;
-  line-height: 1;
-  height: 35px;
-  width: 35px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.new-action-dots-btn:hover {
-  background-color: #e8eee9;
-  color: #2f7d5b;
-}
-
-.new-action-dropdown {
-  position: absolute;
-  right: 50px;
-  top: 15px;
-  background: white;
-  border: 1px solid #e0e0e0;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
-  border-radius: 8px;
-  z-index: 100;
-  display: flex;
-  flex-direction: column;
-  width: 140px;
-  overflow: hidden;
-}
-
-.new-action-dropdown button {
-  padding: 12px 16px;
-  border: none;
-  background: white;
-  text-align: left;
-  cursor: pointer;
-  font-size: 0.9rem;
-  font-family: inherit;
-  font-weight: 600;
-  color: #444;
-  transition: background 0.2s;
-}
-
-.new-action-dropdown button:hover {
-  background-color: #f4f7f6;
-  color: #2f7d5b;
-}
-
-.new-action-dropdown button.new-delete-btn {
-  color: #d32f2f;
-  border-top: 1px solid #f0f0f0;
-}
-
-.new-action-dropdown button.new-delete-btn:hover {
-  background-color: #ffebee;
-  color: #b71c1c;
-}
-
-.new-add-record-btn {
-  background: #d32f2f;
-  color: white;
-  border: 2px solid #d32f2f;
-  padding: 10px 18px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 0.9rem;
-  transition: all 0.2s ease;
-}
-
-.new-add-record-btn:hover {
-  background: #b71c1c;
-  border-color: #b71c1c;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(211, 47, 47, 0.2);
-}
-
-.new-modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-  backdrop-filter: blur(3px);
-}
-
-.new-modal-content {
-  background: white;
-  padding: 35px;
-  border-radius: 16px;
-  width: 420px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-  max-height: 90vh;
-  overflow-y: auto;
-}
-
-.new-modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.new-modal-header h2 {
-  font-size: 22px;
-  color: #1a4331;
-  margin: 0;
-}
-
-.new-close-btn {
-  background: none;
-  border: none;
-  font-size: 20px;
-  cursor: pointer;
-  color: #888;
-  transition: 0.2s;
-}
-
-.new-close-btn:hover {
-  color: #d32f2f;
-}
-
-.new-add-form {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-.new-form-group {
-  display: flex;
-  flex-direction: column;
-}
-
-.new-form-group label {
-  font-weight: 600;
-  margin-bottom: 5px;
-  color: #444;
-  font-size: 0.9rem;
-}
-
-.new-form-group input,
-.new-form-group select {
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  font-size: 14px;
-  transition: 0.2s;
-  background-color: white;
-  font-family: inherit;
-}
-
-.new-form-group input:focus,
-.new-form-group select:focus {
-  outline: none;
-  border-color: #2f7d5b;
-  box-shadow: 0 0 0 2px rgba(47, 125, 91, 0.2);
-}
-
-.new-form-group input.new-readonly-input {
-  background-color: #e9ecef;
-  color: #6c757d;
-  cursor: not-allowed;
-  font-weight: bold;
-}
-
-.new-form-group select.new-month-select {
-  cursor: pointer;
-}
-
-.new-submit-btn {
-  margin-top: 10px;
-  padding: 12px;
-  border: none;
-  background: #2f7d5b;
-  color: white;
-  border-radius: 10px;
-  font-size: 15px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: 0.2s;
-}
-
-.new-submit-btn:hover {
-  background: #25684a;
-}
+@media (max-width: 768px) { .new-yield-page { padding: 14px 16px; } .grid-form, .new-agro-grid-form, .new-fert-add-form.new-fert-grid-form { grid-template-columns: 1fr; } .form-row, .new-fin-form-row { flex-direction: column; } }

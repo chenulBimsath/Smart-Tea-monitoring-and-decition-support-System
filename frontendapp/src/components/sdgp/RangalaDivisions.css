@@ -1,71 +1,86 @@
-.division-page {
-  /* Increased top padding to push everything lower, and side padding to spread it out */
-  padding: 50px; 
-  background: #f5f7f6;
-  min-height: 100vh; /* Ensures the background covers the whole screen */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+.division-page { 
+  padding: 24px 28px; 
+  background: linear-gradient(180deg, #eef7f1, #f6f9f8); 
+  min-height: 100vh; 
+  font-family: 'Inter', sans-serif; 
+  color: #1a3a2a; 
+}
+.division-page *, .division-page *::before, .division-page *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+.division-header { 
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center; 
+  margin-bottom: 24px; 
+  flex-wrap: wrap; 
+  gap: 12px; 
+}
+.division-header h2 { 
+  font-size: 20px; 
+  font-weight: 700; 
+  color: #1a3a2a; 
+  letter-spacing: -0.3px; 
+  margin: 0; 
+}
+.division-page .back-btn { 
+  padding: 7px 16px; 
+  border-radius: 999px; 
+  border: 1px solid #ddeee5; 
+  background: #fff; 
+  color: #5f7c6b; 
+  font-size: 12px; 
+  font-weight: 600; 
+  cursor: pointer; 
+  font-family: 'Inter', sans-serif; 
+  transition: all 0.15s; 
+}
+.division-page .back-btn:hover { 
+  background: #27ae60; 
+  color: #fff; 
+  border-color: #27ae60; 
 }
 
-.division-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  /* Increased margin-bottom to spread the header further from the cards */
-  margin-bottom: 45px; 
+.division-page .division-grid { 
+  display: grid; 
+  grid-template-columns: repeat(2,1fr); 
+  gap: 16px; 
+}
+.division-page .division-card { 
+  background: #fff; 
+  border: 1px solid #ddeee5; 
+  border-radius: 14px; 
+  padding: 22px 24px; 
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center; 
+  cursor: pointer; 
+  box-shadow: 0 2px 10px rgba(0,0,0,0.04); 
+  transition: all 0.2s; 
+}
+.division-page .division-card:hover { 
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1); 
+  transform: translateY(-3px); 
+  border-color: #27ae60; 
+}
+.division-page .division-card h3 { 
+  font-size: 15px; 
+  font-weight: 600; 
+  color: #1a3a2a; 
+  margin: 0; 
+}
+.division-page .arrow { 
+  font-size: 18px; 
+  color: #27ae60; 
+  font-weight: 700; 
+  transition: transform 0.2s; 
+}
+.division-page .division-card:hover .arrow { 
+  transform: translateX(4px); 
 }
 
-.division-header h2 {
-  margin: 0;
-  font-size: 28px; /* Optional: Slightly larger text for the header */
-}
-
-.back-btn {
-  background: #4CAF50;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: 0.3s;
-  font-weight: 500;
-}
-
-.back-btn:hover {
-  background: #45a049;
-}
-
-.division-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  /* Increased gap to spread the cards further apart */
-  gap: 40px; 
-}
-
-.division-card {
-  background: white;
-  padding: 30px 40px; /* Increased side padding inside the cards */
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* Softened the shadow a bit */
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  cursor: pointer;
-  transition: 0.3s;
-  /* Increased min-height to make the cards a bit taller */
-  min-height: 110px; 
-}
-
-.division-card:hover {
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-  transform: translateY(-2px); /* Adds a slight lift effect on hover */
-}
-
-.division-card h3 {
-  margin: 0;
-  color: #2f7d5b;
-  font-size: 18px;
-}
-
-.arrow {
-  font-size: 24px;
-  color: #2f7d5b;
+@media (max-width: 768px) { 
+  .division-page { padding: 14px 16px; } 
+  .division-page .division-grid { grid-template-columns: 1fr; } 
 }
