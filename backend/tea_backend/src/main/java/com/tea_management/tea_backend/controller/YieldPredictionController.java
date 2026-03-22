@@ -11,7 +11,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/yield")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = {"https://smartteamonitor.com", "http://localhost:5173"})
 public class YieldPredictionController {
 
     private final YieldPredictionService service;

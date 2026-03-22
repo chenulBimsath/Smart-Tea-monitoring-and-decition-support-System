@@ -10,7 +10,7 @@ import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/api/report")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = {"https://smartteamonitor.com", "http://localhost:5173"})
 public class MonthlyReportController {
 
     private final MonthlyReportService service;
