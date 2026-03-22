@@ -1,24 +1,21 @@
 /* ================= IMPORT FONTS ================= */
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap');
 
-
-/* ================= RESET ================= */
-*, *::before, *::after {
+/* ================= RESET (scoped to fieldmap) ================= */
+.fieldmap-layout *, .fieldmap-layout *::before, .fieldmap-layout *::after {
   box-sizing: border-box;
-  margin: 0;
-  padding: 0;
 }
-
 
 /* ================= LAYOUT ================= */
 .fieldmap-layout {
   display: flex;
-  height: 100vh;
+  /* Fills the space below header — header is 68px, app-layout handles padding-top */
+  height: calc(100vh - 68px);
   width: 100%;
   font-family: 'DM Sans', sans-serif;
   background: #e8f5e8;
+  position: relative;
 }
-
 
 /* ================= MAP ================= */
 .fieldmap-map {
@@ -50,6 +47,38 @@
   pointer-events: none;
 }
 
+/* ================= TOGGLE BUTTON (mobile only) ================= */
+.filter-toggle-btn {
+  display: none;
+  position: absolute;
+  top: 16px;
+  right: 16px;   /* RIGHT side, near where the panel slides in from */
+  z-index: 1000;
+  background: #ffffff;
+  border: 1px solid #d6e8d6;
+  color: #1a7a3c;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,60,20,0.1);
+  align-items: center;
+  gap: 6px;
+  transition: background 0.15s;
+}
+.filter-toggle-btn:hover { background: #e8f5e8; }
+
+/* Backdrop for mobile panel */
+.filter-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 1050;
+}
 
 /* ================= SIDE PANEL ================= */
 .filter-card {
@@ -61,21 +90,16 @@
   border-left: 1px solid #d6e8d6;
   display: flex;
   flex-direction: column;
-  box-shadow: -2px 0 12px rgba(0, 80, 20, 0.06);
+  box-shadow: -2px 0 12px rgba(0,80,20,0.06);
   scrollbar-width: thin;
   scrollbar-color: #d6e8d6 transparent;
+  /* Transition for mobile slide */
+  transition: transform 0.28s cubic-bezier(0.4,0,0.2,1);
 }
 
-.filter-card::-webkit-scrollbar {
-  width: 4px;
-}
-.filter-card::-webkit-scrollbar-track {
-  background: transparent;
-}
-.filter-card::-webkit-scrollbar-thumb {
-  background: #d6e8d6;
-  border-radius: 2px;
-}
+.filter-card::-webkit-scrollbar       { width: 4px; }
+.filter-card::-webkit-scrollbar-track { background: transparent; }
+.filter-card::-webkit-scrollbar-thumb { background: #d6e8d6; border-radius: 2px; }
 
 .filter-card::before {
   content: '';
@@ -85,10 +109,7 @@
   flex-shrink: 0;
 }
 
-.filter-card > * {
-  padding-left: 20px;
-  padding-right: 20px;
-}
+.filter-card > * { padding-left: 20px; padding-right: 20px; }
 
 .filter-card h3 {
   font-family: 'Space Mono', monospace;
@@ -109,6 +130,20 @@
   font-style: italic;
 }
 
+/* ================= CLOSE BUTTON inside panel (mobile only) ================= */
+.filter-close-btn {
+  display: none;
+  background: none;
+  border: none;
+  color: #8aad8a;
+  cursor: pointer;
+  padding: 14px 20px 4px;
+  align-self: flex-end;
+  font-size: 18px;
+  line-height: 1;
+  transition: color 0.15s;
+}
+.filter-close-btn:hover { color: #1a7a3c; }
 
 /* ================= DIVIDER ================= */
 .divider {
@@ -117,7 +152,6 @@
   margin: 14px 0;
   padding: 0 !important;
 }
-
 
 /* ================= RADIO OPTIONS ================= */
 .filter-card label {
@@ -134,22 +168,17 @@
   position: relative;
 }
 
-.filter-card label:hover {
-  background: #e8f5e8;
-  color: #1a2e1a;
-}
+.filter-card label:hover { background: #e8f5e8; color: #1a2e1a; }
 
 .filter-card label:has(input:checked) {
   color: #1a7a3c;
-  background: rgba(26, 122, 60, 0.08);
+  background: rgba(26,122,60,0.08);
 }
 
 .filter-card label:has(input:checked)::before {
   content: '';
   position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
+  left: 0; top: 0; bottom: 0;
   width: 3px;
   background: #1a7a3c;
   border-radius: 0 2px 2px 0;
@@ -158,8 +187,7 @@
 .filter-card input[type="radio"] {
   appearance: none;
   -webkit-appearance: none;
-  width: 15px;
-  height: 15px;
+  width: 15px; height: 15px;
   border: 1.5px solid #8aad8a;
   border-radius: 50%;
   flex-shrink: 0;
@@ -170,26 +198,20 @@
 
 .filter-card input[type="radio"]:checked {
   border-color: #1a7a3c;
-  background: rgba(26, 122, 60, 0.08);
+  background: rgba(26,122,60,0.08);
 }
 
 .filter-card input[type="radio"]:checked::after {
   content: '';
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 6px;
-  height: 6px;
+  top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  width: 6px; height: 6px;
   background: #1a7a3c;
   border-radius: 50%;
 }
 
-.filter-card input[type="radio"]:disabled {
-  opacity: 0.35;
-  cursor: not-allowed;
-}
-
+.filter-card input[type="radio"]:disabled { opacity: 0.35; cursor: not-allowed; }
 
 /* ================= NDVI DASHBOARD ================= */
 .ndvi-dashboard {
@@ -205,9 +227,7 @@
 .ndvi-dashboard::before {
   content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
+  top: 0; left: 0; right: 0;
   height: 2px;
   background: linear-gradient(90deg, #1a7a3c, transparent);
   opacity: 0.4;
@@ -243,8 +263,8 @@
   font-weight: 600;
   letter-spacing: 0.04em;
   color: #1a7a3c;
-  background: rgba(26, 122, 60, 0.1);
-  border: 1px solid rgba(26, 122, 60, 0.2);
+  background: rgba(26,122,60,0.1);
+  border: 1px solid rgba(26,122,60,0.2);
   padding: 4px 8px;
   border-radius: 20px;
   text-align: right;
@@ -261,7 +281,6 @@
   padding: 0 !important;
 }
 
-
 /* ================= NDVI PROGRESS BAR ================= */
 .ndvi-bar {
   height: 6px;
@@ -274,9 +293,8 @@
 .ndvi-progress {
   height: 100%;
   border-radius: 3px;
-  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: width 0.6s cubic-bezier(0.4,0,0.2,1);
 }
-
 
 /* ================= NDVI LEGEND ================= */
 .ndvi-legend {
@@ -287,6 +305,7 @@
   border-top: 1px solid #e0ede0;
 }
 
+/* These rules are needed — JSX uses inline styles but these ensure layout */
 .ndvi-legend > div {
   display: flex !important;
   align-items: center;
@@ -307,20 +326,15 @@
   font-family: 'Space Mono', monospace;
 }
 
-
 /* ================= POPUP ================= */
 .leaflet-popup-content-wrapper {
   background: #ffffff !important;
   color: #1a2e1a !important;
   border: 1px solid #d6e8d6 !important;
   border-radius: 10px !important;
-  box-shadow: 0 8px 24px rgba(0, 60, 20, 0.12) !important;
+  box-shadow: 0 8px 24px rgba(0,60,20,0.12) !important;
 }
-
-.leaflet-popup-tip {
-  background: #ffffff !important;
-}
-
+.leaflet-popup-tip          { background: #ffffff !important; }
 .leaflet-popup-content {
   font-family: 'DM Sans', sans-serif !important;
   font-size: 12px !important;
@@ -328,7 +342,6 @@
   color: #4a7a55 !important;
   margin: 12px 16px !important;
 }
-
 .leaflet-popup-content b {
   font-family: 'Space Mono', monospace;
   font-size: 11px;
@@ -338,15 +351,13 @@
   margin-bottom: 4px;
 }
 
-
 /* ================= ZOOM CONTROLS ================= */
 .leaflet-control-zoom {
   border: 1px solid #d6e8d6 !important;
   border-radius: 6px !important;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 60, 20, 0.1) !important;
+  box-shadow: 0 2px 8px rgba(0,60,20,0.1) !important;
 }
-
 .leaflet-control-zoom a {
   background: #ffffff !important;
   color: #4a7a55 !important;
@@ -355,42 +366,42 @@
   font-weight: 300 !important;
   transition: background 0.2s ease, color 0.2s ease !important;
 }
-
-.leaflet-control-zoom a:hover {
-  background: #e8f5e8 !important;
-  color: #1a7a3c !important;
-}
-
-
-/* ================= DIVISION LIST ================= */
-.division-item {
-  padding: 6px 20px;
-  font-size: 12px;
-  background: transparent;
-  border: none;
-  color: #4a7a55;
-}
-
+.leaflet-control-zoom a:hover { background: #e8f5e8 !important; color: #1a7a3c !important; }
 
 /* ================= RESPONSIVE ================= */
 @media (max-width: 768px) {
-  .fieldmap-layout {
-    flex-direction: column;
-  }
 
+  .fieldmap-layout { height: calc(100vh - 68px); }
+
+  /* Map fills full screen */
+  .fieldmap-map { height: 100%; width: 100%; }
+
+  /* Show toggle button — below the TEA FIELD MONITOR badge */
+  .filter-toggle-btn { display: flex; top: 54px; right: 16px; }
+
+  /* Panel slides in from right, hidden by default */
   .filter-card {
-    width: 100%;
-    min-width: unset;
-    height: auto;
-    border-left: none;
-    border-top: 1px solid #d6e8d6;
+    position: fixed;
+    top: 68px;
+    right: 0;
+    height: calc(100vh - 68px);
+    width: 280px;
+    z-index: 1100;
+    transform: translateX(100%);  /* hidden off-screen right */
+    border-left: 1px solid #d6e8d6;
+    box-shadow: -4px 0 20px rgba(0,60,20,0.15);
   }
 
-  .fieldmap-map {
-    height: 60vh;
+  /* Open state */
+  .filter-card.filter-open {
+    transform: translateX(0);
   }
 
-  .fieldmap-map::after {
-    display: none;
-  }
+  /* Show close button */
+  .filter-close-btn { display: flex; }
+
+  /* Show backdrop */
+  .filter-backdrop { display: block; }
+
+  .fieldmap-map::after { display: none; }
 }
