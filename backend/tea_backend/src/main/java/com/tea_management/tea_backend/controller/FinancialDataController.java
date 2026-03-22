@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/financial-data")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = {"https://smartteamonitor.com", "http://localhost:5173"})
 public class FinancialDataController {
 
     @Autowired
