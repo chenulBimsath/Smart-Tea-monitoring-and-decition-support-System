@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import "./MyProfile.css";
 
-const API = import.meta.env.VITE_API_BASE || "http://localhost:8080";
+const API = import.meta.env.VITE_API_BASE || "https://api.smartteamonitor.com";
 
 /* Derive initials from full name */
 function initials(name = "") {
