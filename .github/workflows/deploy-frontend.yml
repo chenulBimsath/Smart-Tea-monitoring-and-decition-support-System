@@ -46,8 +46,4 @@ jobs:
         run: |
           aws s3 sync frontendapp/dist/ s3://smart-tea-frontend --delete
 
-      - name: Invalidate CloudFront Cache
-        run: |
-          aws cloudfront create-invalidation \
-            --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
-            --invalidation-batch '{"Paths": {"Quantity": 1, "Items": ["/*"]}, "CallerReference": "'$(date +%s)'"}'
+     
