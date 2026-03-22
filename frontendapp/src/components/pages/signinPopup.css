@@ -214,3 +214,8 @@
 }
 
 .signup-text span:hover { text-decoration: underline; }
+
+@media (max-width: 480px) {
+  .signin-card { padding: 28px 20px 24px; border-radius: 16px; }
+  .signin-title { font-size: 20px; }
+}

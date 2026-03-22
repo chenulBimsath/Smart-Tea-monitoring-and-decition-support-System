@@ -1,48 +1,25 @@
+/* App.css — global layout only. No * resets here (each page CSS handles its own). */
 
-
-.landing-layout {
-  width: 100%;
-  min-height: 100vh;
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  background: #f6f9f8;
 }
 
-.page-content {
-  position: relative;
+/* ── Dashboard shell ── */
+.app-layout {
+  display: flex;
+  padding-top: 68px; /* push below fixed 68px header */
 }
-
-
-.sdgp-layout {
-  width: 100%;
-  min-height: 100vh;
-  background: #f3f6f4;
-}
-
 
 .app-main {
-  position: relative;
-
-
-  margin-left: 240px;
-  margin-top: 70px;
-
-  min-height: calc(100vh - 70px);
-  padding: 20px;
-
-  overflow-y: auto;
+  margin-left: 220px;
+  flex: 1;
+  min-height: calc(100vh - 68px);
+  transition: margin-left 0.28s ease;
 }
 
-
-
-.logo,
-.card,
-.read-the-docs {
-  display: none;
-}
-
-
-
-@media (max-width: 900px) {
-  .app-main {
-    margin-left: 0;
-    padding: 16px;
-  }
+@media (max-width: 768px) {
+  .app-main { margin-left: 0; }
 }

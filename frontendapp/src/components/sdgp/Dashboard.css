@@ -266,3 +266,14 @@
   .db-wx-main    { border-right: none; border-bottom: 1px solid var(--border2); }
   .db-wx-stats   { grid-template-columns: repeat(2, 1fr); }
 }
+
+/* ── Mobile additions ── */
+@media (max-width: 480px) {
+  .db-body           { padding: 10px 12px; }
+  .db-kpi-card       { padding: 12px 14px; }
+  .db-kpi-num        { font-size: 18px; }
+  .db-kpi-sep        { display: none; }
+  .db-kpi-strip      { flex-direction: column; border-radius: 12px; }
+  .db-card-hd        { padding: 10px 14px 8px; }
+  .db-tbl th, .db-tbl td { padding: 8px 10px; font-size: 11px; }
+}

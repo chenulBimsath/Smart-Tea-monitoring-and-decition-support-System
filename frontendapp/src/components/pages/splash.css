@@ -184,3 +184,12 @@
   .splash-stats      { gap: 20px; }
   .splash-scroll-hint{ display: none; }
 }
+
+@media (max-width: 480px) {
+  .splash-heading    { font-size: 30px; line-height: 1.2; }
+  .splash-sub        { font-size: 14px; }
+  .splash-buttons    { flex-direction: column; align-items: center; gap: 10px; }
+  .splash-stat-num   { font-size: 28px; }
+  .splash-stats      { flex-direction: column; align-items: center; gap: 12px; }
+  .splash-stat-div   { width: 40px; height: 1px; }
+}

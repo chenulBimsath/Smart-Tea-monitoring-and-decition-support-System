@@ -92,3 +92,8 @@
   .signup-card  { width: calc(100vw - 32px); }
   .signup-row   { grid-template-columns: 1fr; }
 }
+
+@media (max-width: 640px) {
+  .signup-card { width: calc(100vw - 24px); }
+  .signup-row  { grid-template-columns: 1fr; gap: 0; }
+}

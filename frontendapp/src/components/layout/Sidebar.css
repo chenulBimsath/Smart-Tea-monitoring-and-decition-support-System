@@ -1,22 +1,25 @@
+/* ── Sidebar — desktop + mobile ── */
 .sidebar {
   position: fixed;
-  top: 70px;
+  top: 68px;
   left: 0;
-  width: 240px;
-  height: calc(100vh - 70px);
+  width: 220px;
+  height: calc(100vh - 68px);
   background-color: #2f7d5b;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 24px 0;
-  font-family: "Segoe UI", Roboto, Arial, sans-serif;
-  z-index: 1000;
+  padding: 20px 0;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  z-index: 900;
+  transition: transform 0.28s cubic-bezier(0.4,0,0.2,1);
+  overflow-y: auto;
 }
 
 .sidebar-menu {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
   overflow-y: auto;
 }
 
@@ -24,27 +27,114 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 12px 20px;
-  margin: 0 14px;
+  padding: 11px 18px;
+  margin: 0 12px;
   border-radius: 10px;
-  color: #ffffff;
+  color: rgba(255,255,255,0.85);
   font-size: 14px;
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition: background 0.15s;
+  white-space: nowrap;
 }
+.sidebar-item:hover  { background: rgba(255,255,255,0.15); color: #fff; }
+.sidebar-item.active { background: #ffffff; color: #2f7d5b; font-weight: 600; }
 
-.sidebar-item:hover {
-  background: rgba(255, 255, 255, 0.15);
-}
-
-.sidebar-item.active {
-  background-color: #ffffff;
-  color: #2f7d5b;
-  font-weight: 600;
-}
+.sidebar-icon { display: flex; align-items: center; flex-shrink: 0; }
 
 .sidebar-bottom {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
+  border-top: 1px solid rgba(255,255,255,0.15);
+  padding-top: 12px;
+  margin-top: 12px;
+}
+
+/* Close X inside sidebar — hidden on desktop */
+.sidebar-close-btn {
+  display: none;
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.7);
+  cursor: pointer;
+  padding: 8px 16px 4px;
+  align-self: flex-end;
+  transition: color 0.15s;
+}
+.sidebar-close-btn:hover { color: #fff; }
+
+/* Hamburger button — hidden on desktop */
+.sidebar-hamburger {
+  display: none;
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 1100;
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.3);
+  color: #ffffff;
+  border-radius: 8px;
+  padding: 6px 8px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+}
+.sidebar-hamburger:hover { background: rgba(255,255,255,0.25); }
+
+/* Backdrop */
+.sidebar-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: 850;
+}
+
+/* ── App layout helpers ── */
+.app-layout {
+  display: flex;
+  /* padding-top pushes content below the fixed 68px header — only once here */
+  padding-top: 68px;
+}
+
+.app-main {
+  margin-left: 220px;
+  flex: 1;
+  min-height: calc(100vh - 68px);
+  transition: margin-left 0.28s;
+  /* No extra padding-top here — app-layout already handles it */
+  overflow-x: hidden;
+}
+
+/* ── Mobile ── */
+@media (max-width: 768px) {
+
+  /* Slide sidebar off-screen by default */
+  .sidebar {
+    transform: translateX(-100%);
+    width: 260px;
+    top: 0;
+    height: 100vh;
+    z-index: 1000;
+    padding-top: 8px;
+    box-shadow: 4px 0 24px rgba(0,0,0,0.2);
+  }
+
+  /* Open state — slide in */
+  .sidebar.sidebar-open {
+    transform: translateX(0);
+  }
+
+  /* Show close button inside sidebar */
+  .sidebar-close-btn { display: flex; }
+
+  /* Show hamburger */
+  .sidebar-hamburger { display: flex; }
+
+  /* Backdrop visible */
+  .sidebar-backdrop { display: block; }
+
+  /* Main content takes full width — no sidebar margin */
+  .app-main { margin-left: 0; }
 }

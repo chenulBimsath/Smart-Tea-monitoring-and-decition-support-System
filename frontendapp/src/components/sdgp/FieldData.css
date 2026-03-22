@@ -125,3 +125,11 @@
   .fielddata-page .region-grid { grid-template-columns: 1fr; }
   .fielddata-page .region-box  { height: 240px; }
 }
+
+@media (max-width: 480px) {
+  .fielddata-page       { padding: 12px; }
+  .fielddata-header h2  { font-size: 17px; }
+  .fielddata-page .stat-card p { font-size: 26px; }
+  .fielddata-page .region-grid { height: auto; min-height: 0; }
+  .fielddata-page .region-box  { height: 220px; }
+}

@@ -260,3 +260,11 @@
   .db-kpi-num    { font-size: 20px; }
   .yp-expanded-grid { grid-template-columns: repeat(2, 1fr); }
 }
+
+/* ── Mobile additions ── */
+@media (max-width: 480px) {
+  .yp-body              { padding: 10px 12px; }
+  .db-kpi-sep           { display: none; }
+  .db-kpi-strip         { flex-direction: column; }
+  .yp-expanded-grid     { grid-template-columns: 1fr; }
+}
