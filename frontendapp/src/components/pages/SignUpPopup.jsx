@@ -114,9 +114,8 @@ export default function SignUpPopup({ closePopup, openSignIn }) {
                 <select name="role" value={form.role} onChange={handleChange} className="signup-select">
                   <option>Field Officer</option>
                   <option>Estate Manager</option>
-                  <option>Agronomist</option>
                   <option>Supervisor</option>
-                  <option>Researcher</option>
+                  <option>Viewer</option>
                 </select>
               </div>
               <div className="signin-field">
