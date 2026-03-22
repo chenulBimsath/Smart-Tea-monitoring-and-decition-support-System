@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import "./YieldPrediction.css";
 
-const API         = import.meta.env.VITE_API_BASE || "http://13.233.134.204:8080";
+const API         = import.meta.env.VITE_API_BASE || "https://api.smartteamonitor.com";
 const MONTH_NAMES = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 
 const DIVISION_META = {
@@ -10,7 +10,7 @@ const DIVISION_META = {
   "Ranwella":      { id: "F-03", risk: "Low",    accent: "#17a589" },
   "New Division":  { id: "F-04", risk: "Medium", accent: "#e67e22" },
   "Kalduriya":     { id: "F-05", risk: "Medium", accent: "#f39c12" },
-  "Peru Division": { id: "F-06", risk: "High",   accent: "#e74c3c" },
+  "Peru Division": { id: "F-06", risk: "High",   accent: "#817473" },
 };
 
 const tc = s => s.toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
