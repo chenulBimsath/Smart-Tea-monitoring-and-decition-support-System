@@ -44,7 +44,7 @@ export default function FieldData({ setPage }) {
         ))}
       </div>
 
-      {/* REGION SQUARES */}
+      {/* REGION 2SQUARES */}
       <div className="region-grid">
         {regions.map((region, index) => (
           <div 
