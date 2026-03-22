@@ -5,9 +5,11 @@ import {
   TrendingUp, FileText, User, LogOut, X, Menu
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 export default function Sidebar({ page, setPage }) {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
 
   // Close sidebar when page changes
@@ -24,7 +26,18 @@ export default function Sidebar({ page, setPage }) {
     return () => document.removeEventListener("mousedown", handler);
   }, [open]);
 
-  const nav = (p) => { setPage(p); setOpen(false); };
+  const nav = (p) => {
+    setPage(p);
+    setOpen(false);
+  };
+
+  const handleLogout = () => {
+    // Clear auth/session data
+    localStorage.clear();
+
+    // Redirect to landing page
+    navigate("/"); // change to "/landing" if needed
+  };
 
   return (
     <>
@@ -43,7 +56,11 @@ export default function Sidebar({ page, setPage }) {
       <aside className={`sidebar no-print${open ? " sidebar-open" : ""}`}>
 
         {/* X button inside panel on mobile */}
-        <button className="sidebar-close-btn" onClick={() => setOpen(false)} aria-label="Close">
+        <button
+          className="sidebar-close-btn"
+          onClick={() => setOpen(false)}
+          aria-label="Close"
+        >
           <X size={18} />
         </button>
 
@@ -57,8 +74,18 @@ export default function Sidebar({ page, setPage }) {
         </div>
 
         <div className="sidebar-bottom">
-          <SidebarItem icon={<User size={18}/>}   label={t("myProfile")} active={page==="profile"} onClick={() => nav("profile")} />
-          <SidebarItem icon={<LogOut size={18}/>} label={t("logout")} />
+          <SidebarItem
+            icon={<User size={18}/>}
+            label={t("myProfile")}
+            active={page==="profile"}
+            onClick={() => nav("profile")}
+          />
+
+          <SidebarItem
+            icon={<LogOut size={18}/>}
+            label={t("logout")}
+            onClick={handleLogout}
+          />
         </div>
 
       </aside>
@@ -68,7 +95,10 @@ export default function Sidebar({ page, setPage }) {
 
 function SidebarItem({ icon, label, active, onClick }) {
   return (
-    <div className={`sidebar-item${active ? " active" : ""}`} onClick={onClick}>
+    <div
+      className={`sidebar-item${active ? " active" : ""}`}
+      onClick={onClick}
+    >
       <span className="sidebar-icon">{icon}</span>
       <span>{label}</span>
     </div>
