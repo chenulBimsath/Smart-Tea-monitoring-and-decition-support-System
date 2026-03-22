@@ -45,3 +45,9 @@ jobs:
       - name: Deploy to S3 Bucket
         run: |
           aws s3 sync frontendapp/dist/ s3://smart-tea-frontend --delete
+
+      - name: Invalidate CloudFront Cache
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
+            --paths "/*"
