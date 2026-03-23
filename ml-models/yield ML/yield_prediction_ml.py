@@ -134,10 +134,10 @@ def generate_predictions(df, model, div_map, live_data):
         div_hist  = df[df["division"] == division_name]
 
         if div_hist.empty:
-            print(f"  ⚠️  No history for {division_name} — skipping")
+            print(f"    No history for {division_name} — skipping")
             continue
 
-        # Prefer live data, fall back to historical division average
+        
         if div_upper in live_data:
             ld = live_data[div_upper]
             temp = ld["temperature"] if ld["temperature"] is not None else float(div_hist["Temperature"].mean())
@@ -175,7 +175,7 @@ def generate_predictions(df, model, div_map, live_data):
 def save_predictions(predictions):
     print(f"\nSaving {len(predictions)} rows to monthly_predicted_yield...")
     for p in predictions:
-        # Replace any existing prediction for this division/year/month
+        
         supabase.table("monthly_predicted_yield") \
             .delete() \
             .eq("division", p["division"]) \
@@ -183,7 +183,7 @@ def save_predictions(predictions):
             .eq("month",    p["month"]) \
             .execute()
         supabase.table("monthly_predicted_yield").insert(p).execute()
-    print("  ✅ All predictions saved")
+    print("   All predictions saved")
 
 
 if __name__ == "__main__":
@@ -200,4 +200,4 @@ if __name__ == "__main__":
     print(f"\nGenerating predictions...")
     preds = generate_predictions(df, model, div_map, live)
     save_predictions(preds)
-    print(f"\n🎉 Done! React will now show updated predictions via Spring Boot.\n")
+
