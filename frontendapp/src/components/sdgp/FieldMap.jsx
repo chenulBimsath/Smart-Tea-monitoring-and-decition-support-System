@@ -3,9 +3,16 @@ import {
   MapContainer, TileLayer, ZoomControl,
   GeoJSON, useMap, Marker, Popup
 } from "react-leaflet";
-import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "./FieldMap.css";
+import L from "leaflet"; 
+
+const customIcon = L.icon({
+  iconUrl: "/marker.jpg", 
+  iconSize: [40, 40],
+  iconAnchor: [20, 40],
+  popupAnchor: [0, -40]
+});
 
 /* ── NDVI helpers ── */
 function getNDVIColor(ndvi) {
@@ -206,9 +213,9 @@ export default function FieldMap() {
             />
           )}
           <FlyToDistrict district={selectedDistrict} />
-          <Marker position={markerPosition}>
-            <Popup>{selectedDistrict.toUpperCase()}</Popup>
-          </Marker>
+          <Marker position={markerPosition} icon={customIcon}>
+  <Popup>{selectedDistrict.toUpperCase()}</Popup>
+</Marker>
           <BoundaryLayer geoData={geoData} selectedDivision={selectedDivision} />
           {viewMode === "ndvi" && selectedDivision && (
             <NDVILayer ndviData={ndviData} selectedDivision={selectedDivision} />
