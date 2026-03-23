@@ -194,35 +194,30 @@ export default function MyProfile() {
 
             <div className="mp-info-tiles">
               <div className="mp-info-tile">
-                <div className="mp-tile-icon">📧</div>
                 <div>
                   <div className="mp-tile-lbl">Email</div>
                   <div className="mp-tile-val">{profile.email || "—"}</div>
                 </div>
               </div>
               <div className="mp-info-tile">
-                <div className="mp-tile-icon">📞</div>
                 <div>
                   <div className="mp-tile-lbl">Mobile</div>
                   <div className="mp-tile-val">{profile.mobileNum || "Not set"}</div>
                 </div>
               </div>
               <div className="mp-info-tile">
-                <div className="mp-tile-icon">🏛️</div>
                 <div>
                   <div className="mp-tile-lbl">Estate</div>
                   <div className="mp-tile-val">{profile.estateName || `#${profile.estateId}` || "—"}</div>
                 </div>
               </div>
               <div className="mp-info-tile">
-                <div className="mp-tile-icon">🌿</div>
                 <div>
                   <div className="mp-tile-lbl">Division</div>
                   <div className="mp-tile-val">{profile.divisionName || `#${profile.divisionId}` || "—"}</div>
                 </div>
               </div>
               <div className="mp-info-tile">
-                <div className="mp-tile-icon">🪪</div>
                 <div>
                   <div className="mp-tile-lbl">User ID</div>
                   <div className="mp-tile-val" style={{ fontSize: 11, fontFamily: "monospace" }}>{profile.userId}</div>
