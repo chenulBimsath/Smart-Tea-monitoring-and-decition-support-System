@@ -8,9 +8,9 @@ import "./FieldMap.css";
 import L from "leaflet"; 
 
 const customIcon = L.icon({
-  iconUrl: "/marker.jpg", 
-  iconSize: [40, 40],
-  iconAnchor: [20, 40],
+  iconUrl: "/marker.png", 
+  iconSize: [50, 50],
+  iconAnchor: [20, 50],
   popupAnchor: [0, -40]
 });
 
