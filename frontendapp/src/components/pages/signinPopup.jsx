@@ -73,13 +73,7 @@ export default function SignInPopup({ closePopup, openSignUp }) {
 
         {error && <p style={{ color: "red", fontSize: "12px" }}>{error}</p>}
 
-        <div className="signin-options">
-          <label className="signin-remember">
-            <input type="checkbox" />
-            Remember Me
-          </label>
-          <span className="forgot-link">Forgot Password?</span>
-        </div>
+        
 
         <button className="signin-btn" onClick={handleLogin}>
           Sign In
