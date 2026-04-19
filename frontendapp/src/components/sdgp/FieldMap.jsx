@@ -208,7 +208,7 @@ export default function FieldMap() {
           />
           {viewMode === "ndvi" && (
             <TileLayer
-              url="https://earthengine.googleapis.com/v1/projects/ndvi-project-489709/maps/411895cfe625a22b3dd17c2d472400af-d192c232c3bfebd02e7f668f52aad4e4/tiles/%7Bz%7D/%7Bx%7D/%7By%7D"
+              url="https://earthengine.googleapis.com/v1/projects/ndvi-project-489709/maps/829b37a63f7a7b52b725f4d5b54eb383-5d659cbbe6cf6391564dccea0fe78d32/tiles/{z}/{x}/{y}"
               opacity={0.3}
             />
           )}
