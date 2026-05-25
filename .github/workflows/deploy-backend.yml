@@ -61,8 +61,31 @@ jobs:
           docker build -t $ECR_REGISTRY/smart-tea-ml:latest "./ml-models/yield ML"
           docker push $ECR_REGISTRY/smart-tea-ml:latest
 
+      # Deployment Phase with Collision Handling
       - name: Trigger Auto Scaling Group Instance Refresh
         run: |
+          ASG_NAME="App-ASG"
+          
+          # Check for any blocking refresh operations
+          STATUS=$(aws autoscaling describe-instance-refreshes \
+            --auto-scaling-group-name $ASG_NAME \
+            --query 'InstanceRefreshes[?Status==`InProgress` || Status==`Pending` || Status==`Cancelling`].Status' \
+            --output text)
+
+          if [ -n "$STATUS" ]; then
+            echo "An instance refresh is currently in status: $STATUS."
+            
+            # Only trigger a cancel if it isn't already cancelling
+            if [[ "$STATUS" != *"Cancelling"* ]]; then
+              echo "Cancelling the ongoing refresh..."
+              aws autoscaling cancel-instance-refresh --auto-scaling-group-name $ASG_NAME
+            fi
+            
+            echo "Waiting 30 seconds for the ASG to clear the previous refresh state..."
+            sleep 30 
+          fi
+
+          echo "Starting the new instance refresh..."
           aws autoscaling start-instance-refresh \
-            --auto-scaling-group-name App-ASG \
+            --auto-scaling-group-name $ASG_NAME \
             --preferences MinHealthyPercentage=50
