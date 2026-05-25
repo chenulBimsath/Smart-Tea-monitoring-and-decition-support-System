@@ -49,12 +49,14 @@ Beyond its core analytical features, this project features a highly available, f
 
 This application is deployed using a robust, scalable  architecture designed for zero-downtime and cost efficiency.
 
-* **Architected a Production-Grade Cloud Infrastructure:** Designed and deployed a highly available, fault-tolerant system on AWS to host a machine learning-based agricultural monitoring platform.
+* **Architected a AWS Cloud Infrastructure:** Designed and deployed a highly available, fault-tolerant system on AWS to host a machine learning-based agricultural monitoring platform.
 
 <img width="927" height="872" alt="Screenshot 2026-05-01 at 10 00 52" src="https://github.com/user-attachments/assets/826b79dd-c9bc-45b7-a1ef-7683c7b338f1" />
 
 
 * **Continuous Integration/Continuous Deployment (CI/CD):** Fully automated deployment pipelines via GitHub Actions ensure that code commits automatically trigger builds, ECR image updates, and ASG instance refreshes for seamless delivery.
+
+<img width="1145" height="860" alt="Screenshot 2026-05-25 at 21 22 21" src="https://github.com/user-attachments/assets/74ad0a81-0466-48a2-a79e-180688cba98e" />
 
 
 * **Frontend Delivery & Automation:** Hosted the React.js frontend on Amazon S3 and utilized Amazon CloudFront (CDN) for low-latency global content delivery. Fully automated the deployment process using CI/CD pipelines.
@@ -72,4 +74,45 @@ This application is deployed using a robust, scalable  architecture designed for
 
  <img width="1672" height="862" alt="Screenshot 2026-05-25 at 20 28 32" src="https://github.com/user-attachments/assets/a6a63426-e9b2-4ddb-b483-1e071c5785f1" />
 
-  
+(Note: AWS deployment configurations, including Launch Templates and IAM policies, are documented in the /aws-infrastructure directory).
+
+---
+
+---
+
+
+
+## 🛠️ Getting Started (Local Development)
+
+### Prerequisites
+* Docker and Docker Compose installed
+* Java 17+
+* Node.js & npm
+* Python 3.10+
+
+### Installation Steps
+
+1. **Clone the repository**
+   ```bash
+   [git clone [https://github.com/your-username/smart-tea-monitor.git](https://github.com/your-username/smart-tea-monitor.git)
+   cd smart-tea-monitor](https://github.com/chenulBimsath/Smart-Tea-monitoring-and-decition-support-System.git)
+
+
+---
+---
+
+👥 Contributors
+
+
+Chenul Bimsath -   Frontend Development / Backend Development]
+Nipun Akarshana - Frontend Development
+Dulina nethmal - Frontend Development
+Oshan Wijesinghe - Cloud Architecture, DevOps / Backend Development]
+Dumindu Ranathuga - Database Development
+yehan ayanja - Frontend Development
+
+---
+
+⚠️ Usage Notice: This system and its underlying code are intended strictly for educational purposes. Any form of commercial use, monetization, or distribution for profit is explicitly prohibited.
+
+
