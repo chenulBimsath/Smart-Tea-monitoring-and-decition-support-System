@@ -56,3 +56,6 @@ This application is deployed using a robust, scalable microservices architecture
 * **Centralized Logging:** Ephemeral Docker containers stream application and error logs directly to **CloudWatch Logs** via the `awslogs` driver, ensuring persistent, centralized debugging capabilities even after auto-scaling instance termination.
 * **Security & DNS:** Domain management is handled by **Amazon Route 53**, with SSL/TLS certificates provisioned via **AWS Certificate Manager (ACM)** for secure HTTPS communication.
 * **Continuous Integration/Continuous Deployment (CI/CD):** Fully automated deployment pipelines via GitHub Actions ensure that code commits automatically trigger builds, ECR image updates, and ASG instance refreshes for seamless delivery.
+
+<img width="927" height="872" alt="Screenshot 2026-05-01 at 10 00 52" src="https://github.com/user-attachments/assets/826b79dd-c9bc-45b7-a1ef-7683c7b338f1" />
+
