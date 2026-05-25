@@ -41,8 +41,9 @@ Beyond its core analytical features, this project features a highly available, f
   * Containerization: Docker, Docker Compose
   * CI/CD: GitHub Actions
 
----
 
+
+---
 ---
 
 ## 🏗️ Cloud Architecture & Infrastructure Highlights
@@ -53,27 +54,31 @@ This application is deployed using a robust, scalable  architecture designed for
 
 <img width="927" height="872" alt="Screenshot 2026-05-01 at 10 00 52" src="https://github.com/user-attachments/assets/826b79dd-c9bc-45b7-a1ef-7683c7b338f1" />
 
-
+---
 
 * **Continuous Integration/Continuous Deployment (CI/CD):** Fully automated deployment pipelines via GitHub Actions ensure that code commits automatically trigger builds, ECR image updates, and ASG instance refreshes for seamless delivery.
 
 <img width="1145" height="860" alt="Screenshot 2026-05-25 at 21 22 21" src="https://github.com/user-attachments/assets/74ad0a81-0466-48a2-a79e-180688cba98e" />
 
-
+---
 
 * **Frontend Delivery & Automation:** Hosted the React.js frontend on Amazon S3 and utilized Amazon CloudFront (CDN) for low-latency global content delivery. Fully automated the deployment process using CI/CD pipelines.
 
+---
   
 * **Backend Orchestration & Auto Scaling:** Spring Boot backend services and Python ML models are containerized using Docker and stored in Amazon Elastic Container Registry (ECR). Deployments are managed by an **Auto Scaling Group (ASG)** behind an **Application Load Balancer (ALB)**, allowing the system to dynamically scale in/out based on real-time traffic variations.
 
+  ---
+
 * **Cost Optimization (Spot Instances and NAT Instances):** The ASG is configured to utilize 100% EC2 Spot Instances with a 'Price Capacity Optimized' allocation strategy and 'Capacity Rebalancing' enabled. Additionally, highly cost-effective NAT Instances were deployed in place of managed NAT Gateways. This combined architecture reduces overall compute and networking costs by ~70% while seamlessly rotating instances with zero downtime.
 
+---
   
 * **Proactive Monitoring & Automated Alerts:** Integrated **Amazon CloudWatch** alarms to monitor CPU utilization. If traffic spikes cause CPU usage to exceed 80%, an automated **AWS Lambda** function is triggered, dispatching a richly formatted HTML incident report to administrators via Amazon SES.
 
  <img width="1672" height="862" alt="Screenshot 2026-05-25 at 20 29 54" src="https://github.com/user-attachments/assets/d5ae52e0-d6ce-4e2b-ad6b-15b6c1b2fe8a" />
 
-
+---
   
 * **Centralized Logging:** Ephemeral Docker containers stream application and error logs directly to **CloudWatch Logs** via the `awslogs` driver, ensuring persistent, centralized debugging capabilities even after auto-scaling instance termination.
 
@@ -83,7 +88,6 @@ This application is deployed using a robust, scalable  architecture designed for
 (Note: AWS deployment configurations, including Launch Templates and IAM policies, are documented in the /aws-infrastructure directory).
 
 ---
-
 ---
 
 
@@ -104,7 +108,7 @@ This application is deployed using a robust, scalable  architecture designed for
    cd smart-tea-monitor](https://github.com/chenulBimsath/Smart-Tea-monitoring-and-decition-support-System.git)
 
 
----
+
 ---
 
 👥 Contributors
