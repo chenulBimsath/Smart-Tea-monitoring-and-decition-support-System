@@ -15,20 +15,6 @@ Beyond its core analytical features, this project features a highly available, f
 
 ---
 
-## 🏗️ Cloud Architecture & Infrastructure Highlights
-
-This application is deployed using a robust, scalable microservices architecture designed for zero-downtime and cost efficiency.
-
-* **Frontend Delivery (S3 & CloudFront):** The React frontend is statically hosted on Amazon S3 and distributed globally via Amazon CloudFront (CDN), ensuring sub-millisecond latency for users worldwide.
-* **Backend Orchestration & Auto Scaling:** Spring Boot backend services and Python ML models are containerized using Docker and stored in Amazon Elastic Container Registry (ECR). Deployments are managed by an **Auto Scaling Group (ASG)** behind an **Application Load Balancer (ALB)**, allowing the system to dynamically scale in/out based on real-time traffic variations.
-* **Advanced Cost Optimization (Spot Instances):** The ASG is configured to utilize 100% **EC2 Spot Instances** with a 'Price Capacity Optimized' allocation strategy and 'Capacity Rebalancing' enabled. This architecture reduces compute costs by ~70% while seamlessly rotating instances with zero downtime during interruptions.
-* **Proactive Monitoring & Automated Alerts:** Integrated **Amazon CloudWatch** alarms to monitor CPU utilization. If traffic spikes cause CPU usage to exceed 80%, an automated **AWS Lambda** function is triggered, dispatching a richly formatted HTML incident report to administrators via Amazon SES.
-* **Centralized Logging:** Ephemeral Docker containers stream application and error logs directly to **CloudWatch Logs** via the `awslogs` driver, ensuring persistent, centralized debugging capabilities even after auto-scaling instance termination.
-* **Security & DNS:** Domain management is handled by **Amazon Route 53**, with SSL/TLS certificates provisioned via **AWS Certificate Manager (ACM)** for secure HTTPS communication.
-* **Continuous Integration/Continuous Deployment (CI/CD):** Fully automated deployment pipelines via GitHub Actions ensure that code commits automatically trigger builds, ECR image updates, and ASG instance refreshes for seamless delivery.
-
----
-
 ## 🚀 Key Features
 
 ### Agricultural Intelligence
@@ -57,17 +43,16 @@ This application is deployed using a robust, scalable microservices architecture
 
 ---
 
-## 🛠️ Getting Started (Local Development)
+---
 
-### Prerequisites
-* Docker and Docker Compose installed
-* Java 17+
-* Node.js & npm
-* Python 3.10+
+## 🏗️ Cloud Architecture & Infrastructure Highlights
 
-### Installation Steps
+This application is deployed using a robust, scalable microservices architecture designed for zero-downtime and cost efficiency.
 
-1. **Clone the repository**
-   ```bash
-   git clone [https://github.com/your-username/smart-tea-monitor.git](https://github.com/your-username/smart-tea-monitor.git)
-   cd smart-tea-monitor
+* **Frontend Delivery (S3 & CloudFront):** The React frontend is statically hosted on Amazon S3 and distributed globally via Amazon CloudFront (CDN), ensuring sub-millisecond latency for users worldwide.
+* **Backend Orchestration & Auto Scaling:** Spring Boot backend services and Python ML models are containerized using Docker and stored in Amazon Elastic Container Registry (ECR). Deployments are managed by an **Auto Scaling Group (ASG)** behind an **Application Load Balancer (ALB)**, allowing the system to dynamically scale in/out based on real-time traffic variations.
+* **Advanced Cost Optimization (Spot Instances):** The ASG is configured to utilize 100% **EC2 Spot Instances** with a 'Price Capacity Optimized' allocation strategy and 'Capacity Rebalancing' enabled. This architecture reduces compute costs by ~70% while seamlessly rotating instances with zero downtime during interruptions.
+* **Proactive Monitoring & Automated Alerts:** Integrated **Amazon CloudWatch** alarms to monitor CPU utilization. If traffic spikes cause CPU usage to exceed 80%, an automated **AWS Lambda** function is triggered, dispatching a richly formatted HTML incident report to administrators via Amazon SES.
+* **Centralized Logging:** Ephemeral Docker containers stream application and error logs directly to **CloudWatch Logs** via the `awslogs` driver, ensuring persistent, centralized debugging capabilities even after auto-scaling instance termination.
+* **Security & DNS:** Domain management is handled by **Amazon Route 53**, with SSL/TLS certificates provisioned via **AWS Certificate Manager (ACM)** for secure HTTPS communication.
+* **Continuous Integration/Continuous Deployment (CI/CD):** Fully automated deployment pipelines via GitHub Actions ensure that code commits automatically trigger builds, ECR image updates, and ASG instance refreshes for seamless delivery.
