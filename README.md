@@ -52,8 +52,13 @@ This application is deployed using a robust, scalable  architecture designed for
 
 * **Architected a AWS Cloud Infrastructure:** Designed and deployed a highly available, fault-tolerant system on AWS to host a machine learning-based agricultural monitoring platform.
 
+
 <img width="927" height="872" alt="Screenshot 2026-05-01 at 10 00 52" src="https://github.com/user-attachments/assets/826b79dd-c9bc-45b7-a1ef-7683c7b338f1" />
 
+---
+(Note: AWS deployment configurations, including Launch Templates and IAM policies, are documented in the /aws-infrastructure directory).
+
+---
 ---
 
 * **Continuous Integration/Continuous Deployment (CI/CD):** Fully automated deployment pipelines via GitHub Actions ensure that code commits automatically trigger builds, ECR image updates, and ASG instance refreshes for seamless delivery.
@@ -85,7 +90,7 @@ This application is deployed using a robust, scalable  architecture designed for
  <img width="1672" height="862" alt="Screenshot 2026-05-25 at 20 28 32" src="https://github.com/user-attachments/assets/a6a63426-e9b2-4ddb-b483-1e071c5785f1" />
 
 
-(Note: AWS deployment configurations, including Launch Templates and IAM policies, are documented in the /aws-infrastructure directory).
+
 
 ---
 ---
