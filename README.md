@@ -56,7 +56,7 @@ This application is deployed using a robust, scalable  architecture designed for
 <img width="927" height="872" alt="Screenshot 2026-05-01 at 10 00 52" src="https://github.com/user-attachments/assets/826b79dd-c9bc-45b7-a1ef-7683c7b338f1" />
 
 ---
-(Note: AWS deployment configurations, including Launch Templates and IAM policies, are documented in the /aws-infrastructure directory).
+(Note: AWS deployment configurations, including Launch Templates and IAM policies, are documented in the /aws-infrastructure directory)..
 
 ---
 ---
