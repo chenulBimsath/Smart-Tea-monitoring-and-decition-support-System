@@ -38,13 +38,6 @@ To ensure complete control over the network environment, a custom VPC was create
 
 ---
 
-### 🔵 Step 2: Configuring Subnets for High Availability
-To ensure fault tolerance and high availability, the network was distributed across two different Availability Zones (AZs). A combination of public and private subnets was created to separate internet-facing resources from secure internal resources.
-
-> [!NOTE]
-> **✅ Action:** Created 4 subnets in total across two AZs:
-> * 🔶 **Availability Zone A:** 1 Public Subnet & 1 Private Subnet
-> * 🔷 **Availability Zone B:** 1 Public Subnet & 1 Private Subnet
 
 **📸 Subnet Configuration**
 
@@ -108,7 +101,8 @@ To convert a standard Linux machine into a network router, we had to enable IP f
 
 ![alt text](<images/Screenshot 2026-05-28 at 15.54.56.png>)
 ![alt text](<images/Screenshot 2026-05-28 at 15.55.35.png>)
-![alt text](images/commands.png)
+![alt text](<images/commands.png>)
+
 
 ---
 
