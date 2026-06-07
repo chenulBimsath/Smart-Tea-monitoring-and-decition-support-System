@@ -168,7 +168,7 @@ This is where AWS's security architecture shines. Instead of whitelisting static
 
 **📸 EC2-App-SG Configuration**
 
-![alt text](<images/Screenshot 2026-06-08 at 00.16.32.png>)
+![alt text](<images/Screenshot 2026-06-08 at 00.53.47.png>)
 ---
 
 ### 🛡️ Step 3: NAT Instances Security Group (NAT-SG)
