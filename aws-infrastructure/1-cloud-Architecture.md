@@ -108,6 +108,7 @@ To convert a standard Linux machine into a network router, we had to enable IP f
 
 ![alt text](<images/Screenshot 2026-05-28 at 15.54.56.png>)
 ![alt text](<images/Screenshot 2026-05-28 at 15.55.35.png>)
+![alt text](images/commands.png)
 
 ---
 
@@ -119,7 +120,7 @@ By default, AWS EC2 instances block any network traffic that is not directly add
 
 **📸 Source/Destination Check**
 
-![alt text](<images/Screenshot 2026-05-29 at 20.35.50.png>)
+![alt text](<images/source and dest.png>)
 
 ---
 
