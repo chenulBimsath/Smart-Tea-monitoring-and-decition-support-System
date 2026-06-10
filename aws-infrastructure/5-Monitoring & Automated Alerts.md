@@ -9,22 +9,12 @@
 ---
 
 ## 📑 Table of Contents
-1. [🏗️ Architectural Decision: Bypassing SNS](#️-architectural-decision-bypassing-sns)
-2. [✉️ Step 1: Configuring Amazon SES](#️-step-1-configuring-amazon-ses)
-3. [⚡ Step 2: Creating the Serverless Lambda Function](#-step-2-creating-the-serverless-lambda-function)
-4. [👁️ Step 3: Configuring the CloudWatch Alarm](#️-step-3-configuring-the-cloudwatch-alarm)
+
+1. [✉️ Step 1: Configuring Amazon SES](#️-step-1-configuring-amazon-ses)
+2. [⚡ Step 2: Creating the Serverless Lambda Function](#-step-2-creating-the-serverless-lambda-function)
+3. [👁️ Step 3: Configuring the CloudWatch Alarm](#️-step-3-configuring-the-cloudwatch-alarm)
 
 
----
-
-## 🏗️ Architectural Decision: Bypassing SNS
-
-Initially, traditional AWS architectures routed CloudWatch alarms through Amazon SNS (Simple Notification Service) to trigger a Lambda function. However, utilizing modern AWS updates, we directly integrated CloudWatch with AWS Lambda. 
-
-**Why bypass SNS?**
-* **Reduced Latency:** Direct integration removes an unnecessary intermediary hop (SNS), ensuring alerts are processed milliseconds faster.
-* **Cost Efficiency:** Reduces unnecessary SNS publishing costs.
-* **Separation of Concerns:** The Auto Scaling Group (ASG) inherently manages the `70% CPU` Target Tracking Policy (creating/deleting instances). Our custom CloudWatch Alarm is strictly isolated to trigger at `80% CPU` solely for **administrative notification**, preventing logic conflicts.
 
 ---
 
