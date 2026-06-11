@@ -24,6 +24,8 @@ To send rich HTML emails rather than default plain-text alerts, we configured Am
 * **Action:** Navigated to the SES Dashboard -> **Identities**.
 * **Verification:** Added and verified the administrator email (`admin@smartteamonitor.com`) to authorize SES to send outbound emails on our behalf.
 
+![alt text](<images/Screenshot 2026-06-10 at 19.48.44.png>)
+
 ---
 
 ## ⚡ Step 2: Creating the Serverless Lambda Function
@@ -31,6 +33,9 @@ We deployed a Python-based serverless function to intercept the CloudWatch alert
 
 * **Action:** Created an AWS Lambda function named `Send-HTML-Alert-Email` using `Python 3.10`.
 * **Permissions:** Attached the `AmazonSESFullAccess` IAM policy to the Lambda execution role.
+---
+![alt text](<images/Screenshot 2026-06-11 at 16.44.49.png>)
+---
 ![alt text](<images/Screenshot 2026-05-31 at 17.33.59.png>)
 
 ---
@@ -45,5 +50,5 @@ We configured the explicit threshold that triggers the Lambda function.
 
 Action Configuration: * Under the "Lambda action" section, mapped the trigger directly to the Send-HTML-Alert-Email function.
 
-![alt text](<images/Screenshot 2026-05-31 at 17.40.45.png>)
-Crucial: Ensured no Auto Scaling actions were added to this specific alarm to prevent conflicts with the ASG's internal 70% Target Tracking policy.
+![alt text](<images/Screenshot 2026-06-11 at 16.47.41.png>)
+

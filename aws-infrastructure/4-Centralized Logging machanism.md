@@ -23,6 +23,8 @@ In an Auto Scaling environment, EC2 instances are **ephemeral** (temporary). If 
 
 Because standard Docker logs are saved locally to the EC2 hard drive, **terminating the instance permanently deletes the crash logs**. Centralized logging solves this by streaming logs directly to a highly available AWS vault (CloudWatch) *before* the instance is destroyed.
 
+![alt text](<Untitled Diagram (2).jpg>)
+
 ---
 
 ## 🔐 Step 1: Configuring IAM Permissions
