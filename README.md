@@ -35,7 +35,7 @@ Beyond its core analytical features, this project features a highly available, f
 * **Machine Learning:** Python, Scikit-Learn / TensorFlow, Pandas
 * **Database:** supabase
 * **DevOps & Cloud (AWS):** * Compute: EC2 (Spot Instances), Auto Scaling Groups (ASG), Lambda
-  * Networking: VPC, Application Load Balancer (ALB), CloudFront
+  * Networking: VPC, Application Load Balancer (ALB)
   * Storage/Registry: S3, Elastic Container Registry (ECR)
   * Monitoring/Security: CloudWatch Alarms & Logs, SES, IAM, 
   * Containerization: Docker, Docker Compose
