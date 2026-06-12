@@ -50,7 +50,7 @@ Beyond its core analytical features, this project features a highly available, f
 
 This application is deployed using a robust, scalable  architecture designed for zero-downtime and cost efficiency.
 
-* **Architected a AWS Cloud Infrastructure:** Designed and deployed a highly available, fault-tolerant system on AWS to host a machine learning-based agricultural monitoring platform.
+* **Architected a AWS Cloud Infrastructure:** Designed and deployed a highly available, fault-tolerant system on AWS to host a 3 tier agricultural monitoring platform.
 
 
 <img width="927" height="872" alt="Screenshot 2026-05-01 at 10 00 52" src="https://github.com/user-attachments/assets/826b79dd-c9bc-45b7-a1ef-7683c7b338f1" />
