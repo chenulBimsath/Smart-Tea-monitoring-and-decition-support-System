@@ -38,7 +38,7 @@ Beyond its core analytical features, this project features a highly available, f
   * Networking: VPC, Application Load Balancer (ALB) ,NAT instance,Route tables
   * Storage/Registry: S3, Elastic Container Registry (ECR)
   * Monitoring/Security: CloudWatch Alarms & Logs, SES, IAM, 
-  * Containerization: Docker, Docker Compose
+  * Containerization: Docker
   * CI/CD: GitHub Actions
 
 
