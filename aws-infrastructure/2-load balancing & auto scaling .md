@@ -29,8 +29,9 @@ A Target Group acts as a logical grouping of our EC2 instances. Instead of telli
 | **VPC** | ☁️ `smart-tea-vpc` | The custom virtual private cloud network. |
 | **Health Checks** | 🩺 `HTTP` (Path: `/`) | The Load Balancer constantly pings this path to ensure servers are healthy before routing traffic. |
 | **Register Targets** | ⏭️ *Skipped* | No instances were manually added here because the Auto Scaling Group handles this automatically. |
+---
 
-
+![alt text](<images/Screenshot 2026-06-14 at 10.57.16.png>)
 ---
 
 ## ⚙️ Phase 2: Auto Scaling Group (ASG) & Dynamic Scaling
@@ -61,10 +62,10 @@ The Launch Template defines the exact specifications and bootstrap commands requ
 | **Instance Type** | 🖥️ `t3.micro` |
 | **Network & Security** | 🛡️ Attached `EC2-App-SG` and assigned the `EC2-ECR-Access-Role` IAM profile. |
 
-> **🚀 Automation (User Data):** Injected a Bash script that runs automatically when the server boots. This script updates the OS, installs Docker, logs into AWS ECR, pulls the latest Docker image, and runs the application container on port `8000`.
+
 
 ![alt text](<images/Screenshot 2026-05-29 at 20.28.05.png>)
-![alt text](<images/Screenshot 2026-05-29 at 20.31.49.png>)
+
 
 ---
 ### 🚥 Step 2: Creating the Application Load Balancer (ALB)
@@ -79,12 +80,12 @@ Once the Target Group was ready, we created the actual Load Balancer to accept i
 | **IP Address Type** | 🌐 `IPv4` |
 | **Network Mapping** | ☁️ Selected `smart-tea-vpc`.<br>✅ Selected both Availability Zones (`AZ-A` and `AZ-B`) to ensure high availability.<br><br>🚨 **Crucial Step:** Mapped the ALB specifically to the **Public Subnets** in both zones, allowing it to communicate with the outside world. |
 | **Security Groups** | 🛡️ Removed the default security group and attached `ALB-SG` (Created in Phase 3) to allow open HTTP/HTTPS access. |
-| **Listeners and Routing** | 🎧 Configured the ALB to listen on `HTTP` (Port 80) and set the default routing action to forward all traffic to `App-Target-Group`. |
+| **Listeners and Routing** | 🎧 Configured the ALB to listen on HTTPS (Port 443) and set the default routing action to forward all traffic to App-Target-Group. |
 
 
 
 ![alt text](<images/Screenshot 2026-05-29 at 20.53.18.png>)
-![alt text](<images/Screenshot 2026-05-29 at 20.53.56.png>)
+
 
 
 ---

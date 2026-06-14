@@ -70,7 +70,7 @@ By default, subnets cannot route traffic to the internet. A routing rule was nee
 
 ---
 
-## 🌐 Phase 2: Internet Access via NAT Instances (Cost-Optimized HA)
+## 🌐 Phase 2: Internet Access via NAT Instances (Cost-Optimized NA)
 
 To allow resources in our Private Subnets (like the backend or ML models) to safely access the internet (e.g., to connect to external databases like Supabase or download updates), we need a Network Address Translation (NAT) setup.
 
@@ -94,13 +94,13 @@ We launched two standard EC2 instances to act as our network routers, placing th
 
 ---
 
-### 🔵 Step 2: Configuring the NAT Routing 
+### 🔵 Step 2: Configuring the NAT instances.
 To convert a standard Linux machine into a network router, we had to enable IP forwarding and configure IP tables to translate private IP addresses into public ones.
 
 **📸 NAT Routing Configuration**
 
-![alt text](<images/Screenshot 2026-05-28 at 15.54.56.png>)
-![alt text](<images/Screenshot 2026-05-28 at 15.55.35.png>)
+![alt text](<images/Screenshot 2026-06-14 at 08.37.50.png>)
+
 
 
 
@@ -154,6 +154,7 @@ This security group acts as the front door to the application. It allows users f
 
 ![alt text](<images/Screenshot 2026-05-28 at 16.38.08.png>)
 
+
 ---
 
 ### 🛡️ Step 2: Application Servers Security Group (EC2-App-SG)
@@ -165,11 +166,15 @@ This is where AWS's security architecture shines. Instead of whitelisting static
 | **VPC** | `smart-tea-vpc` |
 | **Security Logic** | 🔒 *"Only allow inbound traffic if it comes directly from the Application Load Balancer."* |
 | **Outbound Rules** | 🌍 All traffic allowed (`0.0.0.0/0`) |
+ 
+ ---
 
 **📸 EC2-App-SG Configuration**
 
-![alt text](<images/Screenshot 2026-06-08 at 00.53.47.png>)
+![alt text](<images/Screenshot 2026-06-14 at 10.01.40.png>)
+
 ---
+
 
 ### 🛡️ Step 3: NAT Instances Security Group (NAT-SG)
 This security group acts as the gateway for the custom NAT Instances created in Phase 2. It securely allows resources inside the Private Subnets to send internet-bound traffic to the NAT instances.
@@ -181,9 +186,11 @@ This security group acts as the gateway for the custom NAT Instances created in 
 | **Inbound Rules** | 🟢 All traffic \| Source: `10.0.0.0/16` (The entire custom VPC CIDR block) |
 | **Outbound Rules** | 🌍 All traffic allowed (`0.0.0.0/0`) to route out to the internet. |
 
+
+
 **📸 NAT-SG Configuration**
 
-![alt text](<images/Screenshot 2026-06-02 at 14.55.13.png>)
+![alt text](<images/Screenshot 2026-06-14 at 10.10.48.png>)
 
 
 ---
