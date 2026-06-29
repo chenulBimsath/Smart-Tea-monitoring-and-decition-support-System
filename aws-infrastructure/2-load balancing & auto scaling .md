@@ -25,7 +25,7 @@ A Target Group acts as a logical grouping of our EC2 instances. Instead of telli
 | :--- | :--- | :--- |
 | **Target Type** | 💻 `Instances` | Targets individual EC2 virtual machines. |
 | **Name** | 🏷️ `App-Target-Group` | Unique identifier for the group. |
-| **Protocol & Port** | 🔌 `HTTP` on Port `8000` | Matches the application/Docker port configured in the Security Groups. |
+| **Protocol & Port** | 🔌 `HTTP` on Port `8080` | Matches the application/Docker port configured in the Security Groups. |
 | **VPC** | ☁️ `smart-tea-vpc` | The custom virtual private cloud network. |
 | **Health Checks** | 🩺 `HTTP` (Path: `/`) | The Load Balancer constantly pings this path to ensure servers are healthy before routing traffic. |
 | **Register Targets** | ⏭️ *Skipped* | No instances were manually added here because the Auto Scaling Group handles this automatically. |
