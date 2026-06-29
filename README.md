@@ -6,7 +6,6 @@
 [![Python](https://img.shields.io/badge/ML_Engine-Python-3776AB?logo=python)](https://python.org/)
 [![Docker](https://img.shields.io/badge/Containerization-Docker-2496ED?logo=docker)](https://docker.com/)
 
-**Live Project URL:** [https://smartteamonitor.com](https://smartteamonitor.com) 
 
 ## 📌 Project Overview
 The Smart Tea Monitoring and Decision Support System is a comprehensive, cloud-native agricultural technology platform. It integrates **NDVI satellite monitoring, machine learning-based yield prediction, and fertilizer analytics** to provide actionable insights for tea plantation management. 
@@ -59,11 +58,11 @@ This application is deployed using a robust, scalable  architecture designed for
 (Note: AWS deployment configurations, including Launch Templates and IAM policies, are documented in the /aws-infrastructure directory)..
 
 ---
----
+
 
 * **Continuous Integration/Continuous Deployment (CI/CD):** Fully automated deployment pipelines via GitHub Actions ensure that code commits automatically trigger builds, ECR image updates, and ASG instance refreshes for seamless delivery.
 
-<img width="1145" height="860" alt="Screenshot 2026-05-25 at 21 22 21" src="https://github.com/user-attachments/assets/74ad0a81-0466-48a2-a79e-180688cba98e" />
+![alt text](<aws-infrastructure/images/Screenshot 2026-06-29 at 22.54.40.png>)
 
 ---
 

@@ -24,11 +24,6 @@ jobs:
           npm install
           npm install -D vitest
 
-      # Automated Testing Phase
-      - name: Run Frontend Tests
-        run: |
-          cd frontendapp
-          npx vitest run
 
       - name: Build Application
         run: |

@@ -25,7 +25,7 @@ Because standard Docker logs are saved locally to the EC2 hard drive, **terminat
 
 
 
-![alt text](<images/Untitled Diagram (2).jpg>)
+
 
 
 ---
