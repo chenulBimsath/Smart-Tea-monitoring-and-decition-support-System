@@ -6,5 +6,5 @@ import lombok.Data;
 public class DivisionDTO {
     private Integer divisionId;
     private String divisionName;
-    private Integer estateId; // We only need the ID for the API
+    private Integer estateId; // We only need the ID ford the API
 }

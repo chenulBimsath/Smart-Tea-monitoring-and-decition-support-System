@@ -81,12 +81,7 @@ export default function CropYields({ setPage }) {
   const handleDelete = async (cropId) => {
     if (window.confirm(`Are you sure you want to delete Crop ID ${cropId}?`)) {
       try {
-<<<<<<< Updated upstream
         const response = await fetch(`http://13.233.134.204:8080/api/crop-details/${cropId}`, {
-=======
-<<<<<<< Updated upstream
-        const response = await fetch(`http://localhost:8080/api/crop-details/${cropId}`, {
->>>>>>> Stashed changes
           method: "DELETE"
         });
 =======
@@ -168,14 +163,6 @@ export default function CropYields({ setPage }) {
         : "http://13.233.134.204:8080/api/crop-details";
         
       const method = editingItemId ? "PUT" : "POST";
-=======
-  // Determine if we are Adding (POST) or Editing (PUT)
-  const url = editingItemId
-    ? `${API}/api/crop-details/${editingItemId}`
-    : `${API}/api/crop-details`;
->>>>>>> Stashed changes
-
-  const method = editingItemId ? "PUT" : "POST";
 
   const response = await fetch(url, {
     method,

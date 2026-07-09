@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
-/* Scope everything under page class to prevent bleed */
+/* Scope everything under page clsass to prevent bleed */
 .yield-page { 
   padding: 24px 28px; 
   background: linear-gradient(180deg,#eef7f1,#f6f9f8); 

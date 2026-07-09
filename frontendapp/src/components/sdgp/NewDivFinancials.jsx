@@ -100,15 +100,7 @@ export default function NewDivFinancials({ setPage }) {
   const handleDelete = async (id) => {
     if (window.confirm(`Are you sure you want to delete Transaction ID ${id}?`)) {
       try {
-<<<<<<< Updated upstream
         const response = await fetch(`http://13.233.134.204:8080/api/financial-data/${id}`, {
-=======
-<<<<<<< Updated upstream
-        const response = await fetch(`http://localhost:8080/api/financial-data/${id}`, {
-=======
-        const response = await fetch(`${API}/api/financial-data/${id}`, {
->>>>>>> Stashed changes
->>>>>>> Stashed changes
           method: "DELETE"
         });
 
@@ -141,6 +133,7 @@ export default function NewDivFinancials({ setPage }) {
     });
     setIsPopupOpen(true);
   };
+  //ss
 
   const handleUpdate = (item) => {
     setEditingItemId(item.id);
@@ -195,18 +188,8 @@ export default function NewDivFinancials({ setPage }) {
     try {
 <<<<<<< Updated upstream
       const url = editingItemId 
-<<<<<<< Updated upstream
         ? `http://13.233.134.204:8080/api/financial-data/${editingItemId}`
         : "http://13.233.134.204:8080/api/financial-data";
-=======
-        ? `http://localhost:8080/api/financial-data/${editingItemId}`
-        : "http://localhost:8080/api/financial-data";
-=======
-  const url = editingItemId
-    ? `${API}/api/financial-data/${editingItemId}`
-    : `${API}/api/financial-data`;
->>>>>>> Stashed changes
->>>>>>> Stashed changes
         
       const method = editingItemId ? "PUT" : "POST";
 

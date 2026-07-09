@@ -12,7 +12,7 @@ import java.util.UUID;
 
 /**
  * PLACE AT:
- * src/main/java/com/tea_management/tea_backend/service/AuthService.java
+ * src/main/java/com/tea_management/teavv_backend/service/AuthService.java
  *
  * Replaces / extends whatever AuthService was in the original backend.
  * Uses the existing UserRepository and User model.
