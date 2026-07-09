@@ -100,7 +100,9 @@ export default function SDGPApp() {
             <AgronomicData setPage={setPage} />
           )}
 
-         
+          {page === "fertilizerdata" && (
+            <FertilizerData setPage={setPage} />
+          )}
 
           {page === "fertilizerrangaladivisions" && (
             <FertilizerRangalaDivisions setPage={setPage} />
