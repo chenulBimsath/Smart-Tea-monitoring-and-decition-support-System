@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./NewDivFinancials.css"; 
 
 export default function NewDivFinancials({ setPage }) {
+  const API = import.meta.env.VITE_API_BASE || "http://localhost:8080";
   // --- STATE ---
   const [allData, setAllData] = useState([]);
   const [availableYears, setAvailableYears] = useState([]);
@@ -41,7 +42,15 @@ export default function NewDivFinancials({ setPage }) {
 
   const fetchFinanceData = async () => {
     try {
+<<<<<<< Updated upstream
       const response = await fetch("http://13.233.134.204:8080/api/financial-data");
+=======
+<<<<<<< Updated upstream
+      const response = await fetch("http://localhost:8080/api/financial-data");
+=======
+      const response = await fetch(`${API}/api/financial-data`);
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
       if (!response.ok) throw new Error("Network response was not ok");
       
       const data = await response.json();
@@ -91,7 +100,15 @@ export default function NewDivFinancials({ setPage }) {
   const handleDelete = async (id) => {
     if (window.confirm(`Are you sure you want to delete Transaction ID ${id}?`)) {
       try {
+<<<<<<< Updated upstream
         const response = await fetch(`http://13.233.134.204:8080/api/financial-data/${id}`, {
+=======
+<<<<<<< Updated upstream
+        const response = await fetch(`http://localhost:8080/api/financial-data/${id}`, {
+=======
+        const response = await fetch(`${API}/api/financial-data/${id}`, {
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
           method: "DELETE"
         });
 
@@ -176,9 +193,20 @@ export default function NewDivFinancials({ setPage }) {
     };
 
     try {
+<<<<<<< Updated upstream
       const url = editingItemId 
+<<<<<<< Updated upstream
         ? `http://13.233.134.204:8080/api/financial-data/${editingItemId}`
         : "http://13.233.134.204:8080/api/financial-data";
+=======
+        ? `http://localhost:8080/api/financial-data/${editingItemId}`
+        : "http://localhost:8080/api/financial-data";
+=======
+  const url = editingItemId
+    ? `${API}/api/financial-data/${editingItemId}`
+    : `${API}/api/financial-data`;
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
         
       const method = editingItemId ? "PUT" : "POST";
 

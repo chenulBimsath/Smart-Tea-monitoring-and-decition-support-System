@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./CropYields.css"; 
 
 export default function CropYields({ setPage }) {
+  const API = import.meta.env.VITE_API_BASE || "http://localhost:8080";
   // --- STATE ---
   const [allData, setAllData] = useState([]);
   const [availableYears, setAvailableYears] = useState([]);
@@ -36,7 +37,15 @@ export default function CropYields({ setPage }) {
 
   const fetchCropData = async () => {
     try {
+<<<<<<< Updated upstream
       const response = await fetch("http://13.233.134.204:8080/api/crop-details");
+=======
+<<<<<<< Updated upstream
+      const response = await fetch("http://localhost:8080/api/crop-details");
+=======
+      const response = await fetch(`${API}/api/crop-details`);
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
       if (!response.ok) throw new Error("Network response was not ok");
       
       const data = await response.json();
@@ -72,9 +81,19 @@ export default function CropYields({ setPage }) {
   const handleDelete = async (cropId) => {
     if (window.confirm(`Are you sure you want to delete Crop ID ${cropId}?`)) {
       try {
+<<<<<<< Updated upstream
         const response = await fetch(`http://13.233.134.204:8080/api/crop-details/${cropId}`, {
+=======
+<<<<<<< Updated upstream
+        const response = await fetch(`http://localhost:8080/api/crop-details/${cropId}`, {
+>>>>>>> Stashed changes
           method: "DELETE"
         });
+=======
+        const response = await fetch(`${API}/api/crop-details/${cropId}`, {
+  method: "DELETE",
+});
+>>>>>>> Stashed changes
 
         if (response.ok) {
           // Remove from UI immediately
@@ -142,36 +161,52 @@ export default function CropYields({ setPage }) {
     };
 
     try {
+<<<<<<< Updated upstream
       // Determine if we are Adding (POST) or Editing (PUT)
       const url = editingItemId 
         ? `http://13.233.134.204:8080/api/crop-details/${editingItemId}`
         : "http://13.233.134.204:8080/api/crop-details";
         
       const method = editingItemId ? "PUT" : "POST";
+=======
+  // Determine if we are Adding (POST) or Editing (PUT)
+  const url = editingItemId
+    ? `${API}/api/crop-details/${editingItemId}`
+    : `${API}/api/crop-details`;
+>>>>>>> Stashed changes
 
-      const response = await fetch(url, {
-        method: method,
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
+  const method = editingItemId ? "PUT" : "POST";
 
-      if (!response.ok) {
-        throw new Error("Failed to save data. Please check if the Division ID exists.");
-      }
+  const response = await fetch(url, {
+    method,
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
 
-      alert(editingItemId ? "Data Updated Successfully!" : "Field Data Added Successfully!");
-      
-      // Close popup, clear state, and refresh table
-      setIsPopupOpen(false);
-      setEditingItemId(null);
-      fetchCropData(); 
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(
+      errorText || "Failed to save data. Please check if the Division ID exists."
+    );
+  }
 
-    } catch (error) {
-      console.error("Error saving data:", error);
-      alert(error.message);
-    }
+  alert(
+    editingItemId
+      ? "Data Updated Successfully!"
+      : "Field Data Added Successfully!"
+  );
+
+  // Close popup, clear state, and refresh table
+  setIsPopupOpen(false);
+  setEditingItemId(null);
+  fetchCropData();
+
+  } catch (error) {
+    console.error("Error saving data:", error);
+    alert(error.message || "Something went wrong.");
+  }
   };
 
   return (
