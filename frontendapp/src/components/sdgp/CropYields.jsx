@@ -37,15 +37,7 @@ export default function CropYields({ setPage }) {
 
   const fetchCropData = async () => {
     try {
-<<<<<<< Updated upstream
-      const response = await fetch("http://13.233.134.204:8080/api/crop-details");
-=======
-<<<<<<< Updated upstream
-      const response = await fetch("http://localhost:8080/api/crop-details");
-=======
-      const response = await fetch(`${API}/api/crop-details`);
->>>>>>> Stashed changes
->>>>>>> Stashed changes
+const response = await fetch(`${API}/api/crop-details`);
       if (!response.ok) throw new Error("Network response was not ok");
       
       const data = await response.json();
@@ -81,14 +73,9 @@ export default function CropYields({ setPage }) {
   const handleDelete = async (cropId) => {
     if (window.confirm(`Are you sure you want to delete Crop ID ${cropId}?`)) {
       try {
-        const response = await fetch(`http://13.233.134.204:8080/api/crop-details/${cropId}`, {
+        const response = await fetch(`${API}/api/crop-details/${cropId}`, {
           method: "DELETE"
         });
-=======
-        const response = await fetch(`${API}/api/crop-details/${cropId}`, {
-  method: "DELETE",
-});
->>>>>>> Stashed changes
 
         if (response.ok) {
           // Remove from UI immediately
@@ -156,7 +143,6 @@ export default function CropYields({ setPage }) {
     };
 
     try {
-<<<<<<< Updated upstream
       // Determine if we are Adding (POST) or Editing (PUT)
       const url = editingItemId 
         ? `http://13.233.134.204:8080/api/crop-details/${editingItemId}`
@@ -164,36 +150,36 @@ export default function CropYields({ setPage }) {
         
       const method = editingItemId ? "PUT" : "POST";
 
-  const response = await fetch(url, {
-    method,
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(payload),
-  });
+      const response = await fetch(url, {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
 
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(
-      errorText || "Failed to save data. Please check if the Division ID exists."
-    );
-  }
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(
+          errorText || "Failed to save data. Please check if the Division ID exists."
+        );
+      }
 
-  alert(
-    editingItemId
-      ? "Data Updated Successfully!"
-      : "Field Data Added Successfully!"
-  );
+      alert(
+        editingItemId
+          ? "Data Updated Successfully!"
+          : "Field Data Added Successfully!"
+      );
 
-  // Close popup, clear state, and refresh table
-  setIsPopupOpen(false);
-  setEditingItemId(null);
-  fetchCropData();
+      // Close popup, clear state, and refresh table
+      setIsPopupOpen(false);
+      setEditingItemId(null);
+      fetchCropData();
 
-  } catch (error) {
-    console.error("Error saving data:", error);
-    alert(error.message || "Something went wrong.");
-  }
+    } catch (error) {
+      console.error("Error saving data:", error);
+      alert(error.message || "Something went wrong.");
+    }
   };
 
   return (

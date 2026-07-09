@@ -42,15 +42,7 @@ export default function NewDivFinancials({ setPage }) {
 
   const fetchFinanceData = async () => {
     try {
-<<<<<<< Updated upstream
-      const response = await fetch("http://13.233.134.204:8080/api/financial-data");
-=======
-<<<<<<< Updated upstream
-      const response = await fetch("http://localhost:8080/api/financial-data");
-=======
-      const response = await fetch(`${API}/api/financial-data`);
->>>>>>> Stashed changes
->>>>>>> Stashed changes
+const response = await fetch(`${API}/api/financial-data`);
       if (!response.ok) throw new Error("Network response was not ok");
       
       const data = await response.json();
@@ -186,10 +178,9 @@ export default function NewDivFinancials({ setPage }) {
     };
 
     try {
-<<<<<<< Updated upstream
-      const url = editingItemId 
-        ? `http://13.233.134.204:8080/api/financial-data/${editingItemId}`
-        : "http://13.233.134.204:8080/api/financial-data";
+const url = editingItemId
+  ? `${API}/api/financial-data/${editingItemId}`
+  : `${API}/api/financial-data`;
         
       const method = editingItemId ? "PUT" : "POST";
 

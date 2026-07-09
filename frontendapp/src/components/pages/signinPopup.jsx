@@ -16,15 +16,7 @@ export default function SignInPopup({ closePopup, openSignUp }) {
     setError("");
 
     try {
-<<<<<<< Updated upstream
-      const response = await fetch("http://13.233.134.204:8080/api/auth/login", {
-=======
-<<<<<<< Updated upstream
-      const response = await fetch("http://localhost:8080/api/auth/login", {
-=======
       const response = await fetch(`${API}/api/auth/login`, {
->>>>>>> Stashed changes
->>>>>>> Stashed changes
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -121,7 +113,6 @@ export default function SignInPopup({ closePopup, openSignUp }) {
           </p>
         )}
 
-<<<<<<< Updated upstream
         <div className="signin-options">
           <label className="signin-remember">
             <input type="checkbox" />
@@ -131,12 +122,6 @@ export default function SignInPopup({ closePopup, openSignUp }) {
         </div>
 
         <button className="signin-btn" onClick={handleLogin}>
-=======
-        <button
-          className="signin-btn"
-          onClick={handleLogin}
-        >
->>>>>>> Stashed changes
           Sign In
           <span className="signin-arrow">→</span>
         </button>
