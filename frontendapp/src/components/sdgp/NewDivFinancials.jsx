@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./NewDivFinancials.css"; 
 
 export default function NewDivFinancials({ setPage }) {
+  const API = import.meta.env.VITE_API_BASE || "http://localhost:8080";
   // --- STATE ---
   const [allData, setAllData] = useState([]);
   const [availableYears, setAvailableYears] = useState([]);
@@ -41,7 +42,7 @@ export default function NewDivFinancials({ setPage }) {
 
   const fetchFinanceData = async () => {
     try {
-      const response = await fetch("https://api.smartteamonitor.com/api/financial-data");
+const response = await fetch(`${API}/api/financial-data`);
       if (!response.ok) throw new Error("Network response was not ok");
       
       const data = await response.json();
@@ -91,7 +92,7 @@ export default function NewDivFinancials({ setPage }) {
   const handleDelete = async (id) => {
     if (window.confirm(`Are you sure you want to delete Transaction ID ${id}?`)) {
       try {
-        const response = await fetch(`https://api.smartteamonitor.com/api/financial-data/${id}`, {
+        const response = await fetch(`http://13.233.134.204:8080/api/financial-data/${id}`, {
           method: "DELETE"
         });
 
@@ -124,6 +125,7 @@ export default function NewDivFinancials({ setPage }) {
     });
     setIsPopupOpen(true);
   };
+  //ss
 
   const handleUpdate = (item) => {
     setEditingItemId(item.id);
@@ -176,9 +178,9 @@ export default function NewDivFinancials({ setPage }) {
     };
 
     try {
-      const url = editingItemId 
-        ? `https://api.smartteamonitor.com/api/financial-data/${editingItemId}`
-        : "https://api.smartteamonitor.com/api/financial-data";
+const url = editingItemId
+  ? `${API}/api/financial-data/${editingItemId}`
+  : `${API}/api/financial-data`;
         
       const method = editingItemId ? "PUT" : "POST";
 

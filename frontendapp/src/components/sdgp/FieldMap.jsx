@@ -3,9 +3,16 @@ import {
   MapContainer, TileLayer, ZoomControl,
   GeoJSON, useMap, Marker, Popup
 } from "react-leaflet";
-import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "./FieldMap.css";
+import L from "leaflet"; 
+
+const customIcon = L.icon({
+  iconUrl: "/marker.png", 
+  iconSize: [50, 50],
+  iconAnchor: [20, 50],
+  popupAnchor: [0, -40]
+});
 
 /* ── NDVI helpers ── */
 function getNDVIColor(ndvi) {
@@ -201,14 +208,14 @@ export default function FieldMap() {
           />
           {viewMode === "ndvi" && (
             <TileLayer
-              url="https://earthengine.googleapis.com/v1/projects/ndvi-project-489709/maps/411895cfe625a22b3dd17c2d472400af-d192c232c3bfebd02e7f668f52aad4e4/tiles/{z}/{x}/{y}"
+              url="https://earthengine.googleapis.com/v1/projects/ndvi-project-489709/maps/829b37a63f7a7b52b725f4d5b54eb383-5d659cbbe6cf6391564dccea0fe78d32/tiles/{z}/{x}/{y}"
               opacity={0.3}
             />
           )}
           <FlyToDistrict district={selectedDistrict} />
-          <Marker position={markerPosition}>
-            <Popup>{selectedDistrict.toUpperCase()}</Popup>
-          </Marker>
+          <Marker position={markerPosition} icon={customIcon}>
+  <Popup>{selectedDistrict.toUpperCase()}</Popup>
+</Marker>
           <BoundaryLayer geoData={geoData} selectedDivision={selectedDivision} />
           {viewMode === "ndvi" && selectedDivision && (
             <NDVILayer ndviData={ndviData} selectedDivision={selectedDivision} />

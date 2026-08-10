@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./CropYields.css"; 
 
 export default function CropYields({ setPage }) {
+  const API = import.meta.env.VITE_API_BASE || "http://localhost:8080";
   // --- STATE ---
   const [allData, setAllData] = useState([]);
   const [availableYears, setAvailableYears] = useState([]);
@@ -36,7 +37,7 @@ export default function CropYields({ setPage }) {
 
   const fetchCropData = async () => {
     try {
-      const response = await fetch("https://api.smartteamonitor.com/api/crop-details");
+const response = await fetch(`${API}/api/crop-details`);
       if (!response.ok) throw new Error("Network response was not ok");
       
       const data = await response.json();
@@ -72,7 +73,7 @@ export default function CropYields({ setPage }) {
   const handleDelete = async (cropId) => {
     if (window.confirm(`Are you sure you want to delete Crop ID ${cropId}?`)) {
       try {
-        const response = await fetch(`https://api.smartteamonitor.com/api/crop-details/${cropId}`, {
+        const response = await fetch(`${API}/api/crop-details/${cropId}`, {
           method: "DELETE"
         });
 
@@ -144,13 +145,13 @@ export default function CropYields({ setPage }) {
     try {
       // Determine if we are Adding (POST) or Editing (PUT)
       const url = editingItemId 
-        ? `https://api.smartteamonitor.com/api/crop-details/${editingItemId}`
-        : "https://api.smartteamonitor.com/api/crop-details";
+        ? `http://13.233.134.204:8080/api/crop-details/${editingItemId}`
+        : "http://13.233.134.204:8080/api/crop-details";
         
       const method = editingItemId ? "PUT" : "POST";
 
       const response = await fetch(url, {
-        method: method,
+        method,
         headers: {
           "Content-Type": "application/json",
         },
@@ -158,19 +159,26 @@ export default function CropYields({ setPage }) {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to save data. Please check if the Division ID exists.");
+        const errorText = await response.text();
+        throw new Error(
+          errorText || "Failed to save data. Please check if the Division ID exists."
+        );
       }
 
-      alert(editingItemId ? "Data Updated Successfully!" : "Field Data Added Successfully!");
-      
+      alert(
+        editingItemId
+          ? "Data Updated Successfully!"
+          : "Field Data Added Successfully!"
+      );
+
       // Close popup, clear state, and refresh table
       setIsPopupOpen(false);
       setEditingItemId(null);
-      fetchCropData(); 
+      fetchCropData();
 
     } catch (error) {
       console.error("Error saving data:", error);
-      alert(error.message);
+      alert(error.message || "Something went wrong.");
     }
   };
 
