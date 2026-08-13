@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/divisions")
-@CrossOrigin(origins = {"https://smartteamonitor.com", "http://localhost:5173"})
+@CrossOrigin(origins = "*")
 public class DivisionController {
 
     @Autowired
